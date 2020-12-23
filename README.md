@@ -1,7 +1,10 @@
+At first:<br>
+<br>
 Like all other text that I have written in english language: please excuse my bad english
 because I'm a native speaken german (and a view people said, i could write my README.md
 in english language. So okay, let's go<br>
----------------------------------------------------------------------------------------
+<br>
+---------------------------------------------------------------------------------------<br>
 <br>
 In the early 1990th, a legendary sofware company called "Borland" was great and they
 developed great Turbo Pascal and C-Compilers. From Turbo-Pascal version 6.0 and Borland C
@@ -45,7 +48,7 @@ PC programs cannot (of course) be flashed, so I have added a hotkey "alt-r" to s
 a compiled PC console programm.<br>
 <br>
 -------------------------------------------------------------------------------<br>
-GENMAKEF
+GENMAKEF<br>
 -------------------------------------------------------------------------------<br>
 <br>
 To get a new project, there is given the FreeVision programm "genmakef" and this is a
@@ -81,7 +84,7 @@ the target systems: AVR, STM32F, STM8S, MCS51 and PIC16. An installed compiler f
 the target system is been expected.<br>
 <br>
 -------------------------------------------------------------------------------<br>
-TUIDUDE
+TUIDUDE<br>
 -------------------------------------------------------------------------------<br>
 If you are programing vor Atmel/Microchip AVR-Series, there is a textmode-
 interface, to flash your controllers. This is called "tuidude".<br>
