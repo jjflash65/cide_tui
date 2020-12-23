@@ -1,0 +1,12 @@
+rm -f rsc.cfg
+rm -f rsc.dsk
+rm -f rsc.ini
+rm -f gci.cfg
+rm -f gci.dsk
+rm -f gci.ini
+rm -f fp.dir
+rm -f fp.cfg
+rm -f fp.dsk
+rm -f fp.ini
+rm -f *.o
+rm -f *.ppu

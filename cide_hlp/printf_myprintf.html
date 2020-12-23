@@ -1,0 +1,494 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>printf - Derivate</title>
+</head>
+<body>
+<p><font face="Arial">
+<A name="000411printf"></a><br>	
+<h2>---------------------------------------------------------<br>
+printf - Derivate<br>
+---------------------------------------------------------</h2>	
+<ul>
+<A name="deriv_printf" href="#000411printf">printf</a><ul><br>
+<A name="umwandl_printf" href="#000411umwandl">Umwandlungszeichen % (printf)</a><br>
+<A name="flag_printf" href="#000411flag">Flag /Flagzeichen (printf)</a><br>
+<A name="feld_printf" href="#000411feld">Feldbreite und Nachkommastellen (printf)</a><br>
+<A name="flag_printf" href="#000411escape">Escape-Sequenzen / Steuerzeichen (printf)</a><br>
+</ul><br>
+<A name="deriv_sprintf" href="#000412sprintf">sprintf</a><br>
+<br>
+<A name="deriv_my_printf" href="#000413myprintf">my_printf</a><ul><br>
+<A name="umwandl_myprintf" href="#000413umwandl">Umwandlungszeichen % (my_printf)</a><br>
+</ul><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+</ul>
+<h2>---------------------------------------------------------<br>
+printf<br>
+---------------------------------------------------------</h2>	
+<br>
+printf gibt formatierte Ausgaben auf dem Standardausgabekanal aus. Bei<br>
+Verwendung eines PC-Betriebssystems ist der Standardausgabekanal die Konsole.<br>
+Bei Verwendung mittels eines Mikrocontrollers muss je nach benutzter Hardware<br>
+ein Ausgabekanal geschaffen werden.<br>
+<br>
+Zudem ist in Verbindung mit einem Mikrocontroller abzuwaegen, ein<br>
+"full featured" printf einzusetzen, da ein printf sehr speicherintensiv<br>
+ist. Ein im Leistungsumfang reduzierter, aber in sehr vielen Faellen ausreichender<br>
+Ersatz fuer printf ist my_printf.<br>
+<br>
+<pre>
+  Die Syntax von printf  :        int printf(const char *format [, argument, ...]);
+  Prototypdeklaration in :        stdio.h
+</pre>
+<br>
+printf unterscheidet sich im Gegensatz zu den meisten Funkktionen in C darin,<br>
+dass fuer diese Funktion eine unterschiedliche (variable) Anzahl Argumente<br>
+uebergeben werden koennen. Bei fehlerfreier Ausfuehrung liefert printf die<br>
+Anzahl insgesamt ausgegebener Zeichen als Funktionsargument zurueck.<br>
+<pre>
+  const char *format
+</pre>
+enthaelt den zwingend notwendigen String, der ausgegeben wird. Alle eventuell<br>
+nachfolgende Argumente sind optional.<br>
+<br>
+Bsp.:<br>
+
+<pre>
+  printf("Hallo Welt");
+</pre>
+
+Innerhalb des Argumentstrings *format werden Umwandlungszeichen<br>
+(engl. conversion modifier) fuer weitere Parameter eingesetzt, die eine<br>
+Formatierung der Ausgabe ermoeglichen. Ausserdem kann dieser String<br>
+Escape-Sequenzen enthalten, die ebenfalls der formatierten Ausgabe dienen.<br>
+<br>
+<a href="printf_myprintf.html">printf - Derivate</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<A name="000411umwandl"></a><br>
+<h2>---------------------------------------------------------<br>
+Umwandlungszeichen % (printf)<br>
+---------------------------------------------------------</h2>	
+<br>
+Prinzipiell funktionieren die Umwandlungszeichen nach folgendem Schema:<br>
+Ein Umwandlungszeichen wird mit dem %-Zeichen (Ascii-Code 37) als Einleitungs-<br>
+zeichen eingeleitet.<br>
+<br>
+Direkt anschliessend an dieses Einleitungszeichens koennen:<br>
+<ul>
+  - ein Flagzeichen (erlaubte Zeichen: SPACE,-,+,#,0)<br>
+  - die Feldbreite<br>
+  - durch einen Punkt getrennt die Anzahl der Nachkommastellen<br>
+  - an lezter Stelle das Umwandlungszeichen (und somit den Ausgabetyp)<br>
+</ul>
+<br>
+Einfaches Beispiel nur mit Umwandlungszeichen (ohne Flags, ohne Feldbreite<br>
+und ohne Punkt):<br>
+<ul>
+  printf("1. Zahl= %d, 2. Zahl= %d, 3. Zahl= %d", 34, 65, 99);<br>
+</ul>
+<br>
+Erklaerung:<br>
+<br>
+Da im Ausgabestring insgesamt 3 Umwandlungszeichen enthalten sind (3 mal %d),<br>
+werden diese %d durch die jeweils folgenden Parametern ersetzt. D.h. anstelle<br>
+des ersten im String enthaltenen %d wird die dem %d zugeordneter Parameter<br>
+ausgegeben. Im vorliegenden Falle wird also in den Text die Zahl mit dezimaler<br>
+Ausgabe eingefuegt. Anstelle des zweiten vorkommens von %d wird 65, anstelle<br>
+des dritten wird 99 ausgegeben.<br>
+<br>
+Die Ausgabe lautet:<br>
+<br>
+<ul>
+  1. Zahl= 34, 2. Zahl= 65, 3. Zahl= 99<br>
+</ul>  
+<br>
+Verfuegbare Umwandlungszeichen sind:<br>
+<br>
+<pre>
+  Zeichen  |    Datentyp und Darstellung
+  --------------------------------------
+           |
+   %d      |    Integer als dezimale Zahl ausgeben
+   %i      |    Integer als dezimale Zahl ausgeben
+   %c      |    Ausgabe eines char als (Ascii)-Zeichen
+   %e      |    Ausgabe von double Gleitkommazahl im
+           |    wissenschaftlichen Format (bspw.: 3.342409e+3)
+   %E      |    Ausgabe von double Gleitkommazahl im
+           |    wissenschaftlichen Format (bspw.: 3.342409E+3)
+   %f      |    Ausgabe von double als Gleitkommadarstellung
+           |    (bsw.: 33424.092342)
+   %o      |    oktale Ausgabe von int
+   %p      |    Ausgabe der Adresse eines Zeigers
+   %s      |    Zeichenkette (String) ausgeben
+   %u      |    Ausgabe eines vorzeichenlosen Integers
+   %x      |    Integer als hexadezimale Zahl ausgeben
+   %X      |    Integer als hexadezimale Zahl ausgeben
+   %%      |    Ausgabe des Prozentzeichens
+</pre>
+<br>
+Beispiel:<br>
+<br>
+<pre>
+  printf("int             : %d \n", 65);
+  printf("negative int    : %d \n",-65);
+  printf("Gleitkomma      : %.6f \n", M_PI);
+  printf("Asciizeichen 65 : %c \n", 'z');
+  printf("Zeichenkette    : %s \n", "AbCdEf");
+  printf("43 in Oktal     : %o\n", 65);
+  printf("43 in Hex       : %x\n", 65);
+  printf("Prozentzeichen  : %%\n");
+  
+Konsolenausgabe:
+ 
+  int             : 65
+  negative int    : -65
+  Gleitkomma      : 3.141593
+  Asciizeichen 65 : z
+  Zeichenkette    : AbCdEf
+  43 in Oktal     : 101
+  43 in Hex       : 41
+  Prozentzeichen  : %
+</pre>
+<br>
+<a href="printf_myprintf.html">printf - Derivate</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<A name="000411flag"></a><br>
+<h2>---------------------------------------------------------<br>
+Flag / Flagzeichen (optional)<br>
+---------------------------------------------------------</h2>	
+<br>
+Direkt nach dem %-Einleitungszeichen kann ein sogenanntes Flag-Zeichen<br>
+(Kennzeichnung) angegeben werden. Dieses Zeichen beeinflusst die Ausgabe<br>
+auf dem Ausgabekanal.<br>
+<br>
+<pre>
+   Zeichen  |    Bedeutung
+   --------------------------------------
+            |
+      -     |    Text wird linksbuendig ausgerichtet
+      +     |    auch bei einem positiven Zahlenwert wird ein Vorzeichen
+            |    mit ausgegeben
+    SPACE   |    Leerzeichen, ein Leerzeichen wird ausgegeben, wenn der
+            |    Wert positiv ist
+      #     |    Abhaengig vom Format und Betriebssystem. In Verbindung mit
+            |    hexadezimaler Ausgabe wird der Ausgabe "0x" vorangestellt.
+      0     |    die Auffuellung erfolgt mit Nullen anstelle von Leerzeichen
+</pre>
+<br>
+Beispiel:
+<pre>
+  printf("Hex-Zahl: %#x\n", 76);
+</pre>
+<br>
+Ausgabe:<br>
+<ul>
+  Hex-Zahl: 0x4c<br>
+</ul>
+<br>
+<a href="printf_myprintf.html">printf - Derivate</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<A name="000411feld"></a><br>
+<h2>---------------------------------------------------------<br>
+Feldbreite und Nachkommastellen (printf)<br>
+---------------------------------------------------------</h2>	
+<br>
+Nach den Flags koennen Angaben zur Gesamtzeichenanzahl der Ausgabe (Feldbreite)<br>
+und / oder Angabe zur Anzahl der Nachkommastellen gemacht werden.<br>
+<br>
+Wird eine fuer die Gesamtbreite eine hoehere Anzahl Stellen angegeben, als<br>
+die auszugebende Zahl selbst besitzt, so wird die Ausgabe linksseitig um<br>
+Leerstellen aufgefuellt, so dass die geforderte Gesamtbreite erfuellt ist.<br>
+Ist als Flag die Ziffer "0" angegeben, so wird die Gesamtausgabe mit Nullen<br>
+anstelle von Leerzeichen aufgefuellt. Soll eine Gleitkommazahl ausgegeben<br>
+werden (float oder double), so kann die Feldbreite durch ein "." Zeichen<br>
+auch den Nachkommaanteil beinhalten. Hierbei gibt die Angabe fuer die<br>
+Feldbreite die Gesamtzeichenzahl der Ausgabe an, die Ziffernangabe nach<br>
+dem Punkt die Anzahl Stellen des Nachkommateils. Ueberschreitet die Anzahl<br>
+der Zeichen fuer den Nachkommaanteil die Angabe fuer die Gesamtzeichen-<br>
+anzahl, so werden jedoch die Zeichen fuer den Nachkommateil garantiert<br>
+ausgegeben, sodass die Gesamtzeichenanzahl der Ausgabe die der angegebenen<br>
+Feldbreite ueberschreitet. Der Punkt, der den Vorkommaanteil vom Nachkommateil<br>
+trennt zaehlt hierbei als Zeichen fuer die Gesamtbreite. Es kann auch nur<br>
+ die Anzahl der Nachkommastellen ohne fuehrende Gesamtanzahl angegeben werden.<br>
+<br>
+Beispiel:<br>
+<br>
+<pre>
+  printf("\n1234567890");
+  printf("\n%10d",23);
+  printf("\n%010d",65);
+  printf("\n%10.4f",M_PI);
+  printf("\n%.3f",M_PI);
+  printf("\n");
+ 
+Ausgabe:
+ 
+  1234567890
+          23
+  0000000065
+      3.1416
+  3.142
+</pre>
+<br>
+<a href="printf_myprintf.html">printf - Derivate</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<A name="000411escape"></a><br>
+<h2>---------------------------------------------------------<br>
+Escape-Sequenzen / Steuerzeichen<br>
+---------------------------------------------------------</h2>
+<br>
+Der Ausgabestring kann Steuerzeichen (Escape-Sequenzen) enthalten. Das<br>
+Ausgabeverhalten haengt vom verwendeten Terminal bzw. der verwendeten<br>
+Terminalemulation ab (die Windowskonsole verhaelt sich leider abweichend<br>
+von der Linuxkonsole).<br>
+<br>
+Ein Steuerzeichen wird durch einen Schraegstrich nach rechts unten<br>
+(engl. backslash) "angemeldet".<br>
+<br>
+<pre>
+        Zeichen  |    Bedeutung
+        --------------------------------------
+         \n      |    (new line) fuegt eine neue Zeile unterhalb der aktuellen
+                 |    Zeile ein. Hierbei ist das Ausgabeverhalten von der
+                 |    Terminalemulation abhaengig. Die Linuxkonsole generiert
+                 |    bei einem "new line" Kommando auch ein Bewegen des Cursors
+                 |    an den Zeilenanfang (was einem "carriage return" entspricht).
+                 |    Bei der Windowskonsole bleibt der Cursor in der X-Position
+                 |    verharren, an der er sich befindet. Ein "/n" unter Linux
+                 |    bewirkt somit dasselbe wie ein "/n/r" unter Windows.
+         \r      |    (carriage return) bewirkt ein setzen des Cursors an den
+                 |    Zeilenanfang.
+         \t      |    setzt den Cursor auf die naechste horizontale Tabulatorposition.
+         \b      |    setzt den Cursor ein Zeichen nach links OHNE das aktuelle
+                 |    Zeichen hierbei zu loeschen.
+         \f      |    setzt den Cursor auf die Startposition der naechsten Seite
+         \v      |    setzt den Cursor auf die naechste vertikale Tabulatorposition
+         \0      |    markiert das Ende einer Textzeile (nachfolgende Zeichen
+                 |    werden nicht mehr interpretiert und auch nicht ausgegeben)
+</pre>
+<br>
+Beispiel (unter Verwendung von \n \r t und Flags):<br>
+<pre>
+    // Hinweis: \r Escape-Sequenz waere fuer Programmlauf unter Linux nicht notwendig
+
+    printf("\n\rQuadratzahlen\t Wurzel\t\t  Reziprokenwerte");
+    printf("\n\r---------------------------------------------------\n\r");
+    for (i= 1; i&lt; 17; i++)
+    {
+      printf("\n\r %2d * %2d= %4d\t sqrt(%2d)= %4.2f\t  1/%2d= %.4f",         \
+                    i,    i,  i*i,    i,   sqrt((float)i), i,  1.0/(float)i);
+    }
+ 
+Ausgabe:
+
+Quadratzahlen    Wurzel           Reziprokenwerte
+---------------------------------------------------
+
+   1 *  1=    1   sqrt( 1)= 1.00   1/ 1= 1.0000
+   2 *  2=    4   sqrt( 2)= 1.41   1/ 2= 0.5000
+   3 *  3=    9   sqrt( 3)= 1.73   1/ 3= 0.3333
+   4 *  4=   16   sqrt( 4)= 2.00   1/ 4= 0.2500
+   5 *  5=   25   sqrt( 5)= 2.24   1/ 5= 0.2000
+   6 *  6=   36   sqrt( 6)= 2.45   1/ 6= 0.1667
+   7 *  7=   49   sqrt( 7)= 2.65   1/ 7= 0.1429
+   8 *  8=   64   sqrt( 8)= 2.83   1/ 8= 0.1250
+   9 *  9=   81   sqrt( 9)= 3.00   1/ 9= 0.1111
+  10 * 10=  100   sqrt(10)= 3.16   1/10= 0.1000
+  11 * 11=  121   sqrt(11)= 3.32   1/11= 0.0909
+  12 * 12=  144   sqrt(12)= 3.46   1/12= 0.0833
+  13 * 13=  169   sqrt(13)= 3.61   1/13= 0.0769
+  14 * 14=  196   sqrt(14)= 3.74   1/14= 0.0714
+  15 * 15=  225   sqrt(15)= 3.87   1/15= 0.0667
+  16 * 16=  256   sqrt(16)= 4.00   1/16= 0.0625 
+</pre>
+<br>
+<a href="printf_myprintf.html">printf - Derivate</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<A name="000412sprintf"></a><br>
+<h2>---------------------------------------------------------<br>
+sprintf<br>
+---------------------------------------------------------</h2>	
+<br>
+sprintf verhaelt sich genau wie printf mit dem Unterschied, dass die Ausgabe<br>
+nicht auf dem Standardausgabekanal, sondern in einen String (d.h. also ein<br>
+Char-Array) erfolgt.<br>
+<pre>
+  Die Syntax von sprintf : int sprintf(char *buffer, const char *format [, argument, ...]);
+  Prototypdeklaration in : stdio.h
+</pre>
+Saemtliche Angaben fuer Umwandlungszeichen, Flags sowie Feldbreitenbezeichner <br>
+sind auch fuer sprintf verfuegbar.<br>
+<br>
+Beispiel:<br>
+<pre>
+  char  txtbuffer[100];
+  
+  sprintf(txtbuffer, "\n%.3f * sqrt(%.1f) = %.3f\n", M_PI, 2.0, M_PI * sqrt(2.0));
+  printf("%s", txtbuffer);
+</pre>
+Ausgabe:<br>
+<ul>
+  3.142 * sqrt(2.0) = 4.443
+</ul>
+<br>
+<a href="printf_myprintf.html">printf - Derivate</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<A name="000413myprintf"></a><br>
+<h2>---------------------------------------------------------<br>
+my_printf<br>
+---------------------------------------------------------</h2>	
+<br>
+my_printf ist ein in der Funktionalitaet reduzierter Ersatz fuer printf,<br>
+speziell zur Benutzung in Verbindung mit Mikrocontrollern. Er macht dann<br>
+Sinn, wenn es darum geht (Flash)speicher zu sparen und ermoeglicht den<br>
+Einsatz auf Mikrocontrollersystemen ab 2 kByte Flashspeicher.<br>
+<br>
+Ein vom Standard abweichendes Umwandlungszeichen %k ermoeglicht es,<br>
+Pseudo-Kommazahlen auszugeben.<br>
+<br>
+my_printf existiert im Verzeichnis ../src in den Quelltextvarianten:
+<ul>
+  - my_printf.c <ul>fuer 8-Bit, 32-Bit Systeme und PC-Systeme</ul><br>
+  - my_printf32.c <ul>nur fuer 8-Bit Systeme</ul><br>
+  - my_printf_float.c<br>
+</ul>
+<br>
+<pre>
+  Die Syntax von printf  :  void my_printf(const char *s,...);
+  Prototypdeklaration in :  ../include/my_printf.h
+</pre>
+<br>
+Um my_printf innerhalb eines Programms zur Verfuegung zu haben, muss<br>
+entsprechend der gewuenschten Funktionalitaet die benoetigte Datei compiliert<br>
+und hinzugelinkt werden. Bei Verwendung der hier benutzten Makefile Vorlagen<br>
+wird dies erreicht durch Angaben von:<br>
+<br>
+<ul>
+  SRCS       += ../src/my_printf.c<br>
+</ul><br>
+Die zu den verschiedenen my_printf gehoerende Header-Datei ist fuer alle<br>
+Varianten unabhaengig der Funktionalitaet gleich:<br>
+<br>
+<pre>
+  #include "my_printf.h"
+</pre>
+<br>
+my_printf benoetigt zur Ausgabe irgendwo in den zu einem Programmprojekt<br>
+gehoerenden Dateien eine Funktion namens:<br>
+<br>
+<pre>
+  void my_putchar(char ch);
+</pre>
+<br>
+my_printf bedient sich dieser Funktion zur Zeichenausgabe. Soll bspw.<br>
+ein Programm die Ausgaben auf der seriellen Schnittstelle vornehmen existiert<br>
+wahrscheinliche eine Funktion aehnlich<br>
+<ul>
+  void uart_putchar(char ch);<br>
+</ul><br>
+Um nun diese Ausgabefunktion nutzen zu koennen koennte ein einfaches Programm<br>
+folgendermassen aussehen:<br>
+<br>
+<pre>
+  #include &lt;avr/io.h&gt;
+ 
+  #include "uart_all.h"
+  #include "my_printf.h"
+ 
+  #define printf    my_printf
+ 
+  /* --------------------------------------------------------
+     my_putchar
+  
+     wird von my-printf aufgerufen und hier muss
+     eine Zeichenausgabefunktion angegeben sein, auf das
+     printf dann schreibt !
+     -------------------------------------------------------- */
+  void my_putchar(char ch)
+  {
+    uart_putchar(ch);
+  }
+ 
+  int main(void)
+  {
+    uart_init();
+    printf("\n\r Hallo Welt\n\r");
+    while(1);
+  }
+</pre>
+<br>
+Im gezeigten Beispiel wird die Zeile<br>
+<ul>
+  #define printf    my_printf<br>
+</ul>
+<br>
+dazu genutzt, um im gesamten Programm printf anstelle von my_printf schreiben<br>
+zu koennen und somit bereits bestehende Programme mit my_printf (anstelle<br>
+von printf aus stdio.h) nutzen zu koennen. Mit dieser Angabe jedoch ist<br>
+dann eine eventuell vorhandene originale printf Funktion nicht mehr<br>
+verfuegbar.<br>
+<br>
+<a href="printf_myprintf.html">printf - Derivate</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<A name="000413umwandl"></a><br>
+<h2>---------------------------------------------------------<br>
+Umwandlungszeichen my_printf<br>
+---------------------------------------------------------</h2>	
+<br>
+<pre>
+  Zeichen  |    Datentyp und Darstellung
+  --------------------------------------
+           |
+    %d     |    Integer als dezimale Zahl ausgeben
+           |           int ist 16-Bit Wert auf 8-Bit Systemen
+           |           int ist 32-Bit Wert auf 32-Bit Systemen
+    %l     |    nur bei printf32.c : 32-Bit Integerwert ausgeben
+           |           (verfuegbar fuer AVR, STM8 und MCS-51=
+    %k     |    (Pseudo-Kommazahl) Integerwert mit eingesetztem
+           |    Kommapunkt ausgeben, auf 32-Bit Systemen oder bei
+           |    my_printf32 als 32-Bit Wert, ansonsten als 16-Bit Wert.
+           |    Mit dem Wert in globaler Variable printfkomma wird
+           |    angegeben, an welcher Position ein Dezimalpunkt ausgegeben
+           |    wird.
+    %c     |    Ausgabe eines char als (Ascii)-Zeichen
+    %f     |    nur bei my_printf_float
+           |           Ausgabe einen (float) Gleitkommawertes. Ein Punkt
+           |           zur Angabe der Nachkommastellen wird
+           |           interpretiert
+    %s     |    Zeichenkette (String) ausgeben
+    %x     |    Integer als hexadezimale Zahl ausgeben
+    %%     |    Ausgabe des Prozentzeichens
+</pre>
+<br>
+Beispiel:<br>
+<pre>
+  #define printf    my_printf
+ 
+  int a,a2,b,c;
+ 
+  printf("\n\r ASCII-Zeichen '%c' = dezimal %d = hexadezimal 0x%x\n\r", 'M', 'M', 'M');
+ 
+  a= 42; b= 13;
+ 
+  // Variable a um eine Zehnerstelle nach links,
+  // um spaeter eine Nachkommastelle anzeigen zu koennen
+  a2= a*100;
+  c= a2 / b;
+ 
+  printfkomma= 2;
+  printf(" %d / %d = %k", a, b, c);
+</pre>
+<br>
+Ausgabe:<br>
+<ul>
+  ASCII-Zeichen 'M' = dezimal 77 = hexadezimal 0x4D<br>
+  42 / 13 = 3.23<br>
+</ul><br>

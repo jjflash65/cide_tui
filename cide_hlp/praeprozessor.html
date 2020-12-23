@@ -1,0 +1,264 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Praeprozessorbeispiele</title>
+</head>
+<body>	
+<p><font face="Arial">	
+<h2><a name="praeprozbsp"></a>Praeprozessor</h2>
+<br>
+Der Praeprozessor ist Bestandteil eines Compilers. Er veraendert den<br>
+Quelltext eines Programmes VOR der eigentlichen Uebersetzung des<br>
+Quelltextes in Maschinencode (daher der Name &quot;Prae&quot;).<br>
+<br>
+Um hier kein Missverstaendnis aufkommen zu lassen: Der Praeprozessor ver-<br>
+aendert nur den Text des Quellprogrammes bevor er diesen dem Compiler ueber-<br>
+gibt, er veraendert jedoch NICHT die Datei in dem ein Aufruf des Praeprozessors<br>
+erfolgt.<br>
+<br>
+Anweisungen an den Praeprozessor werden immer mit dem Hashtagzeichen #<br>
+eingeleitet:<br><br>
+<ul>
+	<a href="#003prae_include">#include</a><br>
+	<a href="#004prae_define">#define</a><br>
+	<br>
+    #define wird entweder als &quot;Flag&quot;, Wertezuweisung, Textersetzung<br>
+    oder als Makro verwendet.<br>
+    <br>
+    Hinweis: Ein Flag signalisiert, ob etwas gegeben ist oder eben nicht.<br>	
+    <br>
+	Zur Auswertung der mit <a href="#004bprae_define">#define als Flag</a> gemachten Angaben werden folgende<br>
+	Praeprozessoranweisungen verwendet:<br>
+	<pre>
+- #ifndef - #undef - #ifdef - #else - #elif (funktional ein &quot;else if&quot;) - #endif
+	</pre>	
+	<a href="#004cprae_define">#define mit Wertezuseisungen</a> koennen mit folgenden Praeprozessor-<br>
+	anweisungen ausgewertet werden:<br>
+	<pre>
+- #if - #else - #elif - #endif
+	</pre>
+	Ein <a href="#004dprae_define">Macro</a> ist ein kleines Stueck Programmcode, das an der Stelle im Quell-<br>
+	text eingefuegt wird, an der es angegeben ist. Macros koennen mit und ohne<br>
+	Parameter codiert sein und wird haeufig dort eingesetzt, wo die Ausfuehrungs-<br>
+	geschwindigkeit im Vergleich zu einem Funktionsaufruf erhoeht werden soll.<br>
+	<br>
+	Da jedoch jedes mal an der Stelle, an der das Macro eingefuegt wird, Programm-<br>
+	code generiert wird, kann eine hohe Nutzung von Macros zu &quot;aufgeblaehten&quot;<br>
+	grossen Programmen fuehren. Mittels #define werden Macros definiert.<br>
+	<br>
+  </ul><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>
+<h2><a name="003prae_include"></a>#include
+<br>-------------------------------------------</h2>
+
+Include bindet eine externe Quelltextdatei an der Stelle ein, an der sie<br>
+angegeben ist. Im Beispiel wird angenommen, dass es 2 Dateien, mymath.h und<br>
+main.c gibt:<br>
+<br>
+mymath.h<br>
+<pre>
+// -------------------------
+// Demo fuer #include
+// -------------------------
+ 
+int addiere(int z1, int z2);
+int subtrahiere(int z1, int z2);
+</pre>
+main.c
+<pre>
+// -------------------------
+// main.c
+// -------------------------
+ 
+#include &quot;mymath.h&quot;
+ 
+int main(void)
+{
+  int ergeb;
+  ergeb= addiere(2,3);
+}
+</pre>
+Aus diesen beiden Quelltexten generiert der Praeprozessor folgenden Text,<br>
+den er dem Compiler zum Uebersetzen gibt.<br>
+<pre>
+// -------------------------
+// main.c
+// -------------------------
+ 
+// -------------------------
+// Demo fuer #include
+// -------------------------
+ 
+int addiere(int z1, int z2);
+int subtrahiere(int z1, int z2);
+ 
+int main(void)
+{
+  int ergeb;
+  ergeb= addiere(2,3);
+}
+</pre>
+<br>Hinweis:<br>
+Die Datei mymath.h &quot;deklariert&quot; nur zwei Funktionen - addiere und<br>
+subtrahiere -. D.h. dass irgendwo im gesamten Programm Funktionen mit<br>
+den entsprechenden Namen existieren muessen und stellt diese Funktionen dem<br>
+Hauptprogramm zur Verfuegung. Der Linker wird an der Stelle, an der diese<br>
+Funktionen aufgerufen werden, einen call (Aufruf) an die Adresse vornehmen,<br>
+an der die Funktionen &quot;definiert&quot; (programmiert) sind.<br>
+<br>
+<a href="#praeprozbsp">Praeprozesorbeispiele</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>
+<h2><a name="004prae_define"></a>#define
+<br>-------------------------------------------</h2>
+
+<a name="004bprae_define"></a>
+<h2>Beispiel fuer #define als Flag:</h2>
+<pre>
+...
+ 
+#define showhinweis                // das Flag "showhinweis" ist gesetzt
+
+// das nachfolgende Flag ist durch "auskommentierung" nicht gesetzt
+// und somit nicht aktiv
+
+// #define copyrightmsg
+ 
+int main(void)
+{
+  #ifdef showhinweis               // wenn das Flag gesetzt ist 
+ 
+    printf("\n\r Hinweistext auf irgendetwas");
+ 
+  #else                            // Flag "showhinweis" ist nicht gesetzt
+	  
+    printf("\n\r ... ein Hinweistext existiert nicht");
+ 
+  #endif
+  
+  #ifndef copyrightmsg
+    printf("\n\r dieses Programm unterliegt keinem Copyright");
+  #endif
+}
+</pre>
+An den Compiler wird der folgende Text zum Uebersetzen gegeben (die printf<br>
+Funktion nach #else wird nicht uebersetzt, ist im Programm nicht vorhanden<br>
+und erzeugt somit auch keinen Code, wodurch die erzeugte Programmgroesse<br>
+kleiner bleibt, als waere dieses mittels Funktionen geloest worden):
+<pre>
+...
+ 
+int main(void)
+{
+ 
+  printf("\n\r Hinweistext auf irgendetwas");
+
+  printf("\n\r dieses Programm unterliegt keinem Copyright");
+ 
+}
+</pre>
+<br>
+Hinweis: Zu jedem #ifdef, #ifndef oder #if gehoert ein abschliessendes #endif !<br>
+<br>
+<a href="#praeprozbsp">Praeprozesorbeispiele</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<a name="004cprae_define"></a>
+<h2>Beispiel fuer #define mit Wertezuweisung:</h2>
+<pre>
+...
+ 
+// nur eine der nachfolgenden defines darf den Wert 1 haben, alle anderen
+// den Wert 0. Hier soll eine italienische Sprachausgabe erfolgen
+ 
+#define de_language    0
+#define us_language    0
+#define it_language    1
+ 
+// einfache Zahlenwertangabe
+ 
+#define zahlenwert     42
+ 
+int main(void)
+{
+  printf("\n\r Der Zahlenwert des #defines ist: %d", zahlenwert);
+  
+  #if (de_language == 1)
+    printf("\n\r Hallo Welt \n\r");
+  #elif (us_language == 1)
+    printf("\n\r Hello world \n\r");
+  #elif (it_language == 1)    
+    printf("\n\r Ciao mondo \n\r");
+  #else
+    printf("\n\r keine Angabe zur Sprache \n\r");    
+  #endif  
+}
+
+</pre>
+An den Compiler wird der folgende Text zum Compilieren uebergeben:<br>
+<br>
+<pre>
+int main(void)
+{
+  printf("\n\r Der Zahlenwert des #defines ist: %d", 42);
+  
+  printf("\n\r Ciao mondo \n\r");
+}
+</pre>
+<br>
+<a href="#praeprozbsp">Praeprozesorbeispiele</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<a name="004dprae_define"></a>
+<h2>Beispiel fuer Macros mit #define realisert</h2>
+<pre>
+...
+ 
+// Berechnung des Indexes eines 10x10 grossen Wertefeldes von
+// linear im Speicher abgelegten Werten (eindimensionales Array)
+ 
+#define GETINDEX(x,y)       ( (y*10)+x )
+ 
+int main(void)
+{
+  int index;
+  int x,y;
+ 
+  index= GETINDEX(4, 2);
+  printf("\n\r Berechnung fuer Position x= 4, y= 2");
+  printf("\n\r Position= %d", index);
+ 
+  x= 9; y= 1;
+  index= GETINDEX(x, y);
+  printf("\n\r Berechnung fuer Position x= %d, y= %d", x,y);
+  printf("\n\r Position= %d", index);
+}
+</pre>
+An den Compiler wird der folgende Text zum Compilieren uebergeben:<br>
+<br>
+<pre>
+int main(void)
+{
+  int index;
+  int x,y;
+ 
+  index= (2*10)+4;
+  printf("\n\r Berechnung fuer Position x= 4, y= 2");
+  printf("\n\r Position= %d", index);  
+ 
+  x= 9; y= 1;
+  index= (y*1)+x;
+  printf("\n\r Berechnung fuer Position x= %d, y= %d", x,y);
+  printf("\n\r Position= %d", index);
+}
+</pre>
+<br>
+<a href="#praeprozbsp">Praeprozesorbeispiele</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+</font>
+</body>
+</html>

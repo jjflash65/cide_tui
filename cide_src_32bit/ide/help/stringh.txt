@@ -1,0 +1,13 @@
+   strdup
+   strlen
+   strlwr
+   strncat
+   strncmp
+   strncpy
+   strpbrk
+   strrchr
+   strrev
+   strspn
+   strstr
+   strtok
+   strupr

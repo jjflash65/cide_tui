@@ -1,0 +1,965 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>string.h</title>
+</head>
+<body>
+<p><font face="Arial">
+<h2>---------------------------------------------------------<br>
+string.h<br>
+---------------------------------------------------------</h2>
+<br>
+Die Bibliothek string.h beinhaltet grundsaetzlich Funktionen zum Umgang<br>
+mit Zeichenketten (Strings). Alle Funktionen arbeiten mit sogenannten<br>
+'Ascii-Zero' Strings, das bedeutet, dass das Ende eines Strings mit<br>
+einem 0-Byte 'markiert' ist. Werden Strings als Konstante im Quelltext<br>
+eingegeben, so ist das 0-Byte nicht mit hinzuzufuegen, dieses erledigt<br>
+der Compiler von selbst. Bei Array-Dimensionierungen ist jedoch<br>
+darauf zu achten, dass der Speicherplatz fuer dieses 0-Byte mit reserviert<br>
+wird.<br>
+<br>
+Die hier aufgefuehrten Beispielprogramme benoetigen zur Verdeutlichung<br> 
+die printf-Funktionalitaet und benoetigen bei manchen Funktionen mehr<br>
+als 2 KByte Flashspeicher und mehr als 256 Byte RAM.<br>
+<br>
+Aus diesem Grund sind daher nicht alle Beispiele auf Kleinstcontrollern<br>
+mit weniger als 4 kByte Flash lauffaehig.<br>
+<br>
+Damit die Beispielprogramme zu stdlib.h auf einem Controller oder in der<br>
+PC-Konsole nachvollzogen werden koennen, ist die Datei smallio.c mittels<br>
+den Linkeroptionen hinzuzufuegen.<br>
+<br>
+Soll ein Programm als Linux-PC Programm ausgefuehrt werden, ist die<br>
+Endlosschleife - while(1); - am Ende des Beispielprogramms zu ersatzlos<br>
+zu entfernen.<br>
+
+<br>
+<h2>---------------------------------------------------------<br>
+Die Funktionen der Bibliothek string.h<br>
+---------------------------------------------------------</h2><br>
+<ul>
+<A name="memccpy" href="#000211memccpy">memccpy</a><br>
+<A name="memchr" href="#000212memchr">memchr</a><br>
+<A name="memcmp" href="#000213memcmp">memcmp</a><br>
+<A name="memcpy" href="#000214memcpy">memcpy</a><br>
+<A name="memmove" href="#000215memmove">memmove</a><br>
+<A name="memset" href="#000215memset">memset</a><br>
+<A name="strcat" href="#000216strcat">strcat</a><br>
+<A name="strchr" href="#000217strchr">strchr</a><br>
+<A name="strcmp" href="#000218strcmp">strcmp</a><br>
+<A name="strcpy" href="#000219strcpy">strcpy</a><br>
+<A name="strcspn" href="#000220strcspn">strcspn</a><br>
+<A name="strdup" href="#000221strdup">strdup</a><br>
+<A name="strlen" href="#000222strlen">strlen</a><br>
+<A name="strlwr" href="#000223strlwr">strlwr</a><br>
+<A name="strncat" href="#000224strncat">strncat</a><br>
+<A name="strncmp" href="#000225strncmp">strncmp</a><br>
+<A name="strncpy" href="#000226strncpy">strncpy</a><br>
+<A name="strpbrk" href="#000227strpbrk">strpbrk</a><br>
+<A name="strrchr" href="#000228strrchr">strrchr</a><br>
+<A name="strrev" href="#000229strrev">strrev</a><br>
+<A name="strspn" href="#000230strspn">strspn</a><br>
+<A name="strstr" href="#000231strstr">strstr</a><br>
+<A name="strtok" href="#000232tok">strtok</a><br>
+<A name="strupr" href="#000233upr">strupr</a><br>
+</ul>
+<br>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000211memccpy">memccpy</a><br>
+---------------------------------------------------------</h2><br>
+
+kopiert einen Block von n Bytes im Speicher<br>
+von src nach dest.<br>
+<pre>
+  void *memccpy(void *dest, const void *src, int c, size_t n);
+</pre>
+Kopiert einzelne Bytes von src nach dest und<br>
+bricht entweder nach n Bytes oder nach der<br>
+Kopie eines Bytes mit dem Wert c ab. Im ersten<br>
+Fall ist das Ergebnis NULL, im zweiten Fall<br>
+liefert memccpy einen Zeiger auf das Byte<br>
+zurueck, das unmittelbar in dest auf c folgt.<br>
+<pre>
+#include &lt;string.h&gt;
+#include "smallio.h"
+ 
+int main(void)
+{
+   char *src = "This is the source string";
+   char dest[50];
+   char *ptr, *ptrs;
+ 
+   smallio_init();
+ 
+   ptrs = &dest[0];
+   ptr = memccpy(dest, src, 'c', strlen(src));
+   if (ptr)
+   {
+      printf("The character was found !\n\r");
+      printf("Copied string is: %s\n\r", dest);
+      printf("Copied bytes: %d\n\r", ptr-ptrs);
+      *ptr = '\0';
+   }
+   else
+      printf("The character wasn't found\n\r");
+   while(1);
+}
+</pre>
+<br>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000212memchr">memchr</a><br>
+---------------------------------------------------------</h2><br>
+
+sucht die ersten n Bytes eines Arrays nach dem<br>
+Wert c ab.<br>
+<pre>
+  *memchr(const void *s, int c, size_t n);
+</pre>
+Liefert einen Zeiger auf das erste Vorkommen<br>
+von c in s bzw. den Wert NULL, wenn die Suche<br>
+erfolglos war.<br>
+
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+    char str[17];
+    char *ptr;
+ 
+    smallio_init();
+ 
+    strcpy(str, "This is a string");
+    ptr = memchr(str, 'r', strlen(str));
+    if (ptr)
+       printf("The character 'r' is at position: %d\n\r", ptr-str);
+    else
+       printf("The character was not found\n\r");
+    while(1);
+ }
+</pre>
+<br>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000213memcmp">memcmp</a><br>
+---------------------------------------------------------</h2><br>
+
+vergleicht die ersten n Bytes zweier Strings<br>
+miteinander.<br>
+<pre>
+  int memcmp(const void *s1, const void *s2, size_t n);
+</pre>
+Liefert das  Ergebnis<ul><ul><ul>
+             &lt; 0 fuer s1 &lt; s2<br>
+            == 0 fuer s1 == s2<br>
+             &gt; 0 fuer s1 &gt; s2<br>
+</ul></ul></ul>
+<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main ()
+ {
+    char str1[15];
+    char str2[15];
+    int ret;
+ 	
+    smallio_init();
+ 
+    memcpy(str1, "abcdef", 6);
+    memcpy(str2, "ABCDEF", 6);
+ 
+    ret = memcmp(str1, str2, 5);
+ 
+    if(ret &gt; 0)
+    {
+       printf("str2 is less than str1\n\r");
+    }
+    else if(ret &lt; 0)
+    {
+       printf("str1 is less than str2\n\r");
+    }
+    else
+    {
+       printf("str1 is equal to str2\n\r");
+    }
+    return(0);
+ }
+
+</pre>
+<br>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000214memcpy">memcpy</a><br>
+---------------------------------------------------------</h2><br>
+
+kopiert n Bytes von src nach dest.<br>
+<pre>
+  *memcpy(void *dest, const void *src, size_t n);
+</pre>
+Liefert den als dest uebergebenen Zeiger. Die<br>
+Funktionsweise von memcpy ist undefiniert, falls<br>
+sich src und dest ueberlappen.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+	
+ int main(void)
+ {
+ 	
+    smallio_init();
+ 
+    char src[] = "***************";
+    char dest[] = "abcdefghijlkmnopqrstuvwxy";
+    char *ptr;
+    printf("destination before memcpy: %s\n\r", dest);
+    ptr = memcpy(dest, src, strlen(src));
+    if (ptr)
+       printf("destination after memcpy:  %s\n\r", dest);
+    else
+       printf("memcpy failed\n\r");
+    while(1);
+ }
+</pre>
+<br>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000215memmove">memmove</a><br>
+---------------------------------------------------------</h2><br>
+kopiert n Bytes von src nach dest.<br>
+<pre>
+  void *memmove(void *dest, const void *src, size_t n);
+</pre>
+Liefert den als dest uebergebenen Zeiger. memmove<br>
+funktioniert auch dann korrekt, wenn sich src und<br>
+dest ueberlappen.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+   char *dest = "abcdefghijklmnopqrstuvwxyz";
+   char *src = "****************";
+ 
+   smallio_init();
+ 
+   printf("destination prior to memmove: %s\n\r", dest);
+   memmove(dest, src, 26);
+   printf("destination after memmove:    %s\n\r", dest);
+   while(1);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000215memset">memset</a><br>
+---------------------------------------------------------</h2><br>
+
+ setzt die ersten n Bytes von s auf den Wert c.<br>
+<pre>
+ void *memset(void *s, int c, size_t n)
+</pre>
+ Liefert den als s ubergebenen Zeiger zurueck.<br>
+<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+   char buffer[] = "Hello world\n\r";
+ 
+   smallio_init();
+ 
+   printf("Buffer before memset: %s", buffer);
+   memset(buffer, '*', strlen(buffer) - 2);
+   printf("Buffer after memset:  %s", buffer);
+   while(1);
+ }
+</pre>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000216strcat">strcat</a><br>
+---------------------------------------------------------</h2><br>
+
+haengt den Inhalt von src an den String dest an.<br>
+<pre>
+   char *strcat(char *dest, const char *src);
+</pre>
+Liefert die als dest uebergebene Adresse.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   char destination[25];
+   char *atmel = "Atmel";
+   char *blank = " ";
+   char *avr   = "AVR";
+ 
+   smallio_init();
+ 
+   strcpy(destination, atmel);
+   strcat(destination, blank);
+   strcat(destination, avr);
+ 
+   printf("%s\n\r", destination);
+   while(1);
+ }
+</pre>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000217strchr">strchr</a><br>
+---------------------------------------------------------</h2><br>
+sucht in einem String ein Zeichen.<br>
+<pre>
+   char *strchr(const char *s, int c);
+</pre>
+Liefert einen Zeiger auf das erste Vorkommen von<br>
+c in str bzw. den Wert NULL, wenn c in str nicht<br>
+enthalten ist.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+   char string[15];
+   char *ptr, c = 'r';
+ 
+   smallio_init();
+ 
+   strcpy(string, "This is a string");
+   ptr = strchr(string, c);
+   if (ptr)
+     printf("The character %c is at position: %d\n\r", c, ptr-string);
+   else
+     printf("The character was not found\n\r");
+      
+   while(1);
+ }
+</pre>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+
+<h2>---------------------------------------------------------<br>
+<A name="000218strcmp">strcmp</a><br>
+---------------------------------------------------------</h2><br>
+vergleicht zwei Strings miteinander.<br>
+<pre>
+  int strcmp(const char *s1, const char *s2);<br>
+</pre>
+Ergebnis<ul><ul><ul>
+    &lt;  0 fuer s1  &lt;  s2<br>
+   == 0 fuer s1 == s2<br>
+    &gt;  0 fuer s1  &gt;  s2<br>
+</ul></ul></ul>
+<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+
+ int main(void)
+ {
+    char *buf1 = "aaa", *buf2 = "bbb", *buf3 = "ccc";
+    int ptr;
+ 
+    smallio_init();
+ 
+    ptr = strcmp(buf2, buf1);
+    if (ptr > 0)
+       printf("buffer 2 is greater than buffer 1\n\r");
+    else
+       printf("buffer 2 is less than buffer 1\n\r");
+ 
+    ptr = strcmp(buf2, buf3);
+    if (ptr > 0)
+       printf("buffer 2 is greater than buffer 3\n\r");
+    else
+       printf("buffer 2 is less than buffer 3\n\r");
+ 
+    while(1);
+ }
+</pre>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000219strcpy">strcpy</a><br>
+---------------------------------------------------------</h2><br>
+kopiert den Inhalt von src in den String dest<br>
+(und ueberschreibt den vorherigen Inhalt von<br>
+dest dabei).<br>
+<pre>
+  char *strcpy(char *dest, const char *src);
+</pre>
+Liefert die als dest uebergebene Adresse.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   smallio_init();
+ 
+   char string[10];
+   char *str1 = "abcdefghi";
+ 
+   strcpy(string, str1);
+   printf("%s\n\r", string);
+   while(1);
+ }
+</pre>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000220strcspn">strcspn</a><br>
+---------------------------------------------------------</h2><br>
+durchsucht einen String nach dem Vorkommen<br>
+bestimmter Zeichen.<br>
+<pre>
+  size_t strcspn(const char *s1, const char *s2);
+</pre>
+Liefert die Position des ersten Zeichens in s1, das sowohl<br>
+in s1 als auch in s2 enthalten ist. wird kein Zeichen ge-<br>
+funden, so die Stringlaenge (0-Byte gefunden) von s1 zurueck-<br>
+gegeben.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+
+ int main(void)
+ {
+ 
+   smallio_init();
+ 
+   char *string1 = "1234567890";
+   char *string2 = "747DC8";
+   int length;
+ 
+   length = strcspn(string1, string2);
+   printf("First character in string1 which is also\n\r");
+   printf("in string2 is at position %d\n\r", length);
+ 
+   while(1);
+ }
+</pre>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000221strdup">strdup</a><br>
+---------------------------------------------------------</h2><br>
+belegt dynamisch Speicher und erzeugt ein<br>
+String-Duplikat.<br>
+<pre>
+  char *strdup(const char *s);
+</pre>
+Wenn kein Platz auf dem Heap vorhanden ist,<br>
+liefert strdup den Wert NULL; ansonsten einen<br>
+Zeiger auf den neu erzeugten String. Der<br>
+entsprechende Bereich muÃ¡ vom Programmierer<br>
+explizit wieder freigegeben werden.<br>
+<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   smallio_init();
+ 
+   char *dup_str, *string = "abcde";
+ 
+   dup_str = strdup(string);
+   printf("%s\n", dup_str);
+   free(dup_str);
+ 
+   while(1);
+ }
+</pre>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000222strlen">strlen</a><br>
+---------------------------------------------------------</h2><br>
+ermittelt die Laenge eines Strings.<br>
+<pre>
+  size_t strlen(const char *s);
+</pre>
+Das abschliessende NULL-Zeichen wird nicht<br>
+mitgezaehlt.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   smallio_init();
+ 
+   char *string = "Dies ist ein Testtext";
+ 
+   printf("%d\n\r", strlen(string));
+   while(1);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000223strlwr">strlwr</a><br>
+---------------------------------------------------------</h2><br>
+verwandelt alle Kleinbuchstaben eines Strings<br>
+in Grossbuchstaben; funktioniert nicht fuer die<br>
+deutschen Umlaute.
+<pre>
+  char *strlwr(char *s);<br>
+</pre>
+Liefert einen Zeiger auf den String s zurueck.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   smallio_init();
+ 
+   char *string = "Dies ist ein Testtext";
+ 
+   printf("string prior to strlwr: %s\n\r", string);
+   strlwr(string);
+   printf("string after strlwr:    %s\n\r", string);
+   while(1);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000224strncat">strncat</a><br>
+---------------------------------------------------------</h2><br>
+haengt maximal maxlen Zeichen von src an<br>
+dest an.<br>
+<pre>
+   char *strncat(char *dest, const char *src, size_t maxlen);<br>
+</pre>
+Liefert den als dest uebergebenen Zeiger.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   smallio_init();
+ 
+   char destination[40];
+   char *source = "Deutschland";
+ 
+   strcpy(destination, "Bundesrepublik ");
+   strncat(destination, source, 11);
+   printf("%s\n\r", destination);
+   while(1);
+ }
+</pre>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000225strncmp">strncmp</a><br>
+---------------------------------------------------------</h2><br>
+vergleicht die ersten maxlen Zeichen zweier Strings.<br>
+<pre>
+    int strncmp(const char *s1, const char *s2, size_t maxlen);<br>
+</pre>
+Ergebnis<ul><ul><ul>
+     &lt; 0 fuer s1 &lt; s2<br>
+     == 0 fuer s1 == s2<br>
+     &gt; 0 fuer s1 &gt; s2<br>
+</ul></ul></ul>
+<br>
+Fuehrt einen signed Vergleich durch.
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+    char *buf1 = "aaabbb", *buf2 = "bbbccc", *buf3 = "ccc";
+    int ptr;
+ 
+    smallio_init();
+ 
+    ptr = strncmp(buf2,buf1,3);
+    if (ptr > 0)
+       printf("buffer 2 is greater than buffer 1\n\r");
+    else
+       printf("buffer 2 is less than buffer 1\n\r");
+ 
+    ptr = strncmp(buf2,buf3,3);
+    if (ptr > 0)
+       printf("buffer 2 is greater than buffer 3\n\r");
+    else
+       printf("buffer 2 is less than buffer 3\n\r");
+ 
+    return(0);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000226strncpy">strncpy</a><br>
+---------------------------------------------------------</h2><br>
+kopiert maximal maxlen Zeichen von src nach dest<br>
+(und ueberschreibt dest dabei).<br>
+<pre>
+  char *strncpy(char *dest, const char *src, size_t maxlen);<br>
+</pre>
+Liefert den als dest uebergebenen Zeiger.<br>
+<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   char string[10];
+   char *str1 = "abcdefghi";
+ 
+   smallio_init();
+ 
+   strncpy(string, str1, 3);
+   string[3] = '\0';
+   printf("%s\n\r", string);
+   while(1);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000227strpbrk">strpbrk</a><br>
+---------------------------------------------------------</h2><br>
+sucht das erste Vorkommen eines Zeichens aus s2 in s1.<br>
+<pre>
+  char *strpbrk(const char *s1, const char *s2);<br>
+</pre>
+Liefert einen Zeiger auf das erste Vorkommen eines<br>
+beliebigen Zeichens von s2 in s1 bzw. den Wert NULL,<br>
+wenn s1 ueberhaupt keines der Zeichen von s2 enthaelt.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   char *string1 = "abcdefghijklmnopqrstuvwxyz";
+   char *string2 = "onm";
+   char *ptr;
+
+   smallio_init();
+
+   ptr = strpbrk(string1, string2);
+
+   if (ptr)
+      printf("strpbrk found first character: %c\n\r", *ptr);
+   else
+      printf("strpbrk didn't find character in set\n\r");
+ 
+   while(1);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000228strrchr">strrchr</a><br>
+---------------------------------------------------------</h2><br>
+sucht das letzte Vorkommen des Zeichens c im String s.<br>
+<pre>
+  char *strrchr(const char *s, int c);
+</pre>
+Prototyp in  string.h<br>
+<br>
+Liefert einen Zeiger auf das letzte Vorkommen von c in<br>
+s bzw. den Wert NULL, wenn s das Zeichen c<br>
+ueberhaupt nicht enthaelt.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+    char mystring[20];
+    char *ptr;
+    char c = 'i';
+    
+    smallio_init();
+
+    strcpy(mystring, "Dies ist ein String");
+    printf("\n\r..........1.........2\n\r");
+    printf("012345678901234567890\n\r");
+    printf("%s\n\n\r",mystring);
+    ptr = strrchr(mystring, c);
+    if (ptr)
+       printf("Das letzte Vorkommen von '%c' ist an Pos.: "   \
+       "%d\n\r", c, ptr - mystring);
+    else
+       printf("Das Zeichen wurde nicht gefunden\n\r");
+    while(1);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000229strrev">strrev</a><br>
+---------------------------------------------------------</h2><br>
+Dreht die Reihenfolge der Zeichen eines Strings s<br>
+um (das abschliessende Nullzeichen ausgeschlossen).<br>
+<pre>
+  char *strrev(char *s);
+</pre>
+Prototyp in  string.h<br>
+<br>
+Liefert einen Zeiger auf den gespiegelten String zurueck.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {	
+    char *forward = "AVR ist super";
+ 
+    smallio_init();
+ 
+    printf("\n\rText vor strrev(): %s\n\r", forward);
+    strrev(forward);
+    printf("Text nach strrev():  %s\n", forward);
+ 
+    while(1);
+}	
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000230strspn">strspn</a><br>
+---------------------------------------------------------</h2><br>
+Sucht einen String nach dem Vorkommen eines bestimmten<br>
+Teilstrings ab.<br>
+<pre>
+  size_t strspn(const char *s1, const char *s2);<br>
+</pre>
+Liefert die Laenge des Teilstrings von s1 zurueck, der<br>
+ausschliesslich aus den in s2 angegebenen Zeichen besteht.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   char *string1 = "1234567890";
+   char *string2 = "123DC8";
+   int length;
+ 
+   smallio_init();
+ 
+   length = strspn(string1, string2);
+   printf("Character where strings differ is at position %d\n\r", length);
+   while(1);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000231strstr">strstr</a><br>
+---------------------------------------------------------</h2><br>
+sucht s1 nach dem ersten Vorkommen des Strings s2 ab.<br>
+<pre>
+   char *strstr(const char *s1, const char *s2);
+</pre>
+Liefert einen Zeiger auf den Anfang von s2 in s1 bzw.<br>
+den Wert NULL, wenn s2 in s1 berhaupt nicht vorkommt.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+   char *str1 = "Mein Name ist Hase";
+   char *str2 = "Hase";
+   char *ptr;
+ 
+   smallio_init();
+ 
+   ptr = strstr(str1, str2);
+   printf("123456789012345678\n\r");
+   printf("%s\n\r",str1);
+   printf("Substring '%s' is found at position: %d\n\r", str2, ptr-str1+1);
+   while(1);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000232tok">strtok</a><br>
+---------------------------------------------------------</h2><br>
+Sucht das erste (oder das naechste) 'token' aus s1<br>
+heraus, d.h. eine Zeichenfolge, die kein Zeichen aus<br>
+s2 enthaelt (sucht somit einen String bis zu einem<br>
+Trennzeichen ab).<br>
+<pre>
+  char *strtok(char *s1, const char *s2);
+</pre>
+s2 definiert das Trennzeichen. strtok interpretiert<br>
+s1 als eine Reihe von 'tokens', die durch ein oder<br>
+mehrere Zeichen aus s2 voneinander getrennt sind.<br>
+<br>
+Falls kein 'token' gefunden wurde, ist das Ergebnis<br>
+NULL, ansonsten schreibt strtok an die Stelle nach<br>
+dem 'token' in s1 ein NULL-Zeichen und liefert einen<br>
+Zeiger auf den Anfang des 'tokens.<br>
+<br>
+Nachfolgende Aufrufe von strtok mit NULL als erstem<br>
+Argument bearbeiten den String s1 weiter. Es koennen<br>
+dabei auch andere Trennzeichen (in s2) verwendet<br>
+werden.<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+    char myzahlen[30] = "13.89 #14.92 #15.97";
+    char *ptr;
+ 
+    smallio_init();
+ 
+    printf("Extraktion einer Zahlenreihe\n\r\n\r");
+ 
+    /* strtok platziert ein 0-Byte an der Stelle
+      an der das Token gefunden wurde. ptr ist nun ein
+      Zeiger auf einen String der an der Stelle
+      terminiert ist, an der das Token WAR                */
+ 
+    ptr = strtok(myzahlen, "#");
+ 
+    while (ptr)                // solange ptr nicht auf ein
+    {                          // Textende zeigt
+ 
+      if (ptr)  printf("%s\n\r", ptr);
+ 
+      /* Ein weiterer Aufruf von strtok mit einem NULL
+         Zeiger sucht das naechste Token ersetzt dieses,
+         uebergibt wieder den Zeiger darauf */
+      ptr = strtok(NULL, "#");
+    }
+    while(1);
+ }
+</pre>
+
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000233upr">strupr</a><br>
+---------------------------------------------------------</h2><br>
+Wandelt alle Kleinbuchstaben eines Strings in Gross-<br>
+buchstaben um.-<br>
+<pre>
+  char *strupr(char *s);
+</pre>
+Liefert einen Zeiger auf s zurueck.-<br>
+<pre>
+ #include &lt;string.h&gt;
+ #include "smallio.h"
+ 
+ int main(void)
+ {
+ 
+   smallio_init();
+ 
+   char *string = "abcdefghijklmnopqrstuvwxyz";
+   char *ptr;
+ 
+   /* converts string to upper case characters */
+   ptr = strupr(string);
+   printf("%s\n\r", ptr);
+   while(1);
+ }
+</pre>
+<a href="stringh.html">string.h</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<br>
+</font></p>
+</body><br>
+</html><br>

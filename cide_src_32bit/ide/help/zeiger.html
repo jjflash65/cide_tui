@@ -1,0 +1,223 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Zeiger (Pointer)</title>
+</head>
+<body>
+<p><font face="Arial">	
+<h2><a name="pointer">Zeiger (Pointer)</a></h2>
+<ul>
+<A name="bspzeiger" href="#000301zeiger">Beispielprogramm mit Zeigern</a><br>
+<A name="bspcallbyreference" href="#000302reference">Call by reference</a><br>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="avrhelp.html#anfang">Inhaltsverzeichnis</a><br>
+</ul><br>
+Zeiger sind Variable, die anstelle von Datentypen (Anmerkung 1) die<br>
+Adresse (reference), an der diese Daten gespeichert sind, beinhalten.<br>
+Ein Zeiger ist gewissermassen der Verweis oder der Link auf eine Variable,<br>
+an der diese im Speicher zu finden ist.<br>
+<br>
+Anmerkung 1: Datentypen koennen Standardtypen wie char, int, float aber auch<br>
+Strukturen sein.<br>
+<pre>
+  Datentyp   *variable;
+</pre>
+Das "*" Zeichen zeigt an, dass es sich bei der Variable um einen Zeiger<br>
+handelt. Zu beachten ist hierbei, dass das "*" Zeichen VOR dem Variablen-<br>
+namen steht. Ein Zeiger muss immer vom selben Datentyp sein, auf den er<br>
+zeigt.<br>
+Zeiger kommen vor allem immer dann zum Einsatz, wenn Variable die mehr als<br>
+aus einem Wert (Value) bestehen, bearbeitet werden sollen.
+<br>
+<h2>Beispiel:</h2>	
+<br>
+Ein Char-Array fuer einen Text wird definiert:<br>
+<pre>
+	char  mytext[4]= "Ich";
+</pre>
+Hier wird der Compiler fuer diesen Text insgesamt 4 Bytes des<br>
+Speichers belegen. Es wird angenommen, dass der Compiler hierfuer<br>
+die Adresse 0x0210 gewaehlt hat (Adresse wurde absolut zufaellig<br>
+bestimmt). Dann sieht dieses im Speicher folgendermassen aus:<br>
+<pre>  
+    Adresse     Inhalt
+   ---------------------
+  |  0x0210  |   0x49   |    'I'
+  |----------|----------|
+  |  0x0211  |   0x63   |    'c'
+  |----------|----------|
+  |  0x0212  |   0x68   |    'h'
+  |----------|----------|
+  |  0x0213  |   0x00   |    Endekennung eines Ascii-Textes 
+   ---------------------
+</pre>
+Moechte man nun auf die einzelnen Elemente des Arrays zugreifen um<br>
+diese zu bearbeiten oder auszulesen hat man nun 2 Moeglichkeiten:<br>
+<br>
+Man kann eine "Indexvariable" erstellen die dann zum einen im<br>
+Stile von<br>
+<pre>
+  char  mytext[4]= "Ich";	
+  int   strindex;
+  char  ch;
+  
+  strindex= 0;
+  ch= mytext[strindex];
+  
+  // ch beinhaltet nun das 'I' Zeichen
+</pre>
+auf das Array zugreift. Wird nun aber eine Funktion benoetigt, die<br>
+die Bearbeitung des Arrays vornimmt funktioniert dieses Vorgehen nur<br>
+noch bedingt.<br>
+<br>
+Hier kommen die Zeiger ins Spiel und dies ist somit die zweite<br>
+Moeglichkeit:<br>
+<pre>
+  char  mytext[4]= "Ich";		
+  char  *p;              // ein Zeiger auf Datentyp char
+  char  ch;
+   
+  p= &mytext[0];
+  
+  ch= *p;
+  
+  // ch beinhaltet nun das 'I' Zeichen
+</pre>
+<h2>Erklaerung:</h2>
+<br>
+Das "*" Zeichen vor der Variable "p" ist ein Operator und bedeutet,<br>
+dass dies keine "normale" Variable ist, sondern dass sie als Inhalt eine<br>
+Speicheradresse aufnehmen kann, die auf eine Variable vom Typ char zeigt.<br>
+Somit ist "p" eine Zeigervariable (korrekt bezeichnet als Indirektions-<br>
+operator).
+<h2>ch = *p;</h2>
+Das Sternchen VOR dem p gibt an, dass ch der Wert uebergeben werden soll,<br>
+auf den p zeigt.<br>
+<br>
+Das "&" Zeichen in der Anweisung
+<h2>p = &mytext[0];</h2>
+gibt an, dass dem Zeiger "p" die Adresse des Arrays "mytext[0]" zugewiesen<br>
+wird. Somit hat die Zeigervariable "p" nach obigem Beispiel die Adresse 0x210<br>
+und "zeigt" somit auf den Anfang des Arrays.<br>
+Da dem Zeiger eine Adresse uebergeben wird (und kein Inhalt gemeint ist),<br>
+erhaelt die Variable p KEIN Sternchen davor.<br>
+<br>
+Mit "ch = *p" wird angewiesen, dass der Variable "ch" (vom Typ char) der<br>
+Wert zugewiesen werden soll, auf den "p" zeigt (in unserem Fall auf den<br>
+Buchstaben "I" der im Speicher abgelegt ist).<br>
+<A name="000301zeiger"><h2>Beispielprogramm mit Zeigern</h2></a>
+<br>
+Dieses Beispielprogramm zeigt, wie ein Array, dessen Inhalt einen Text ist,<br>
+auf der seriellen Schnittstelle ausgegeben werden kann.<br>
+<pre>
+ #include &lt;avr/io.h&gt;
+ #include "../include/rs232_io.h" 
+ 
+ int main(void)
+ {
+ 
+   char   mytext[] = "Mein Name ist Hase\n\r";
+   char   *p;                   // unser Zeiger
+   char   *p2;                  // ein zweiter Zeiger
+   char   ch;
+ 
+   rs232_init();                // damit ser. Schnittstelle funktioniert
+ 
+ 
+   p= &mytext[0];               // p beinhaltet die Adresse des Textes
+   p2= p;                       // ... und p2 auch !
+  
+   while(*p)                    // wiederhole so lange, wie das Element
+   {                            // auf das p zeigt groesser als 0,
+                                // also keine Endekennung ist.
+                                 
+     ch= *p;                    // ch beinhaltet das Zeichen auf
+                                // das p zeigt
+                                 
+     p++;                       // Zeiger auf naechstes Element
+                                // setzen
+                                 
+     rs232_putchar(ch);         // Zeichen ausgeben
+   }
+   p= p2;                       // da der originale Zeiger in der
+                                // While-Schleife veraendert wurde
+                                // zeigt er hiermit wieder auf den
+                                // originalen Speicherbereich
+   while (1);
+ }
+</pre>
+<br>
+<a href="#pointer">Zeiger (Pointer)</a><br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="avrhelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<A name="000302reference"><h2>Call by reference</h2></a>
+<br>
+Wird an eine Funktion anstelle eines Wertes (value) die Speicheradresse<br>
+(reference) einer Variable uebergeben die den Wert beinhaltet, so wird der<br>
+Aufruf einer solchigen Funktion als "call by reference" bezeichnet. Die<br>
+Uebergabe der Speicheradresse wird mittels Zeigervariablen vorgenommen.<br>
+<br>
+<h2>Beispielprogramm</h2><br>
+Folgendes Beispielprogramm beinhaltet 2 Funktionen, die zu<br>
+<pre>"call by reference"</pre>
+Funktionen gehoeren. " myprint " gibt einen Text aus, " searchreplace "<br>
+sucht nach einem Zeichen in diesem Text und ersetzt alle vorkommenden<br>
+Zeichen durch ein anderes.<br>
+<pre>
+ #include &lt;avr/io.h&gt;
+ #include "../include/rs232_io.h" 
+ 	
+ void myprint(char *mytext)     // beinhaltet Adresse des Textes
+ {
+   char   ch;
+ 
+   while(*mytext)               // wiederhole solange, bis das Zeichen
+   {                            // auf das *mytext zeigt > 0 ist und
+                                // somit keine Endekennung ist.
+     ch= *mytext;
+     rs232_putchar(ch);
+     mytext++;                  // Zeiger auf naechstes Element zeigen
+                                // lassen
+   }
+ }
+ 
+ void searchreplace(char search, char replace, char *mytext)
+ {
+   while(*mytext)
+   {
+     if (*mytext == search)      // bei Uebereinstimmung des Zeichens
+     {
+       *mytext = replace;        // an dieselbe Stelle das Ersatz-
+     }                           // zeichen setzen
+     mytext++;                   // naechstes Element
+   }
+ }
+ 
+ int main(void)
+ {
+ 
+   char   mytext_dt[] = "Mein Name ist Hase\n\r";
+   char   meldung[]   = "\n\rErsetze Buchstaben a durch einen Punkt .\n\n\r";
+ 
+   rs232_init();                // damit ser. Schnittstelle funktioniert
+ 
+   myprint(&mytext_dt[0]);      // Funktion wird die Adresse von
+                                // mytext_dt mit dem ersten Element ueber-
+                                // geben.
+   myprint(&meldung[0]);        // dto. mit Meldungstext
+ 
+   searchreplace('a','.', &mytext_dt[0]);
+   myprint(&mytext_dt[0]);
+ 
+   while (1);
+ }
+</pre>
+<a href="#pointer">Zeiger (Pointer)</a><br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="avrhelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+</font>
+</body>
+</html>

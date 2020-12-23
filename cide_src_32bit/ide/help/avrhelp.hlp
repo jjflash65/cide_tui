@@ -1,0 +1,193 @@
+<h2><a name="anfang">Inhaltsverzeichnis</a></h2>
+<A name="Editor" href="#000100editor">Editor</a>
+<A name="Menu-Leiste" href="#000200menu">Menu-Leiste</a>
+<A name="Danksagung" href="#000999danke">Danksagung</a>
+
+<h2><A name="000100editor">Editor</A>
+---------------------------------------------------------</h2>
+Tastenfunktionen:<ul>
+  suchen ........... :  STRG-Q-F
+  naechstes suchen.. :  STRG-L
+  suchen/ersetzen .. :  STRG-Q-A
+  naechstes ersetzen :  STRG-L
+  Block bilden ..... :  SHIFT-Cursortasten
+  Block kopieren ... :  STRG-C
+  Block ausschneiden :  STRG-X
+  Block einfuegen .. :  STRG-V
+  Block loeschen ... :  STRG-Entf
+  Block aufheben ... :  STRG-K-H</ul><h2>
+---------------------------------------------------------</h2>
+<a href="#anfang">Inhaltsverzeichnis</a>
+<h2><a name="000200menu">Menu-Leiste</a></h2>
+Compile:
+
+  Der Menupunkt Compile stellt mehrere Optionen
+  zur Auswahl.
+
+  Compile-Build (Taste F9):<ul>
+    erstellt aus der aktuellen
+    Quelldatei entsprechend den gewaehlten Optionen von
+    Linker und Microcontroller eine Intel-Hexdatei die
+    in einen AVR-Microcontroller uebertragen werden kann.</ul>
+
+  Flash (Taste F8):<ul>
+    uebertraegt (bei angeschlossenem Programmer) eine
+    erstellte Hexdatei in den AVR-Mikrocontroller.</ul>
+
+  Linker:<ul>
+    stellt 3 Auswahlmoeglichkeiten zur Verfuegung.
+      - nothing:<br>
+           es werden keine weiteren Funktionalitaeten
+           hinzugefuegt.<br>
+      - floating point:<br>
+           es wird zum Programm Unterstuetzung fuer
+           Gleitkommazahlen hinzugefuegt<br>
+      - printf & floating point:<br>
+           es wird zusaetzlich die Ausgabemoeglichkeit
+           fuer Gleitkommazahlen mittels "printf" hin-
+           zugefuegt.
+           ==> printf und Gleitkommazahlen benoetigen
+           relativ viel Speicherplatz<br></ul>
+
+  Programmer-Port:<ul>
+    waehlt den Anschluss, an den der Programmer an-
+    geschlossen ist. Entweder USB fuer USBtiny oder
+    USBasp oder den entsprechenden seriellen Port
+    fuer PonySer oder einen Bootloader</ul>
+
+  Microcontroller & Programmer:<ul>
+    waehlt zum einen den Microcontroller aus, fuer den
+    ein Programm compiliert werden soll, zum anderen
+    den zu benutzenden Programmer wenn ein erstelltes
+    Programm in den Controller uebertragen werden soll.</ul>
+
+  Reset Controller:<ul>
+    fuert durch das Auslesen der Mikrocontroller-
+    signatur einen Reset aus</ul>
+
+  Fuses:<ul>
+    hier kann eingestellt werden, ob der Mikrocontroller
+    mit einem internen Takt (1 MHz oder 8 MHz) oder
+    einem extern angeschlossenen Quarz betrieben werden
+    soll.
+<h2>###################################################
+W A R N U N G
+###################################################</h2>
+    Wird ein externer Quarz gewaehlt und es kein
+    solchiger angeschlossen, dann ist der Microcontroller
+    anschliessend ueber den Programmer nicht mehr an-
+    sprechbar !</ul>
+
+  Compiler messages (Taste F12):<ul>
+    zeigt die Meldungen des Compilers (AVR-GCC) oder
+    des Uploadprogramms (AVRDUDE) an.</ul>
+
+<h2>---------------------------------------------------------</h2>
+<a href="#anfang">Inhaltsverzeichnis</a>
+
+<h2>RS232-MONITOR:</h2>
+
+  Der Menupunkt RS232-Monitor stellt ein Monitor fuer
+  die serielle Schnittstelle und deren Einstellungen
+  zur Verfuegung.<ul>
+
+  Open Monitor:<ul>
+    oeffnet das Schnittstellenfenster mit den in
+    Settings gemachten Einstellungen.</ul>
+
+  Close Monitor:<ul>
+    schliesst das Schnittstellenfenster</ul>
+
+  Clear Monitor-Window:<ul>
+    loescht den Inhalt des Schnittstellenfensters</ul>
+
+  Settings:<ul>
+    stellt die Parameter der seriellen Schnittstelle ein</ul></ul>
+
+<h2>---------------------------------------------------------<h2>
+<a href="#anfang">Inhaltsverzeichnis</a><ul>
+
+<h2>WINDOWS:</h2><ul>
+
+  Der Menupunkt bietet Moeglichkeiten zum zeigen oder
+  veraendern der geoeffneten Quellcodefenster sowie
+  des Compiler-, Schnttstellen- und der Utilityfenster
+  an.</ul>
+
+  Tile:<ul>
+    ordnet die Quellcodefenster uebereinander an</ul>
+
+  Cascade:<ul>
+    ordnet die Quellcodefenster "kaskadiert" an. Dies
+    ist eine gute Moeglichkeit um mit einer Mouse
+    verschiedene Fenster durch anklicken zu fokusieren.</ul>
+
+  Close All:<ul>
+    schliesst alle Quellcodefenster</ul>
+
+  Size/Move (Tasten STRG-F5):<ul>
+    waehlt ein Fenster an, damit  mit der Tastatur
+    dessen Position oder dessen Groesse veraendert
+    werden kann.
+    Nach der Anwahl kann mit den Cursortasten die
+    Position veraendert werden. Wird gleichzeitig die
+    Shifttaste mit den Cursortasten verwendet, kann
+    hiermit die Groesse des Fensters eingestellt werden.</ul>
+
+  Zoom (Taste F5):<ul>
+    vergroessert/verkleinert das aktuelle Fenster</ul>
+
+  Next (Taste F6):<ul>
+    bringt das naechste Fenster in den Fokus</ul>
+
+  Hide (Tasten STRG-F6):<ul>
+    "versteckt" das Fenster und ist auf dem Desktop
+    nicht mehr sichtbar. Im Menupunkt <List> kann ein
+    verstecktes Fenster wieder sichtbar gemacht werden.</ul>
+
+  Close (Tasten ALT-F3):<ul>
+    schliesst ein Fenster.</ul>
+
+  List:<ul>
+    listet alle fuer den Desktop verfuegbaren Fenster
+    auf.</ul>
+
+  Refresh Display:<ul>
+    bei einem Fehler (sollte nicht vorkommen) wird das
+    Fenster neu aufgebaut !</ul></ul>
+
+<h2><A name="000999danke">Danksagung</a>
+---------------------------------------------------------</h2>
+<h1>Generelles</h1><h2>
+---------------------------------------------------------</h2>
+
+Die vorliegende AVR Entwicklungsumgebung basiert in
+grossen Teilen auf der Free Pascal Entwicklungsumgebung
+FP und ist in Free Pascal geschrieben.
+
+Ohne die Entwickler von Free Pascal zu kennen oder mit
+ihnen in Kontakt zu stehen gilt ihnen mein grosser
+Dank, da diese IDE ohne sie nicht machbar gewesen waere,
+
+             diese sind laut
+<h1> http://freepascal.org/aboutus.var</h1>
+<h1>Carl Eric Codere
+Daniel Mantione
+Florian Klaempfl
+Jonas Maebe
+Michael Van Canneyt
+Marco van de Voort
+
+und die Entwickler der IDE
+Peter Vreman (auch FPC)
+Pierre Muller (auch FPC)
+Berczi Gabor</h1>
+
+Die AVRIDE untersteht der GNU Gerneral Public License
+
+Ralph Seelig im Januar 2015
+
+<a href="#anfang">Inhaltsverzeichnis</a>
+
+</body>
+</html>

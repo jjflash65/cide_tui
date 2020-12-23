@@ -1,0 +1,46 @@
+Variable
+
+Programme muessen waehrend eines Programmlaufes verwendete Daten hauefig zwischenspeichern um
+mit ihnen spaeter weiterrechnen zu koennen.
+
+Eine Variable dient grundsaetzlich dazu, eine Information zu speichern. Hierfuer wird eine Stelle
+oder ein Speicherbereich des Computers benutzt um diese Information speichern und wieder abrufen
+zu koennen.
+
+Grundsaetzlich sind saemtliche Speicherstellen eines Speichers nummeriert, d.h. jede
+Speicherstelle wird durch eine Nummer identifiziert. Fuer den Programmierer waere es sehr
+muehsam innerhalb eines Programms mit der Nummer des Speicherorts der die Information traegt
+zu arbeiten.
+
+Angenommen, es wuerde an Speicherstelle 2087 (das waere die Adresse im Speicher) die Laenge eines
+Rechtecks gespeichert werden, so muesste er, um an die Information zu gelangen, innerhalb eines
+Programms sagen:
+
+"Programm, lese mir den Wert an der Speicherstelle 2087 aus damit ich die Kantenlaenge des
+Rechtecks weiss"
+
+Wuerde dieses Vorgehen mit wenigen zu speichernden Informationen noch handhabbar sein, waere es
+jedoch spaetestens bei Verwendung von vielleicht 20, 100 oder gar 1000 Informationen gaenzlich
+unpraktikabel.
+
+In C (und in jeder anderen Programmiersprache auch) koennen zu diesem Zweck den Speicherstellen
+Namen zugewiesen werden. Hierbei wird dem C Compiler (in aller Regel) sogar ueberlassen, an 
+welcher Speicherstelle er diese Variable ablegt.
+
+Damit ein Programm mit Variablen arbeiten kann, muss im Programm festgelegt werden, dass es die
+zu verwendende Variable geben soll.
+
+Da es jedoch Daten unterschiedlichster Art gibt, muss zudem angegeben werden, um welche Art ( Datentyp )
+es sich bei der Variable handelt.
+
+Eine Variable, die die Kantenlaenge eines Rechtecks aufnehmen soll wuerde bspw. mit
+
+   int kantenlaenge;
+
+oder vielleicht auch mit
+
+   int laenge;
+
+definiert werden. Fortan kann innerhalb des Programms dieser Variable ein Wert des Datentyp's
+Integer zugewiesen werden ( ein Integer kann ganze Zahlen, keine Kommazahlen aufnehmen).
+

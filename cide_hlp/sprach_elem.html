@@ -1,0 +1,971 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>C Sprachelemente</title>
+</head>
+<body>
+<p><font face="Arial">
+<h2>---------------------------------------------------------<br>
+Sprachelemente<br>
+---------------------------------------------------------</h2>
+<ul>
+<A name="datatypes" href="#000401datatypes">Datentypen</a><br>
+<br>
+<A name="variable1" href="#000401avariable1">Variable</a>
+<ul>
+<A name="globallocal" href="#000401bgloballocal">Global / Local</a><br>	
+<A name="staticvar" href="#000401cstaticvar">static</a><br>	
+<A name="volatilevar" href="#000401dvolatile">volatile</a><br>	
+<A href="zeiger_n_funkts.html#pointer">Zeiger (Pointer)</A><br>
+</ul>
+<br>
+<A name="struct" href="#000402struct">struct</a>
+<br>
+<br>
+<A name="kontrollstrucs" href="#000402kontrollstrucs">Programmablaufkontrolle</a>
+<ul>
+<A name="ifcond" href="#000403aif">if - else</a><br>	
+<A name="whileloop" href="#000403whileloop">while</a><br>	
+<A name="dowhileloop" href="#000403bdowhileloop">do - while</a><br>	
+<A name="forloop" href="#000405forloop">for</a><br>	
+<A name="switch" href="#000404switch">switch - case</a><br>	
+</ul>
+<br>
+<A href="zeiger_n_funkts.html#000301functionsall">Funktionen</a>
+<ul>
+<A href="zeiger_n_funkts.html#000301functionsall">Funktionen allgemein / Call by value</a><br>
+<A href="zeiger_n_funkts.html#000302reference">Call by reference</A><br>	
+</ul>
+
+<br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000401datatypes">Datentypen</a><br>
+---------------------------------------------------------</h2><br>
+
+C definiert fuer Variable grundsaetzliche Datentypen. Die Be-<br>
+zeichnungen fuer die Ganzzahlentypen ist nicht ganz un-<br>
+problematisch denn die Speichergroesse (und damit der Werte-<br>
+bereich) kann auf unterschiedlichen Prozessorsystemen auch<br>
+unterschiedlich ausfallen.<br>
+<br>
+Der Datentyp ' int ' hat auf 8 und 16 Bit Prozessoren in aller<br>
+Regel eine Speichergroesse von 2 Byte (16 Bit), jedoch auf 32<br>
+Bit Systemen eine Speichergroesse von 4 Byte (und hiermit auch<br>
+einen anderen Wertebereich). Manche C-Compiler fuer 64 Bit<br>
+CPU's verwenden fuer einen Integer sogar 8 Byte.<br>
+<br>
+Eine klare Bestimmung, welcher Speicherbereich und welcher Werte-<br>
+bereich fuer eine Variable gegeben ist, ist die Verwendung der<br>
+Datentypen aus stdint.h. Hier gilt fuer alle C Compiler bspw.<br>
+verbindlich, dass ein uint16_t (in AVR-GCC ein 'unsigned int')<br>
+2 Bytes Speicher belegt (und hierbei einen entsprechenden Werte-<br>
+bereich besitzt).<br>
+<br>
+Die nachfolgende Tabelle ist gueltig fuer 8 Bit AVR MCU's<br>
+<br>
+<pre>
+----------------------------------------------------------------
+                  Grundtypen von C Variablen
+<br>
+Type               | Groesse |     Wertebereich      | stdint.h |
+-----------------------------------------------------------------
+                     Typen fuer ganze Zahlen
+-----------------------------------------------------------------
+char               | 1 Byte  |   -128  ...  127      | int8_t   |
+unsigned char      | 1 Byte  |     0   ...  255      | uint8_t  |
+int                | 2 Byte  |  -32768 ... 32767     | int16_t  |
+unsigned int       | 2 Byte  |     0   ... 65535     | uint16_t |
+long               | 4 Byte  | -2 ^ 31 ... 2 ^ 31 -1 | int32_t  |
+unsigned long      | 4 Byte  |     0   ... 2 ^ 32 -1 | uint32_t |
+long long          | 8 Byte  | -2 ^ 63 ... 2 ^ 63 -1 | int64_t  |
+unsigned long long | 8 Byte  |     0   ... 2 ^ 64 -1 | uint64_t |
+-----------------------------------------------------------------
+             Typen fuer Kommazahlen (Gleitkommazahl)
+-----------------------------------------------------------------
+float              | 4 Byte  | 1.5E-45 ... 3.4E38    |          |
+-----------------------------------------------------------------
+</pre>
+</br>
+Anmerkung: AVR-GCC kennt auch die Gleitkommazahlentypen fuer:<br>
+<ul>
+- double<br>
+- long double<br>
+</ul><br>
+Gleitkommazahlen sind jedoch wie folgt definiert:<br>
+<br><ul>
+#define FLOAT_TYPE_SIZE 32<br>
+#define DOUBLE_TYPE_SIZE 32<br>
+#define LONG_DOUBLE_TYPE_SIZE 32<br>
+</ul><br>
+Hier wird klar, dass fuer beide erweiterten Gleitkomma-Typen<br>
+keine genauere Berechnungen erfolgen und von daher bringt die<br>
+Verwendung dieser Typen mit der  Benutzung mit AVR-GCC keine<br>
+Vorteile.<br>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000401avariable1">Variable</a><br>
+---------------------------------------------------------</h2>
+Programme muessen waehrend eines Programmlaufes verwendete<br>
+Daten hauefig zwischenspeichern um mit ihnen spaeter weiter-<br>
+rechnen zu koennen.<br>
+<br>
+Eine Variable dient grundsaetzlich dazu, eine Information zu<br>
+speichern. Hierfuer wird eine Stelle oder ein Speicherbereich<br>
+des Computers benutzt um diese Information speichern und<br>
+wieder abrufen zu koennen.<br>
+<br>
+Grundsaetzlich sind saemtliche Speicherstellen eines Speichers<br>
+nummeriert, d.h. jede Speicherstelle wird durch eine Nummer<br>
+identifiziert. Fuer den Programmierer waere es sehr muehsam<br>
+innerhalb eines Programms mit der Nummer des Speicherorts der<br>
+die Information traegt zu arbeiten.<br>
+<br>
+Angenommen, es wuerde an Speicherstelle 2087 (das waere die<br>
+Adresse im Speicher) die Laenge eines Rechtecks gespeichert<br>
+werden, so muesste er, um an die Information zu gelangen,<br>
+innerhalb eines Programms sagen:<br>
+<br>
+"Programm, lese mir den Wert an der Speicherstelle 2087 aus<br>
+damit ich die Kantenlaenge des Rechtecks weiss"<br>
+<br>
+Wuerde dieses Vorgehen mit wenigen zu speichernden Informationen<br>
+noch handhabbar sein, waere es jedoch spaetestens bei Verwendung<br>
+von vielleicht 20, 100 oder gar 1000 Informationen gaenzlich<br>
+unpraktikabel.<br>
+<br>
+In C (und in jeder anderen Programmiersprache auch) koennen zu<br>
+diesem Zweck den Speicherstellen Namen zugewiesen werden.<br>
+Hierbei wird dem C Compiler (in aller Regel) sogar ueberlassen,<br>
+an  welcher Speicherstelle er diese Variable ablegt.<br>
+<br>
+Damit ein Programm mit Variablen arbeiten kann, muss im Programm<br>
+festgelegt werden, dass es die zu verwendende Variable geben soll.<br>
+<br>
+Da es jedoch Daten unterschiedlichster Art gibt, muss zudem<br>
+angegeben werden, um welche Art ( Datentyp )es sich bei der<br>
+Variable handelt.<br>
+<br>
+Eine Variable, die die Kantenlaenge eines Rechtecks aufnehmen<br>
+soll wuerde bspw. mit<br>
+<pre>
+   int kantenlaenge;
+</pre>
+oder vielleicht auch mit<br>
+<pre>
+   int laenge;
+</pre>
+definiert werden. Fortan kann innerhalb des Programms dieser<br>
+Variable ein Wert des Datentyp's Integer zugewiesen werden<br>
+( ein Integer kann ganze Zahlen, keine Kommazahlen aufnehmen).<br>
+<br>
+<pre>
+/* ----------------- 001example.c ----------------
+<br>
+     Beispiel fuer die Hilfedatei
+     02.01.2015
+<br>
+   ----------------------------------------------- */
+<br>
+#include "smallio.h"
+<br>
+int   laenge, breite, hoehe, flaeche;
+char  ch;
+<br>
+int main(void)
+{
+<br>
+  smallio_init();              
+<br>
+  while (1)
+  {
+    printf("\n\n\rDemo fuer Variable");
+    printf("\n\rQuaderberechnung\n\r");
+    printf("\n\rLaenge des Quaders: ");
+    laenge= readint();
+    printf("\n\rBreite des Quaders: ");
+    breite= readint();
+    printf("\n\rHoehe des Quaders : ");
+    hoehe= readint();
+    flaeche= (2 * (laenge*breite + laenge*hoehe + breite*hoehe));
+    printf("\n\rQuaderoberflaeche: %d", flaeche);
+    ch= getchar();
+    printf("\n\r");
+  }
+}
+</pre>
+Im Beispielsprogramm "001example.c" werden insgesamt 4 Variable<br>
+deklariert: laenge, breite und hoehe vom Typ Integer sowie eine<br>
+Variable des Datentyps char mit dem Namen ch. Da diese Variablen<br>
+nicht explizit dem Hauptprogramm "main" zugeteilt sind (und auch<br>
+keiner anderen Funktion) sind diese sogenannte globale Variable.<br>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000401bgloballocal">Global / Local</a><br>	
+---------------------------------------------------------</h2>
+Variable besitzen eine sogenannte "Gueltigkeit". Im obigen Beispiel<br>
+"001example.c" koennen die Variable innerhalb des gesamten Programms<br>
+verwendet werden und auf sie zugegriffen werden. Sie haben somit eine<br>
+"globale" Gueltigkeit.<br>
+<br>
+In vielen Faellen ist dieses jedoch NICHT wuenschenswert. Verwendet<br>
+eine Funktion bspw. denselben Namen fuer eine Variable wie das<br>
+Hauptprogramm, so ist nach einem Funktionsaufruf eventuell ein<br>
+weiterhin benoetigter Wert verloren. Variable, die nur innerhalb<br>
+einer Funktion benoetigt werden sollten deshalb nur innerhalb ihrer<br>
+eigenen Funktion Gueltigkeit haben. Hiermit ist es moeglich, in einer<br>
+Funktion A dieselbe Variable wie in Funktion B oder im Hauptprogramm<br>
+(main) zu verwenden ohne dass der Inhalt einer anderen lokalen Variable<br>
+ueberschrieben wird.<br>
+<br>
+Haeufig findet dies Anwendung bspw. fuer Zaehlschleifen.<br>
+<pre>
+/* ----------------- 002example.c ----------------
+<br>
+     Beispiel fuer die Hilfedatei
+     lokale und globale Variable
+     29.04.2015
+<br>
+   ----------------------------------------------- */
+<br>
+#include "smallio.h"
+<br>
+void myfunc(void)
+// Funktion mit lokaler Variable i
+{
+  int i;                      // lokale Variabel, nur
+                              // gueltig innerhalb von myfunc
+<br>
+  printf("Zaehler innerhalb von myfunc\n\r");
+  for (i= 0; i&lt; 10; i++)
+  {
+    printf("%d ",i);  
+  }
+  printf("\n\r\n\r");
+}
+<br>
+int main(void)
+{
+  int i;                       // Variable i ist nur im
+                               // Hauptprogramm main gueltig
+<br>
+  smallio_init();              // damit I/O Anweisungen funktioneren  
+<br>
+  printf("\n\r");  
+  for (i= 0; i&lt; 3; i++)
+  {
+    printf("%d-ter Aufruf von myfunc\n\r",i+1);
+    myfunc();
+  }
+  while (1);
+}
+</pre>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000401cstaticvar">static</a><br>	
+---------------------------------------------------------</h2>
+Eine statische Variable (static) ist grundsaetzlich auch<br>
+eine lokale Variable, die nur innerhalb einer Funktion<br>
+verwendet werden kann.<br>
+<br>
+Im Unterschied zu einer rein lokalen Variable wird der<br>
+Speicherplatz, den eine statische Variable belegt nach<br>
+Beenden der Funktion in der sie benutzt wird NICHT frei-<br>
+gegeben. D.h. dass die Variable nach Beenden der Funktion<br>
+ihren Werteinhalt behaelt und bei einem spaeteren erneuten<br>
+Aufruf der Funktion dieser Inhalt verfuegbar ist.<br>
+<pre>
+/* ----------------- 003example.c ----------------
+<br>
+     Beispiel fuer die Hilfedatei
+     statische Variable
+     29.04.2015
+<br>
+   ----------------------------------------------- */
+<br>
+#include "smallio.h"
+<br>
+void myfunc(void)
+{
+  // Funktion mit statisch lokaler Variable i
+ 
+  static int i = 1;           // statisch lokale Variabel, nur
+                              // gueltig innerhalb von myfunc
+<br>
+  printf("%d-ter Aufruf von myfunc\n\r", i);
+  i++;
+}
+<br>
+int main(void)
+{
+  char ch;
+<br>
+  smallio_init();              // damit I/O Anweisungen funktioneren
+<br>
+  printf("Demo -statische Variable-\n\r");
+  printf("Taste zum Zaehlen druecken\n\r");
+  while (1)
+  {
+    ch= getchar();
+    myfunc();
+  }
+}
+<br>
+</pre>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000401dvolatile">volatile</a><br>
+---------------------------------------------------------</h2>
+Wird 'volatile' bei der Definition einer Variablen benutzt,<br>
+nimmt der Compiler an diesen keinerlei Optimierungen vor. Als<br>
+'volatile' definierte Variablen werden darum nie in Prozesor-<br>
+register geladen.<br>
+<br>
+'volatile' Variablen werden eingesetzt, wenn die Variablen zu<br>
+einem beliebigen Zeitpunkt veraendert werden koennen, die<br>
+ausserhalb der Kontrolle des Programms liegen. Typischer-<br>
+weise ist dies bei Variablen der Fall, die in einer Interrupt-<br>
+routine verwendet werden.<br>
+<pre>
+   volatile static char myvariable
+</pre>
+definiert eine Variable namentlich 'myvariable', die:<br>
+<pre>
+  - nicht 'wegoptimiert' werden kann (d.h. der Compiler
+    stellt die Variable zur Verfuegung auch wenn dieser
+    'glaubt' dass diese Variable nicht benutzt wird
+    ('volatile').
+<br>
+  - die im Speicher immer denselben Platz einnimmt (<A name="staticvar" href="#000401cstaticvar">static</a>)
+    und dieser Speicherplatz somit anderen NICHT zur
+    Verfuegung steht.
+</pre><br>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000402struct">struct</a><br>
+---------------------------------------------------------</h2>
+<br>
+Fasst Variable zusammen<br>
+<pre>
+  struct [<Strukturtyp-Name>]
+    { [ Typ Feldname ] ;
+     ...
+    } [ struct-Variable ] ;
+</pre>
+Eine struct-Definition fasst mehrere Felder unterschiedlichen Typs unter<br>
+einem gemeinsamen Typbezeichner zusammen und kann (bei Angabe eines<br>
+Strukturtyp-Namens) als Typdefinition oder als aktuelle Variablendeklaration<br>
+erfolgen. Ein einmal definierter Strukturtyp laesst sich (wie char, int usw.)<br>
+fuer beliebige Variablendeklarationen verwenden.<br>
+<br>
+Die Definition eines Feldes besteht aus einem Typ-Bezeichner, gefolgt von<br>
+einem oder mehreren Feldnamen, die durch Komms voneinander getrennt sind.<br>
+Felder verschiedener Typen werden durch Semikolons voneinander getrennt:<br>
+<pre>
+    struct my_struct                      // Strukturtyp
+    {
+      char  name[80], tel_nummer[20];
+      int   alter, groesse;
+    } freund, kollege;                    // - Variable
+</pre>
+Hier werden sowohl ein Strukturtyp (my_struct) als auch zwei Variablen dieses<br>
+Typs (freund und kollege) vereinbart. Jede dieser beiden Variablen enthaelt<br>
+vier Felder.<br>
+<br>
+Der Zugriff auf ein Feld einer struct-Variablen erfolgt ueber<br>
+" struct-Name.Feldname ":
+<pre>
+    strcpy(freund.name,"Max Mustermann");
+    freund.alter= 39;
+</pre>
+Nach der Vereinbarung eines Strukturtyp-Namens koennen mit diesem Namen<br>
+weitere Variablen desselben Typs deklariert werden, hier ein Array mit 100<br>
+Elementen der Struktur:
+<pre>
+  struct my_struct meine_freunde[100];
+</pre>
+Der Zugriff auf ein Element des Arrays geschieht folgendermassen:<br>
+<pre>
+    strcpy(meine_freunde[32].name,"Michaela Musterfrau");
+    meine_freunde[32].alter= 34;
+</pre>
+Da der Speicherbedarf einer Struktur (vor allem bei Verwendung eines Array<br>
+welches als Arrayelement die Struktur beinhaltet) sehr gross werden kann,<br>
+empfiehlt es sich, Bearbeitungen von Strukturen mittels "call by reference"<br>
+(Zeigerprogrammierung) vorzunehmen.<br>
+<br>
+Der Zugriff auf ein Element einer Struktur, die mittels einer Adresse referenziert<br>
+ist funktioniert folgenderweise:
+<pre>
+    alter= (*freund).alter ;
+</pre>
+Eine bessere Moeglichkeit auf das Mitglied (engl. member) " alter " der<br>
+zeigerreferenzierten Struktur " freund " zuzugreifen ist: 
+<pre>
+    alter= freund -> alter;
+</pre>
+Hinweis: Das folgende Beispiel hat einen erhoehten RAM-Speicherbedarf und<br>
+funktioniert erst mit Systemen, die mindestens 2 kByte RAM aufweisen!<br>
+<br>
+Beispiel:
+<pre>
+/* ----------------------------------------------------------
+     example_struct.c
+
+     Beispiel zur Verwendung von struct
+   ---------------------------------------------------------- */
+#include <string.h>
+#include "smallio.h"
+
+#define name_len     30
+
+struct my_struct                      // Strukturtyp
+{
+  char  name[name_len], tel_nummer[20];
+  int   alter, groesse;
+};
+
+
+/* ----------------------------------------------------------
+     zeigt die Mitglieder einer einzelnen Struktur an
+   ---------------------------------------------------------- */
+void show_struct_val(struct my_struct *freunde)
+{
+  char my_name[name_len];
+  char my_tel[20];
+  int  alter, groesse;
+
+  alter= freunde -> alter;                    // Zugriff auf Mitglied alter
+  groesse= freunde -> groesse;                // dto. groesse
+  strcpy(my_name, freunde -> name);           // dto. name
+  strcpy(my_tel, freunde -> tel_nummer);      // dto. tel_nummer
+
+  // Anzeige der Mitglieder
+  printf ("\n\r Name   : %s", my_name);
+  printf ("\n\r Tel.   : %s", my_tel);
+  printf ("\n\r Alter  : %d", alter);
+  printf ("\n\r Groesse: %d cm \n\r", groesse);
+}
+
+/* ----------------------------------------------------------
+     zeigt die Mitglieder eines Arrayelementes ueber einen
+     Index an
+   ---------------------------------------------------------- */
+void show_struct_indexval(struct my_struct *freunde, int index)
+{
+  char my_name[name_len];
+  char my_tel[20];
+  int  alter, groesse;
+
+  freunde += index;                           // Zeiger um die Elementposition der Struktur um
+                                              // deren Position erhoehen
+
+  // Mitglieder  der Struktur auslesen
+  alter= freunde -> alter;                    // Zugriff auf Mitglied alter
+  groesse= freunde -> groesse;                // dto. groesse
+  strcpy(my_name, freunde -> name);           // dto. name
+  strcpy(my_tel, freunde -> tel_nummer);      // dto. tel_nummer
+
+  // Anzeige der Mitglieder
+  printf ("\n\r Name   : %s", my_name);
+  printf ("\n\r Tel.   : %s", my_tel);
+  printf ("\n\r Alter  : %d", alter);
+  printf ("\n\r Groesse: %d cm \n\r", groesse);
+}
+
+/* ---------------------------------------------------------------------------
+                                    M A I N
+   --------------------------------------------------------------------------- */
+int main(void)
+{
+  struct my_struct meine_freunde[10];
+
+  int index;
+
+  smallio_init();
+
+  index= 5;
+  strcpy(meine_freunde[index].name,      "Max Mustermann");
+  strcpy(meine_freunde[index].tel_nummer,"0555/323232");
+  meine_freunde[index].alter=             39;
+  meine_freunde[index].groesse=           181;
+
+  index= 7;
+  strcpy(meine_freunde[index].name,      "Michaela Musterfrau");
+  strcpy(meine_freunde[index].tel_nummer,"0555/454545");
+  meine_freunde[index].alter=             34;
+  meine_freunde[index].groesse=           163;
+
+  show_struct_val(&meine_freunde[5]);
+  show_struct_indexval(&meine_freunde[0], 7);
+}
+</pre>
+Ausgabe:
+<pre>
+  Name   : Max Mustermann	
+  Tel.   : 0555/323232
+  Alter  : 39
+  Groesse: 181 cm
+  
+  Name   : Michaela Musterfrau
+  Tel.   : 0555/454545
+  Alter  : 34
+  Groesse: 163 cm
+</pre>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000402kontrollstrucs">Programmablaufkontrolle</a><br>
+---------------------------------------------------------</h2>
+Damit Programme in einer Programmiersprache erstellt werden<br>
+koennen, ist es notwendig, dass diese Sprache Kontrollstrukturen<br>
+besitzt, die in der Lage sind, bestimmte Anweisungsbloecke nur<br>
+unter bestimmten Bedingungen auszufuehren oder diese bei Bedarf<br>
+mehrfach zu wiederholen. Die haeufigsten in C verwendeten <br>
+Kontrollstrukturen sind das if-Statement zur bedingten Ausfuehrung<br>
+und die for-Schleife zur Wiederholung von gebuendelten Anweisungen.<br>
+Daneben existieren noch die while- und do{}while Schleife und<br>
+das switch() case:-Statement, das aufgrund des Inhalts einer<br>
+Variablen einen auszufuehrenden Block anspringt.<br>
+<br>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000403aif">if - else</a><br>	
+---------------------------------------------------------</h2><br>
+Bedingte Verzweigung<br>
+<pre>
+   if ( ' ausdruck ' )
+        ' anweisung1 '
+<br>
+         ODER
+<br>
+   if ( ' ausdruck ' )
+        ' anweisung1 '
+   else
+        ' anweisung2 '
+</pre>
+Wenn der Wert von ' ausdruck ' != 0 (ungleich 0 entspricht 1 oder <br>
+groesser) ergibt, wird ' anweisung1 ' ausgefuehrt, ansonsten<br>
+wird diese Anweisung ( Befehl ) uebersprungen.<br>
+<br>
+<br>
+if..else: Wenn ' ausdruck ' != 0 ergibt, wird ' anweisung1 '<br>
+ausgefuehrt und ' anweisung2 ' uebersprungen. Wenn<br>
+' ausdruck ' == 0 ergibt, wird ' anweisung1 '  uebersprungen und<br>
+' anweisung2 ' ausgefuehrt.<br>
+<br>
+Das else ist optional, aber zwischen einer if-Anweisung und einem<br>
+else duerfen keine weiteren Anweisungen stehen.<br>
+<br>
+<pre>
+/* ----------------- 004example.c ----------------	
+     Beispiel fuer die Hilfedatei
+     if - else Demo
+     31.08.2015
+   ----------------------------------------------- */
+<br>
+#include "smallio.h"
+<br>
+<br>
+int main(void)
+{
+  char ch;
+<br>
+  smallio_init();
+<br>
+  printf("\n\rif - else Demo\n\r--------------\n\n\r");
+  while(1)
+  {
+    printf("\n\rgeben sie eine Zahl ein: ");
+    ch= readint();
+<br>
+    if (ch > 50)
+    {
+      printf("\n\rEingabe war groesser 50...\n\r");
+    }
+    else
+    {
+      printf("\n\rEingabe war kleiner-gleich 50...\n\r");
+    }
+<br>
+    printf("\n\rgeben sie eine Zahl ein: ");
+    ch= readint();
+    if (ch)
+      { printf("\n\rEingabe war NICHT 0!\n\r"); }
+    else
+       { printf("\n\rEingabe war 0 !\n\r"); }
+  }
+}
+</pre>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000403whileloop">while</a><br>	
+---------------------------------------------------------</h2><br>
+Wiederholt Ausfuehrung<br>
+<pre>
+   while ( 'Ausdruck' ) 'Befehl'
+</pre>
+'Befehl' wird so oft wiederholt, bis die Auswertung von 'Ausdruck'<br>
+den Wert FALSE (0) ergibt. Jeder andere Wert als FALSE<br>
+(also jeder Wert groesser 0) wiederholt den / die Befehle.<br>
+Die Pruefung von 'Ausdruck' findet jeweils *vor* der Aus-<br>
+fuehrung von 'Befehl' statt, d.h. zu Anfang jedes Schleifen-<br>
+durchlaufs.<br>
+<br>
+Beispiele zu while:
+<br>
+<pre>
+/* ----------------- 005example.c ----------------	
+     Beispiel fuer die Hilfedatei
+     while - Demo
+     31.08.2015
+   ----------------------------------------------- */
+<br>
+#include "smallio.h"
+<br>
+int main(void)
+{
+  char  mytext[] = "Mein Name ist Hase\n\r";
+  char  index;
+  char  ch;
+  char  *ptr;
+<br>
+  smallio_init();
+
+  ptr= &amp;mytext[0];              // Zeiger erhaellt
+                                // Adresse von mytext
+<br>
+  // solange der Wert, auf den ptr zeigt ungleich 0
+  // ist, wird die Schleife wiederholt.
+<br>
+  while (*ptr)
+  {
+    putchar(*ptr);
+    ptr++;
+  }
+<br>
+  index= 0;;
+<br>
+  // wiederhole so lange, wie der gelesene
+  // Buchstabe in mytext ungleich 'H' ist
+<br>
+  while (mytext[index] != 'H')
+  {
+    index++;
+  }
+<br>
+  printf("Buchstabe 'H' wurde gefunden an Position: %d \n\r", index);
+<br>
+  while(1);                     // Endlosschleife
+}
+</pre>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2>---------------------------------------------------------<br>
+<A name="000403bdowhileloop">do - while</a><br>	
+---------------------------------------------------------</h2><br>
+Do - While Schleife<br>
+<pre>
+   do 'Befehl' while ( 'Ausdruck' ) ;<br>
+</pre>
+'Befehl' wird solange ausgefuehrt, bis die Auswertung von<br>
+'Ausdruck' den Wert 0 (FALSE) ergibt. Die Pruefung von<br>
+'Ausdruck' findet jeweils NACH der Ausfuehrung von 'Befehl'<br>
+(d.h. nach dem Durchlaufen des Schleifenrumpfes) statt. Somit<br>
+findet MINDESTENS ein Schleifendurchlauf statt (im Gegensatz zu<br>
+einer while - Schleife, bei der die Pruefung VOR dem Schleifen-<br>
+durchlauf durchgefuehrt wird).<br>
+<br>
+Beispiel 1:<br>
+<pre>
+/* ----------------- 006aexample.c ----------------
+
+     Beispiel fuer die Hilfedatei
+     do - while Demo1
+     31.08.2015
+
+   ------------------------------------------------ */
+<br>
+#include "smallio.h"
+<br>
+int main(void)
+{
+  unsigned int ch;
+<br>
+  smallio_init();
+<br>
+  printf("\n\rdo - while Demo1\n\r----------------\n\r");
+<br>
+  do
+  {
+    printf("\n\rEingabe Zahl 1..99 (inkl.):  ");
+    ch= readint();
+  } while ( !((ch&gt; 0) &amp;&amp; (ch &lt;100)));
+<br>
+  printf("\n\rEingabe korrekt...\n\r");
+  while(1);
+}
+</pre>
+<br>
+Beispiel 2 - Zahlensuchspiel:<br>
+<pre>
+/* ----------------- 006bexample.c ----------------
+     Beispiel fuer die Hilfedatei
+     do - while Demo
+     31.08.2015
+   ----------------------------------------------- */
+ 
+#include "smallio.h"
+ 
+int main(void)
+{
+  char suchzahl, versuche, ch;
+ 
+  smallio_init();
+ 
+  printf("\n\rdo - while Demo: Zahlensuchspiel");
+  printf("\n\r--------------------------------\n\r");
+ 
+  while(1)
+  {
+    // Zufallszahl generieren, Zaehler zaehlt so
+    // lange immer wieder von 1..99 , bis ein Zeichen
+    // auf der seriellen Schnittstelle eingeht und
+    // stopt somit den Zaehler
+
+    printf("\n\r generiere Zufallszahl, Taste fuer Stop\n\n\r");
+    do
+    {
+      suchzahl++;
+      suchzahl= (suchzahl % 99)+1;
+      printf(" **\r ");
+    } while (!keypressed());
+ 
+    printf("\r    ");                // Zahlenanzeige loeschen
+    ch= getchar();
+  
+    versuche= 1;
+  
+    do
+    {
+      do
+      {
+        printf("\n\r %d", versuche);
+        printf(". Eingabe ( 1..99 ):  ");
+        ch= readint();
+ 
+      } while ( !((ch&gt; 0) &amp;&amp; (ch &lt;100)));
+<br>  
+      if (ch == suchzahl)
+      {
+        printf("\n\n\r   Yeaaah, Zahl wurde gefunden");
+        printf("\n\r   Benoetigte Versuche: %d", versuche);
+        printf("\n\n\rTaste fuer weiter...\n\r");
+      }
+      else
+      {
+        if (ch&gt; suchzahl) { printf("\n\rGesuchte Zahl ist kleiner !"); }
+                     else { printf("\n\rGesuchte Zahl ist groesser !"); }
+      }
+      versuche++;
+    } while (ch != suchzahl);
+    ch= getchar();
+  }
+}
+</pre>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000405forloop">for</a><br>	
+---------------------------------------------------------</h2><br>
+for-Schleife<br>
+<pre>
+   for ( ['expr1'] ; ['expr2'] ; ['expr3'] )
+       'Befehl' ;
+</pre>
+'Befehl' wird solange wiederholt ausgefuehrt, bis die Aus-<br>
+wertung von 'expr2' FALSE ergibt (d.h. den Wert 0).<br>
+<br>
+'expr1' wird vor dem ersten Durchlauf ausgewertet und<br>
+initialisiert eine sogenannte Laufvariable, die im Test mit<br>
+'expr2' verwendet wird.<br>
+<br>
+'expr3' wird nach jedem Durchlauf ausgewertet und in aller<br>
+Regel zur Veraenderung der Laufvariablen verwendet. Alle<br>
+drei Ausdruecke sind optional. Fuer ein nicht definiertes<br>
+'expr2' wird eine 1 angenommen (was zu einer Endlosschleife<br>
+fuehrt).<br>
+<br>
+<pre>
+/* ----------------- 007example.c ----------------
+
+     Beispiel fuer die Hilfedatei
+     for Demo
+     31.08.2015
+
+   ----------------------------------------------- */
+<br>
+#include "smallio.h"
+<br>
+int main(void)
+{
+  char ch;
+  char i;
+<br>
+  smallio_init();
+<br>
+  printf("\n\rfor Demo\n\r--------\n\r");
+<br>
+  for (i= 11; i&lt; 21; i++)
+  {
+    printf("\n\rdas Quadrat von  %d = %d", i, i*i);
+  }
+}
+</pre>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000404switch">switch - case</a><br>	
+---------------------------------------------------------</h2><br>
+Mehrweg-Verzweigung<br>
+<pre>
+   switch ( 'Ausdruck' ) 'Anweisung'
+</pre>
+'Ausdruck' wird berechnet und muss einen Integerwert<br>
+ergeben, danach folgt ein Vergleich mit der 'Konstante'<br>
+einen jeden case-Zweiges. Bei Uebereinstimmung wird der<br>
+'Befehl' dieses Zweiges ausgefuehrt. Jeder<br>
+Konstanten-Wert darf in der case-Liste nur einmal<br>
+erscheinen.<br>
+<br>
+Die optionale break-Anweisung hinter 'Befehl' fuehrt<br>
+einen Sprung zum Ende von switch aus, d.h. zum<br>
+naechsten auf das switch-Konstrukt folgenden Befehl.<br>
+Der (optionale) default-Zweig wird nur dann ausgefuehrt,<br>
+wenn alle vorherigen Vergleiche fehlgeschlagen sind.<br>
+<br>
+<pre>
+  switch(Ausdruck)
+  {
+	case Konstante1 : Anweisung;
+	                  break;
+    case Konstante2 : Anweisung;
+                      break;
+    .
+    .
+    .
+    default:          Anweisung;
+  }
+</pre>
+<br>
+Switch - case ist somit in Verbindung mit vielen Ver-<br>
+zweigungsoptionen manchmal uebersichtlicher als es<br>
+stark verschachtelte else - if Ketten sind.<br>
+<br>
+Beispiele zu switch-case:<br>
+<pre>
+/* ----------------- 008example.c ----------------
+
+     Beispiel fuer die Hilfedatei
+     switch - case Demo
+      27.08.2015
+
+   ----------------------------------------------- */
+ 
+#include "smallio.h"
+ 
+uint16_t calculate(char func, uint16_t x, uint16_t y)
+{
+  uint16_t z;
+ 
+  switch (func)
+  {
+    case '/' : { z= x / y; break; }      // div
+    case '+' : { z= x+y; break; }        // add
+    case '-' : { z= x-y; break; }        // subb
+    case 'i' : { z= x+1; break; }        // inc
+    case 'x' :
+    case 'X' :
+    case '*' : { z= x*y; break; };       // mul
+
+    case 's' :                           // sqrt
+    case 'e' :                           // exp
+    case 'm' : { printf(" Funktion nicht verfuegbar !");    // mod
+                break;
+              }
+    default : {
+                printf(" Unerwarteter Fehler !");
+              }
+  }
+  return z;
+}
+ 
+int main(void)
+{
+  char func;
+  uint16_t op1, op2;
+ 
+  smallio_init();                // damit I/O Anweis-
+                                 // ungen funktioneren
+ 
+  printf("\n\rswitch - case demo : Integer calc\n\r");
+  printf(    "---------------------------------");
+  while(1)
+  {
+    printf("\n\n\rOperand1: ");
+    op1= readint();
+
+    printf("\n\rRechenfunktion (* + - / i): ");
+    func= getchar();
+    printf("%c", func);
+
+    if (func != 'i')
+    {
+      printf("\n\rOperand2: ");
+      op2= readint();
+    }
+
+    printf("\n\n\r Ergebnis: %d", calculate(func,op1,op2));
+  }
+}
+</pre>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+</font></p>
+</body><br>
+</html><br>
+

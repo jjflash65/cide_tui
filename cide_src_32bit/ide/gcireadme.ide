@@ -1,0 +1,12 @@
+             Welcome to the GCC IDE
+            ------------------------
+
+ The GCC IDE is heavily modified version of the
+ Free Pascal IDE to do the job with a very small gcc-
+ programming 
+
+ I hope it provides an easy contact by first working with
+ the GNU gcc compiler. Thousand thanks goes to the
+ developer of Free Pascal and the Free Pascal IDE.
+
+ Modifications to this IDE by R. Seelig

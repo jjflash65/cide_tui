@@ -1,0 +1,949 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>CIDE - Die Hilfedatei</title>
+</head>
+<body>
+<p><font face="Arial">
+<h2><a name="anfang">Inhaltsverzeichnis</a></h2><br>
+1.0<br><br>
+<A href="#000200menu">Menu-Leiste der IDE</a><ul><br>
+
+<A href="#000510FileOptions">File</a><br>
+
+<A href="#000520EditOptions">Edit</a><br>
+
+<A href="#000530SearchOptions">Search</a><br>
+
+<A href="#000540CallMakeOptions">Call make</a><br>
+
+<A href="#000550MonitorOptions">RS232-Monitor</a><br>
+
+<A href="#000250windows">Windows</a></ul>
+<br>1.1<br>
+
+<ul><A name="Editor" href="#000100editor">Editor</a></ul><br>
+
+<h2>---------------------------------------------------------</h2>
+<br>2.0<br>
+<ul>
+<A href="#2a0000verzeichnisse">Verzeichnisstruktur fuer Projekte</a><br></ul>
+<br>2.1<br><ul>
+<A href="#2a0001makefile">Makefile</a><br>
+</ul>
+<h2>---------------------------------------------------------</h2>
+<br>3.0<br><br>
+<A href="#100100einfuehrung">C , eine Einfuehrung</a><br>
+<br>3.1
+<ul>
+	<A href="#130000dercompiler">Der Compiler</a><br>
+
+	<A href="#130200prae">Praeprozessor</a><br>
+	
+	<A href="#130300linker">Linker</a><br>	
+
+    <A href="#130100kommentare">Kommentare</a><br>
+
+    <A href="#130200bspanmerk">Anmerkungen zu Beispielen</A><br>
+
+    <A href="#130300hallowelt">Hallo Welt</A><br>
+
+    <A href="#130400prgaufbau">Grundsaetzlicher Programmaufbau</A><br>
+
+    <A href="#130500klammern">Geschweifte Klammern</A><br>
+</ul>
+
+<br>3.2
+<ul><A href="sprach_elem.html">Sprachelemente</a><br>
+<ul>
+      - <A href="sprach_elem.html#000401datatypes">Datentypen</a><br>	
+<br>
+      - <A href="sprach_elem.html#000401avariable1">Variable</a><ul>
+        -- <A href="sprach_elem.html#000401bgloballocal">Global / Local</a><br>
+        -- <A href="sprach_elem.html#000401cstaticvar">static</a><br>	
+        -- <A href="sprach_elem.html#000401dvolatile">volatile</a><br>	
+        -- <A href="zeiger.html#pointer">Zeiger (Pointer)</A>
+</ul><br>
+      - <A href="sprach_elem.html#000402struct">struct</a><br>
+<br>      
+      - <A href="sprach_elem.html#000402kontrollstrucs">Programmablaufkontrolle</a><ul>
+           -- <A href="sprach_elem.html#000403aif">if - else</a><br>	
+           -- <A href="sprach_elem.html#000403whileloop">while</a><br>	
+           -- <A href="sprach_elem.html#000403bdowhileloop">do - while</a><br>	
+           -- <A href="sprach_elem.html#000405forloop">for</a><br>	
+           -- <A href="sprach_elem.html#000404switch">switch - case</a><br></ul>
+<br>
+      - <A href="zeiger_n_funkts.html#000301functionsall">Funktionen</a><ul>
+           -- <A href="zeiger_n_funkts.html#000301functionsall">Funktionen allgemein / Call by value</a><br>
+           -- <A href="zeiger_n_funkts.html#000302reference">Call by reference</A>
+</ul><br>		
+</ul>
+</ul><br>
+<h2>---------------------------------------------------------</h2>
+4.0<br>
+<br><h2>Liste der <A name="incdateien">LIBC Include-Dateien</A><br></h2>
+Die Vollstaendigkeit der Beschreibungen zu den zu C gehoerenden <br>
+Include Dateien ist nicht gegeben. Hier werden lediglich haeufig<br>
+benutzte Funktionen und Makros aufgefuehrt. Eine komplette<br>
+Dokumentation der AVR-GCC Libraries ist (in Englisch) zu finden <br>
+unter:<br>
+<pre>http://www.nongnu.org/avr-libc/user-manual/modules.html</pre>
+<br>
+Eine komplette Beschreibung fuer glibc (gueltig fuer PC- und in sehr<br> 
+grossen Teilen fuer ARM Cortex- Programmierung findet sich unter:<br>
+<pre>http://www.gnu.org/software/libc/manual/html_node/index.html</pre>
+<ul>
+<A href="stringh.html">string.h</a><br>
+<A href="stdlib.html">stdlib.h</a><br>
+</ul>
+<h2>---------------------------------------------------------</h2>
+4.1<br>
+<br><h2><A name="funcbeschreib">Beschreibung einzelner Funktionen</A><br></h2>
+<ul>
+<A href="getopt_syntax.html">getopt (Linux - PC)</a><br>
+<br>
+<A href="printf_myprintf.html">printf - Derivate</a><br><ul>
+        - <A href="printf_myprintf.html#000411printf">printf</a><br>
+        - <A href="printf_myprintf.html#000412sprintf">sprintf</a><br>	
+        - <A href="printf_myprintf.html#000413myprintf">my_printf</a><br>	
+</ul><br>
+
+</ul>
+<h2>---------------------------------------------------------</h2>
+5.0<br>
+<br><h2><A name="hardwarepins">Hardware</A><br></h2>
+Pinbelegungen von Entwicklungsboards / - Plattformen (Arduino,<br>
+Bluepill, Minumumboards etc.), Modulen und integrierten Schaltungen<br>
+(IC), sowie Klein- und/oder Teilschaltungen.<br>
+<br>
+<A href="pins_n_schems.html">Pinbelegungen und Plaene</a><br>
+<ul>
+	<A href="pins_n_schems.html#000devboards">- Developmentboards</a>
+	<ul>		
+		<A href="pins_n_schems.html#001arduino_uno">Arduino Uno (r3)</a><br>
+		<A href="pins_n_schems.html#002arduino_nano">Arduino Nano</a><br>
+		<A href="pins_n_schems.html#003stm8_mindev">STM8S103F3P6 Minimum Dev. Board (China)</a><br>
+		<A href="pins_n_schems.html#004stm8_bootdev">STM8S103F3P6 Bootloaderboard (r3)</a><br>
+		<A href="pins_n_schems.html#005stm32f030_r3revb">STM32F030F4P6 Dev. Board rev 0.b (r3)</a><br>		
+		<A href="pins_n_schems.html#006stm32f103_bluepill">STM32F103C8T6 Minimum Dev.-Board (BluePill)</a><br>
+	</ul>	
+</ul>
+<br>
+<h2>---------------------------------------------------------</h2>
+<A name="Danksagung" href="#000999danke">Danke an ...</a><br>
+
+<br>
+<h2>---------------------------------------------------------<br>
+<A name="000100editor">Editor</A><br>
+---------------------------------------------------------</h2><br>
+Innerhalb des Editors sind folgende Funktionen ueber Shorkeys<br>
+verfuegbar:<ul><br>
+  suchen ......................... :  Ctrl-Q F<br>
+  naechstes suchen ............... :  Ctrl-L<br>
+  suchen/ersetzen ................ :  Ctrl-Q A<br>
+  naechstes ersetzen ............. :  Ctrl-L<br>
+  Block bilden ................... :  Shift-Cursortasten<br>
+  Block kopieren ................. :  Ctrl-C<br>
+  Block ausschneiden ............. :  Ctrl-X<br>
+  Block einfuegen ................ :  Ctrl-V<br>
+  Block loeschen ................. :  Ctrl-Entf<br>
+  Block aufheben ................. :  Ctrl-K H<br>
+  Blockanfang markieren .......... :  Ctrl-K B<br>
+  Blockende markieren ............ :  Ctrl-K K<br>
+  Block verschieben .............. :  Ctrl-K V<br>
+  Block von Disk lesen ........... :  Ctrl-K R<br>
+  Block auf Disk schreiben ....... :  Ctrl-K W<br>
+  Blockanzeige an/aus ............ :  Ctrl-K H<br>
+  Block ein Zeichen links ruecken. :  Ctrl-K I<br>
+  Block ein Zeichen rechts ruecken :  Ctrl-K U<br>
+  Wort markieren ................. :  Ctrl-K T<br>
+  Zeile markieren ................ :  Ctrl-K L</ul>
+  <br>
+  Aktivierung einer gewuenschten Funktion am Beispiel der Textsuche<br>
+  innerhalb des gerade aktiven Fensters (Ctrl-Q-F):<br>
+  <br><ul>
+  - Taste Ctrl (deutsche Tastatur Strg) druecken, und gedrueckt halten<br>
+  - Taste Q druecken und wieder loslassen<br>
+  - Taste F druecken und wieder loslassen<br>
+  - Taste Ctrl loslassen<br>
+  </ul><br>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<h2>---------------------------------------------------------<br>
+<a name="000200menu">Menu-Leiste</a><br>
+    ---------------------------------------------------------<br>
+
+<h2><A name="000510FileOptions">File</A></h2><ul>	
+  Der Menupunkt File stellt Funktionen zur Dateibehandlung in<br>
+  Menupunkten zur Verfuegung:<br>
+  <ul>
+  New (Shortkey F4):
+  <ul>
+    Oeffnet ein neues leeres Fenster zur Codeeingabe
+  </ul>
+  <br>
+  New from template :
+  <ul>
+    noch nicht implementiert
+  </ul>
+  <br>
+  Open (Shortkey F3):
+  <ul>
+    Oeffnet ein Dialogfenster zur Auswahl der Datei, die bearbeitet<br>
+    werden soll. In diesem Fenster kann im Eingabefeld<br>
+    &quot;File to open&quot; entweder die Datei, die geladen werden<br>
+    soll direkt angegeben werden, oder eine Suchmaske, deren Such-<br>
+    optionen mittels eines Strichpunkts getrennt ist.<br>
+    <br>
+    Bsp.: *.c;*.h;*.cpp;*.hpp;Ma*<br>
+    <br>
+    listet alle C und C++ sowie deren Headerfiles und zusaetzlich<br>
+    Dateien ohne Dateinamensextension wie beispielsweise &quot;Makefile&quot;<br>
+  </ul><br>
+  Reload :
+  <ul>
+    sollte die aktuell sichtbare Datei zwischenzeitlich von einem<br>
+    anderen Programm modifiziert worden sein, so wird die modifizierte<br>
+    Datei geladen<br>
+  </ul><br>
+  Save (Shortkey F2) :
+  <ul>
+    speichert die aktuell sichtbare Datei.<br>
+  </ul><br>
+  Save as... :
+  <ul>
+    speichert die aktuell sichtbare Datei unter einem anderen Namen.<br>
+    Im aufgehenden Dialogfeld kann im Eingabefeld &quot;Name&quot; entweder<br>
+    der Name unter dem die Datei gespeichert werden soll, oder eine Suchmaske<br>
+    die Dateien im aktuellen Verzeichnis auflistet, eingegeben werden.<br>
+  </ul><br>
+  Change Dir :
+  <ul>
+    wechselt das aktuelle Verzeichnis. Im aufgehenden Dialog kann das<br>
+    Verzeichnis aus dem Verzeichnisbaum gewaehlt werden<br>
+  </ul><br>
+  Command Shell :
+  <ul>
+    ruft die Textkonsole auf. Ein &quot;exit&quot; auf der Konsole kehrt<br>
+    zu CIDE zurueck<br>
+  </ul><br>
+  Exit (Shortkey Alt - x) :
+  <ul>
+    beendet CIDE. Bei offenen noch nicht gespeicherten Dateien erfolgt<br>
+    eine Rueckfrage, ob diese gespeichert werden sollen.<br>
+  </ul>
+  </ul>
+  <br>
+  <a href="#anfang">Inhaltsverzeichnis</a><br>
+  </ul>
+
+<h2><A name="000520EditOptions">Edit</a></h2><ul>
+  Der Menupunkt Edit stellt Blockoperationen innerhalb des Editors zur<br>
+  Verfuegung.</ul>
+  <br><ul>
+  Undo :
+  <ul>
+    macht die zuletzt getaetigte Operation im Editor (Blockoperation<br>
+    oder Tastatureingabe rueckgaengig.<br>
+  </ul><br>
+  ReDo :
+  <ul>
+    stellt eine mit Undo gemachte Operation wieder her<br>
+  </ul><br>
+  Cut (Shortkey Strg - X):
+  <ul>
+    schneidet einen markierten Textabschnitt (Block) aus dem Editor<br>
+    aus und speichert diesen im Clipboard zwischen<br>
+  </ul><br>
+  Copy (Shortkey Strg - C):
+  <ul>
+     kopiet einen markierten Textabschnitt (Block) aus dem Editor und<br>
+     speichert im Clipboard zwischen<br>
+  </ul><br>
+  Paste (Shortkey Strg - V):
+  <ul>
+     fuegt den im Clipboard zwischengespeicherten Text an der aktuellen<br>
+     Cursorposition ein<br>
+  </ul><br>
+  Select all :
+  <ul>
+     markiert den gesamten Textinhalt eines Editorfensters<br>
+  </ul><br>
+  Unselect :
+  <ul>
+     hebt die Markierung eines Textblocks auf<br>
+  </ul><br>
+  Options :
+  <ul>
+     erlaubt Einstellungen zum Editor, Suchmasken in Dialogfeldern und<br>
+     den Shortkeys zu den Blockoperationen<br>
+  </ul><br>
+  <a href="#anfang">Inhaltsverzeichnis</a><br>
+  </ul>
+
+<h2><A name="000530SearchOptions">Search</a></h2>
+  <ul>
+  Der Menupunkt Search stellt Funktionen fuer die Textsuche innerhalb<br>
+  eines Fensters zur Verfuegung.</ul>
+  <ul>
+  Find (Shortkey Strg - F):
+  <ul>
+    Oeffnet einen Dialog in dem die zu findende Textpassage eingegeben<br>
+    werden muss<br>
+  </ul><br>
+  Replace (Shortkey Strg-Q-A):
+  <ul>
+    Oeffnet einen Dialog, in dem der zu ersetzende Text sowie  der<br>
+    Text der ihn ersetzt eingegeben werden kann<br>
+  </ul><br>
+  Go to line number:
+  <ul>
+    springt an die im aufgehenden Dialog angegebene Zeilennummer des<br>
+    Textes. Findet der Compiler an einer bestimmten Stelle<br>
+    des Quelltextes einen Fehler, kann mit der Angabe der Zeilennummer<br>
+    an die entsprechende Stelle gesprungen werden.<br>
+  </ul>
+  <br>
+  <a href="#anfang">Inhaltsverzeichnis</a><br>
+  </ul>
+
+<h2><A name="000540CallMakeOptions">Call make</a></h2>
+  <ul>
+	Der Menupunkt &quot;Call make&quot; enthaelt in den Untermenupunkten<br>
+	die Funktionen, die benoetigt werden um ein Programm zu compilieren,<br>
+	linken und bei Bedarf auszufuehren. Die verschiedenen Aufrufe von<br>
+	Make erfordern eine im Projektverzeichnis liegende Datei mit dem<br>
+	Namen &quot;"Makefile"&quot;<br>
+	<br>
+	Makefiles werden in aller Regel dem Aufruf mit angegebenen Para-<br>
+	metern angegeben. Damit die in diesem Menupunkt erfolgenden Aufrufe<br>
+	von Make funktionieren, muessen innerhalb des Makefiles entsprechende<br>
+	Labels:<br>
+	<br><ul>
+	   - all<br>
+	   - clean<br>
+	   - flash<br>
+    </ul><br>
+	vorhanden sein. Normalerweise wird ein Makefile mit der Option &quot;all&quot;<br>
+	so geschrieben, dass &quot;all&quot; alle zum Erstellen eines lauffaehigen<br>
+	Programms benoetigten Schritte vornimmt (Compilieren und linken). Die<br>
+	hier aufrufbaren Funktionen entsprechen einer Kommandoeingabe auf<br>
+	der Konsole:<br>
+	<br><Ul>
+	  make all<br>
+	  make clean<br>
+	  make flash<br>
+	</ul><br>
+	Compilermeldungen werden in einem eigenen Fenster (Compiler messages)<br>
+	angezeigt. Sollte dieses Fenster nicht sichtbar sein, kann dieses<br>
+	mittels dem Menupunkt &quot;compiler messages&quot; (oder F12) sicht-<br>
+	bar gemacht werden.<br>
+	<br>
+	Da mit CIDE auch Konsolenprogramme fuer den PC geschrieben werden<br>
+	koennen, kann ein Makefile keine Parameterauswertung fuer &quot;flash&quot;<br>
+	enthalten. Um ein PC-Programm von CIDE aus starten zu koennen, ist<br>
+	der Menupunkt &quot;Run (PC only)&quot; auszuwaehlen.<br>
+	<br>
+	Unter dem Menupunkt &quot;Programarguments&quot; koennen einem Konsolen-<br>
+	programm Programmargumente zum Programmstart mitgegeben werden.<br>
+	<br>
+	Zusammenfassung der Menupunkte:<br>
+	<br>
+	<ul>
+	  make all (Shortkey F9)<br>
+	  make flash (Shortkey F8)<br>
+	  make clean<br>
+	  Programarguments<br>
+	  Run (PC only) (Shortkey Alt-R)<br>
+	  <br>
+	  Compiler messages (Shortkey F12)<br>
+    </ul><br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+</ul>
+
+<h2><A name="000550MonitorOptions">RS232-Monitor</a></h2>
+  <ul>
+	Folgende Menupunkte stehen zur Verfuegung:<br>
+    Open Monitor:<br><ul>		
+      startet das externe Terminalprogramm &quot;picocom&quot; Hierzu wird<br>
+      CIDE temporaer verlassen und PicoCom hat die alleinige Kontrolle<br>
+      ueber den Bildschirm. PicoCom kann mit der Tastenkombination STRG-A-X<br>
+      beendet werden (was eine Rueckkehr zu CIDE bedeutet).<br><br></ul>
+    Settings:<ul>
+      stellt die Parameter der seriellen Schnittstelle ein, mit der PicoCom<br>
+      geoeffnet wird. Einstellbare Parameter sind:<br>
+      <ul>
+		  - serieller Anschluss am PC<br>
+		  - Baudrate<br>
+		  - Databits<br>
+		  - Stopbits<br>
+		  - Parity<br>
+		  - Return Key (CR oder CR+LF)<br>
+      </ul></ul>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>     
+</ul><br>
+
+<h2><A name="000250windows">Windows</a></h2><br>
+  Der Menupunkt bietet Moeglichkeiten zum Zeigen oder Veraendern der geoeffneten<br>
+  Quellcodefenster sowie der Compiler-, Schnttstellen- und der Utilityfenster<br>
+  an.<br><br><ul>
+  Tile:<ul><br>
+    ordnet die Quellcodefenster uebereinander an</ul><br>
+  Cascade:<ul><br>
+    ordnet die Quellcodefenster "kaskadiert" an. Dies ist eine gute<br>
+    Moeglichkeit um mit einer Mouse verschiedene Fenster durch<br>
+    anklicken zu fokusieren.</ul><br>
+  Close All:<ul><br>
+    schliesst alle Quellcodefenster</ul><br>
+  Size/Move (Tasten Strg-F5):<ul><br>
+    waehlt ein Fenster an, damit  mit der Tastatur dessen Position oder dessen<br>
+    Groesse veraendert werden kann.<br><br>
+    Nach der Anwahl kann mit den Cursortasten die Position veraendert werden.<br>
+    Wird gleichzeitig die Shifttaste mit den Cursortasten verwendet, kann<br>
+    hiermit die Groesse des Fensters eingestellt werden.</ul><br>
+  Zoom (Taste F5):<ul><br>
+    vergroessert/verkleinert das aktuelle Fenster</ul><br>
+  Next (Taste F6):<ul><br>
+    bringt das naechste Fenster in den Fokus</ul><br>
+  Hide (Tasten Strg-F6):<ul><br>
+    "versteckt" das Fenster und ist auf dem Desktop nicht mehr sichtbar.<br>
+    Im Menupunkt &quot;List&quot; kann ein verstecktes Fenster wieder<br>
+    sichtbar gemacht werden.</ul><br>
+  Close (Tasten Alt-F3):<ul><br>
+    schliesst ein Fenster.</ul><br>
+  List:<ul><br>
+    listet alle fuer den Desktop verfuegbaren Fenster<br>
+    auf.</ul><br>
+  Refresh Display:<ul><br>
+    bei einem Fehler (sollte nicht vorkommen) wird das Fenster neu aufgebaut !</ul>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+</ul><br>
+
+<h2>---------------------------------------------------------</h2><br>
+<h2><A name="2a0000verzeichnisse">Verzeichnisstruktur fuer Projekte</a></h2>
+<br>
+Um mittels CIDE Projekte fuer verschiedene Mikrocontroller oder<br>
+PC-Konsolenprogramme erstellen zu koennen, werden Projekte in den, dem<br>
+Mikrocontroller zugeordneten Verzeichnissen abgelegt. Hierbei liegen alle<br>
+Projekte fuer einen Mikrocontroller, einer Mikrocontrollerfamilie oder eines<br>
+PC-Programmes in einem Verzeichnis:<br>
+<pre>
+Beispiel fuer Atmel-AVR Familie
+    	
+/home/mcu/atmel_avr
+	
+Beispiel fuer einen STM32F103
+	
+/home/mcu/stm32f103
+</pre>
+Innerhalb dieses Ordners gibt es zwei wichtige (im Falle von STM32 drei)<br>
+Unterordner:<br>
+<ul>
+./src<br>
+./include<br>
+</ul><br>
+Im Ordner ./src sind Quellcodedateien gespeichert, die einem Projekt bei<br>
+Bedarf hinzugelinkt werden koennen. Im Ornder ./include sind die fuer diese<br>
+Quellcodedateien dazugehoerenden Header-Dateien enthalten.<br>
+<br>
+Im Falle von STM32 existiert ein weiterer Unterordner:<br>
+<ul>
+./lib
+</ul><br>
+Da dieses System die LIBOPENCM3 Bibliothek benutzt, sind hier die speziell <br>
+fuer den verwendeten Controller die Softwaresourcen der LIBOPENCM3 gespeichert.<br>
+<br>
+Um ein Projekt compilieren und linken zu koennen arbeitet CIDE mit Makefiles.<br>
+In den Projekten selbst bedarf es nur "rudimentaerer" Makefiles, die ihrerseits<br>
+den funktionalen Teil inkludieren. Dieser funktionale Teil liegt bei<br>
+NICHT-STM32 Controllern in dem den Projekten uebergeordneten Verzeichnis und<br>
+lautet: makefile.mk<br>
+<br>
+Bei STM32 Controllern heisst die Datei libopencm3.mk und liegt im<br>
+Verzeichnis .lib<br>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2>---------------------------------------------------------</h2><br>
+<h2><A name="2a0001makefile">Makefile</a></h2>
+<br>
+Lauffaehige Programme (binaries) werden bei Benutzung von CIDE mittels <br>
+sogenannter Makefiles erstellt. Ein Makefile enthaelt Angaben darueber, <br>
+wie der Compiler und Linker ein lauffaehiges Programm zu erstellen hat.<br>
+<br>
+Makefiles koennen sehr komplex werden und aus diesem Grund bedient sich dieses <br>
+System sehr vereinfachter Makefiles, die in jedem Projektordner abgelegt sein<br>
+muss. Das Makefile in einem Projektordner enthaelt hierbei keine funktionalen Teile,<br>
+es enthaelt lediglich Angaben darueber, wie die Projektdatei heisst (das ist die<br>
+Datei, die die Funktion &quot;main&quot; beinhaltet) und welche Dateien eventuell<br>
+hinzugelinkt werden muessen. Desweiteren beinhaltet sie Angaben fuer die gewuenschte<br>
+Uploadmethode fuer den Controller.<br>
+<br>
+Nach diesen Angaben wird der Funktionale Teil des Makefiles nachgeladen (bei STM32<br>
+ist dies die Datei libopencm3.mk im Ordner ../lib , bei allen anderen ist dies die<br>
+Datei makefile.mk in dem dem Projekt uebergeordneten Verzeichnis.<br>
+<br>
+Diese Makefiles koennen entweder mit dem CIDE Editor erstellt und bearbeitet, oder<br>
+mit dem Makefile-Generator genmakef erstellt werden.<br>
+<br>
+Beispiel fuer AVR-Atmel Makefile<br>
+<pre>
+###############################################################################
+#
+#                                 Makefile
+#
+#   einfaches Makefile zum "builden" von HEX-Dateien fuer Atmel (c) AVR-
+#   Mikrocontroller.
+#
+#
+#
+#   Mai 2017,  R. Seelig
+#
+###############################################################################
+ 
+ 
+PROJECT           = serial_demo
+ 
+SRCS              = ../src/uart.o
+SRCS             += ../src/my_printf.o
+ 
+INCLUDE_PATHS     = -I. -I../include
+ 
+ 
+PRINTF_FL         = 0
+SCANF_FL          = 0
+MATH              = 0
+ 
+# fuer Compiler / Linker
+FREQ              = 16000000ul
+MCU               = atmega328p
+ 
+# fuer AVRDUDE
+PROGRAMMER        = stk500v2
+SERPORT           = /dev/ttyUSB0
+BRATE             = 115200
+DUDEOPTS          = B1
+ 
+ 
+include ../makefile.mk
+ 	
+</pre><br>
+Hier wird aus einer Quelldatei serial_demo.c ein lauffaehiges Binary erstellt.<br>
+Zu beachten ist hierbei, dass die Dateinamensendung .c NICHT mit angegeben <br>
+werden darf. Zusaetzlich werden die Dateien uart.c und my_printf.c im Ordner<br>
+../src kompiliert und hinzugelinkt. Aus den Standardbibliotheken wird weder<br>
+die Funktionalitaet printf, scanf und math hinzugelinkt. Das zu erstellende<br>
+Programm wird fuer einen ATmega328p mit einer Taktfrequenz von 16 MHz erstellt.<br>
+Erfolgt bei diesem Makefile ein Flashvorgang, so wird dieser mittels eines<br>
+STK500V2 Programmers vorgenommen.<br>
+<br>
+Moegliche Angaben fuer Programmer sind hier: stk500v2, arduino, usbasp, tinyusb<br>
+avrisp, wiring und ponyser<br>
+<br>
+Beispiel fuer STM32 Makefile<br>
+<pre>
+############################################################
+#
+#                         Makefile
+#
+############################################################
+ 
+PROJECT       = serial_demo
+ 
+# hier alle zusaetzlichen Softwaremodule angegeben
+SRCS          = ../src/sysf103_init.o
+SRCS         += ../src/my_printf_float.o
+SRCS         += ../src/uart.o
+ 
+ 
+INC_DIR       = -I./ -I../include
+ 
+LSCRIPT       = stm32f103c8.ld
+ 
+# FLASHERPROG Auswahl fuer STM32:
+# 0 : STLINK-V2, 1 : 1 : stm32flash_rts  2 : stm32chflash 3 : DFU_UTIL
+# FLASHERPROG Auswahl fuer LPC
+# 4 : flash1114_rts
+ 
+PROGPORT      = /dev/ttyUSB0
+CH340RESET    = 1
+ERASEFLASH    = 1
+FLASHERPROG   = 1
+ 
+ 
+include ../lib/libopencm3.mk
+</pre>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+
+<h2>---------------------------------------------------------</h2><br>
+<h2><A name="100100einfuehrung">C , eine Einfuehrung</a></h2>
+
+<br>
+<h2><A name="130000dercompiler">Der Compiler</a></h2>
+<br>
+Bevor ein Programm ausgefuehrt werden kann, muss es von einem Programm<br>
+- dem Compiler - in Maschinensprache uebersetzt werden. Dieser Vorgang<br>
+wird als Kompilieren, oder schlicht als uebersetzen, bezeichnet.<br>
+Maschinensprache besteht aus einer Abfolge von Befehlen, die vom<br>
+Prozessor direkt verarbeitet werden koennen. Jeder einzelne Befehl<br>
+hiervon ist ein sogenannter Maschinencode (Mnemonic), der letztlich jedoch<br>
+nur eine Zahl ist, die die Funktion des Maschinenbefehls darstellt.<br>
+<br>
+Ein C-Programm wird als Quelltext bezeichnet, aus dem nach dem Kompilieren<br>
+ein ausfuehrbares Programm entsteht. Dieses Programm ist das sogenannte<br>
+Binary und kann, je nach Zielsystem und Compiler, unterschiedliche<br>
+Dateinamenserweiterungen besitzen:<br>
+<ul>
+	- Linux:
+	    <ul>
+			keine spezielle Extension (meistens jedoch haben Linuxprogramme<br>
+	        keine Dateinameserweiterung<br>
+	    </ul><br>
+	 - Windows:
+	    <ul>.com oder .exe</ul><br>
+	 - AVR (ATmega / Attiny):<br>
+	    <ul>.hex</ul><br>
+	 - MCS51:
+	    <ul>.ihx</ul><br>
+	 - ARM-Cortex:
+	    <ul>.bin oder .hex</ul><br>
+	 - STM8:
+	   <ul>.ihx</ul><br>
+	 - PIC16F:
+	   <ul>.hex</ul>
+</ul>
+<br>
+Neben dem Compiler werden fuer das Uebersetzen des Quelltextes die folgenden<br>
+Programme benoetigt:<br>
+<br><ul>
+Praeprozessor<br>
+Linker<br></ul>
+<br>
+Umgangssprachlich wird oft die Gesamtheit aller Programme, die am Erstellungs-<br>
+vorgang eines Binaries beteiligt sind, vereinfacht als Compiler bezeichnet.<br>
+Tatsaechlich uebernimmt oft nur ein ein einzelnes Programm die Funktion des<br>
+Praeprozessors, Compilers und Linkers.<br><br>
+So hat der GCC Compiler (in allen seinen Portierungen fuer bspw. AVR oder<br>
+ARM) immer den Praeprozessor integriert und obwohl das Compilerpaket ein externes<br>
+Link-Programm enthaelt, kann GCC mehrere Softwaremodule zu einem lauffaehigen<br>
+Programm zusammenfuegen (linken).<br>
+<br>
+
+<a name="130200prae"></a><h2>Praeprozessor</h2>
+  <br>
+  Vor der eigentlichen Uebersetzung des Quelltextes wird dieser von dem<br>
+  sogenannten Praeprozessor verarbeitet, dessen Resultat anschliessend<br>
+  dem Compiler uebergeben wird. Der Praeprozessor ist im wesentlichen ein<br>
+  einfacher Textersetzer (suchen und ersetzen), welcher Makroanweisungen auswertet<br>
+  und &quot;Quelltextworte&quot;, temporaer ersetzt. Praeprozessoranweisungen beginnen<br>
+  immer mit dem Hashtagzeichen #.<br>
+  <br>
+  Mittels #define Anweisungen und Auswertungen ist es moeglich mit einer Anweisung<br>
+  (meistens zu Beginn einer Datei) zu bestimmen, welche Teile des Quelltextes ueber-<br>
+  setzt werden sollen (und somit Bestandteil des Programms sind) und welche nicht.<br>
+  <br>
+  Dieses macht vor allen Dingen dann Sinn, wenn ein Quelltext auf unterschiedliche<br>
+  Zielsystemen laufen soll. Mittels #defines kann hier auf unterschiedliche Eigen-<br>
+  heiten des Zielsystems eingegangen werden.<br>
+  <br>
+  <A href="praeprozessor.html">Beispiele fuer den Praeprozessor</a><br>
+  <br>
+  <a href="#anfang">Inhaltsverzeichnis</a><br><br>
+
+<a name="130300linker"></a><h2>Linker</h2>
+   <br>
+   Ein uebersetztes Quellprogramm fuer sich ist noch kein lauffaehiges Programm !!!<br>
+   In aller Regel verwendet ein Programm Funktionen (Unterprogramme), die bereits<br>
+   geschrieben sind. Bspw. koennen in einer vom Hauptprogramm (das die Funktion main<br>
+   beinhaltet) losgeloesten anderen Datei Funktionen zur Darstellung von Grafik,<br>
+   Text oder Toenen programmiert sein. Der Compiler uebersetzt jede Einzelne Datei<br>
+   in Maschinensprache und der Linker &quot;bindet&quot; nun aus allen am Programm<br>
+   beteiligten angegebenen Dateien ein lauffaehiges Programm.<br>
+   <br>
+   Werden, wie zum bei &quot;libc&quot; mehrere bereits uebersetzte Quellprogramme<br>
+   (sogenannte Objektdateien) zu einer Datei zusammengefuegt, so wird diese als<br>
+   Bibliothek (oder englisch: Library) bezeichnet.<br>
+   <br>
+   Soll der Linker zusaetzlich zu den uebersetzten Programmteilen Bibliotheksfunktione<br>
+   mit einbinden, wird die Library nach den benoetigten Funktionen durchsucht und zum<br>
+   generierenden Hauptprogramm hinzugefuegt.<br>
+   <br>
+   Der Linker bindet also eine oder mehrere uebersetzte Quellprogramme zu einem lauf-<br>
+   faehigen Programm zusammen.<br>
+   <br>
+   Standardmaessig gehoeren zu einem Ansi C-Compiler die Bibliotheken libc und libm die,<br>
+   wie oben beschrieben, wiederum aus mehreren bereits uebersetzten Programmteilen bestehen.<br>
+   <br>
+   In den beiden Bibliotheken libc und libm sind u.a. Funktionsdefinitionen fuer folgende<br>
+   Headerdateien (Auszug) enthalten:<br>
+   <ul><A href="stringh.html">string.h</a> - math.h - stdint.h - stdio.h - <A href="stdlib.html">stdlib.h</a> - stdarg.h - time.h - inttypes.h <br>
+   </ul>
+   <br>
+   Es empfiehlt sich daher, diese Biblootheken mitzulinken, der Linker wird in aller Regel<br>
+   die nicht benoetigten Programmfunktionen in das zu generierende Gesamtprogramm NICHT<br>
+   integrieren.<br>
+   <br>
+   Anmerkung: Leider ist die libc des SDCC (small-device-c-compiler) in der Portierung fuer<br>
+   einen PIC16F Microcontroller nur sehr unvollstaendig und einige Teile muessen, wenn<br>
+   mit diesem Chip gearbeitet werden soll, in Verbindung mit dem SDCC, nachprogrammiert<br>
+   werden.<br>
+   <br>
+  <a href="#anfang">Inhaltsverzeichnis</a><br><br>
+
+<h2><A name="130100kommentare">Kommentare</a></h2>
+<br>
+Bei Programmen empfiehlt es sich, vor allem wenn sie eine gewisse Groesse erreichen,<br>
+diese zu kommentieren. Selbst wenn Sie das Programm uebersichtlich gliedern, wird es<br>
+fuer eine zweite Person schwierig werden, zu verstehen, welche Logik hinter Ihrem<br>
+Programm steckt. Vor dem gleichen Problem stehen Sie aber auch, wenn Sie sich nach<br>
+ein paar Wochen oder gar Monaten in Ihr eigenes Programm wieder einarbeiten muessen.<br>
+<br>
+Fast alle Programmiersprachen besitzen deshalb eine Moeglichkeit, Kommentare in den<br>
+Programmtext einzufuegen. Diese Kommentare bleiben vom Compiler unberuecksichtigt.<br>
+In C werden Kommentare in /* und */ eingeschlossen. Ein Kommentar darf sich ueber<br>
+mehrere Zeilen erstrecken.<br>
+<br>
+Ausserdem ist es moeglich, einzeilige Kommentare, beginnend mit // (2 Slashzeichen),<br>
+zu verfassen.  Ein solcher Kommentar muss nicht unbedingt am Anfang einer Zeile<br>
+stehen, sondern kann bspw. am Ende einer Befehlszeile als Kommentar zu derselbigen<br>
+stehen. Mit dem Ende einer Zeile ist ein solchiger Kommentar abgeschlossen.<br>
+<br>
+Ein Beispiel fuer Kommentare:<br>
+<br><pre>
+/* Dieser Kommentar
+   erstreckt sich
+   ueber mehrere
+   Zeilen */
+<br>
+#include &lt;stdio.h&gt;  // Dieser Kommentar endet am Zeilenende
+<br>
+int main()
+{
+  printf("Beispiel fuer Kommentare\n");
+  //printf("Diese Zeile wird niemals ausgegeben\n");
+  return 0;
+}
+</pre>
+<a href="#anfang">Inhaltsverzeichnis</a><br><br>
+<br>
+
+<h2><A name="130200bspanmerk">Anmerkungen zu Beispielen</A></h2>
+<br>In dieser Hilfedatei werden zum Verdeutlichen von Funktionalitaeten<br>
+kurze Programme oder Programmausschnitte gezeigt. Damit diese<br>
+nachvollzogen werden koennen, benoetigt es zumindest eines minimalistischen<br>
+Ein-Ausgabesystems. Auf einem PC ist das relativ leicht zu bewerkstelligen,<br>
+da hier das Ein-Ausgabesystem die Konsole ist (oder sein kann). Hierfuer<br>
+gibt es Funktionen printf und scanf. Diese stehen zwar grundsaetzlich<br>
+Mikrocontrolleranwendungen auch zu Verfuegung, ist jedoch mit Schwierig-<br>
+keiten verbunden.<br>
+<br>
+Zum einen gibt es keine Klartextausgabeeinheit, diese muss erst implementiert<br>
+werden. Zum Anderen ist die printf - Funktionalitaet recht umfangreich,<br>
+so dass bei einem Mikrocontroller mit bspw. 2 KByte Flash (wie bei einem<br>
+ATtiny2313 oder ATtiny24) der Speicher alleine fuer ein printf nicht<br>
+ausreicht.<br>
+<br>
+Um nun Beispiele dennoch zeigen zu koennen, wurde ein sehr minimalistisches<br>
+Ein-Ausgabesystem geschaffen, das selbst noch auf einem 2 KByte Mikro-<br>
+controller funktionsfaehig ist.<br>
+<br>
+Hierfuer muss einem Beispielsprojekt smallio.o hinzugelinkt werden (siehe<br>
+auch <A href="#2a0001makefile">Makefile</a>.<br>
+<br>
+smallio bedient sich zur Kommunikation fuer Ein- und Ausgabe der seriellen<br>
+Schnittstelle, so dass es hier eines Schnittstellenwandlers USB zu UART (mit<br>
+den entsprechenden Logikpegeln) bedarf. Im Falle einer Arduino Hardware ist<br>
+dieser Schnittstellenwandler bereits gegeben. Im Falle eines PC-Programmes<br>
+wird die Konsole verwendet.<br>
+<br>
+Die Parameter sind hierbei (mit Ausnahme von MCS-51 Systemen): <br>
+<ul>19200 Bd, 8 Datenbits, 1 Startbit, 1 Stopbit, keine Paritaet</ul>
+Fuer MCS-51 Systeme sind die Parameter:
+<ul>4800 Bd, 8 Datenbits, 1 Startbit, 1 Stopbit, keine Paritaet</ul>
+<br>
+smallio stellt hierbei folgende (Prototypen) Funktionen zur Verfuegung:<br>
+<ul><pre>
+  void    smallio_init(void);
+  int     putchar(int ch);
+  uint8_t keypressed( void );
+  uint8_t getchar( void );
+  int16_t readint();
+   
+  void    my_printf(const uint8_t *s,...);
+ 
+  #define printf(str,...)  printf
+</pre></ul>
+<br>
+Aus Kompatiblitaetsgruenden wurde auch in den Ordnern .src und .include<br>
+bei PC-Projekten ein smallio erstellt, damit die Beispiele auch in einer<br>
+PC-Konsole lauffaehig sind.<br>
+<br>
+<br><h2><A name="130300hallowelt"></A></h2>
+Das "beruehmte"<br>
+<h2>Hallo-Welt-Programm</h2><br>
+<br>
+<br>
+<pre>/* ----------------- 000example.c ----------------
+<br>
+                     Hallo Welt
+<br>
+            Beispiel fuer die Hilfedatei
+<br>
+                     08.01.2015
+   ----------------------------------------------- */
+
+<br>
+#include "smallio.h"
+<br>
+int main(void)
+{
+<br>
+  smallio_init();                 // damit I/O Anweis-
+                                  // ungen funktioneren
+<br>
+  printf("Hallo Welt\n\r");
+  while (1)
+  {
+  }
+}</pre>
+<h2>Besprechung:</h2><br>
+Die ersten Zeilen sind Kommentar, grundsaetzlich sollte<br>
+am Anfang eines Programmes ein Kommentar stehen damit<br>
+leicht erkennbar ist, fuer WAS dieses Programm gut ist.<br>
+<br>
+<br>
+<h2>#include smallio.h</h2><br>
+<ul>bindet zusaetzlich die Funktionalitaet einer seriellen<br>
+Schnittstelle (oder die Ausgabe auf der PC-Konsole) ein.<br>
+Fuer die Funktionalitaet von smallio siehe auch<br><br>
+<A name="bspanmerk" href="#130200bspanmerk">Anmerkungen zu Beispielen</A><br>
+<br></ul>
+<h2>int main(void)</h2><br>
+<ul>Bezeichnet das "Hauptprogramm" des Programms. Jedes<br>
+Programm muss eine solche Zeile besitzen, ab hier wird<br>
+beim Start (bei einer MCU nach anlegen der Betriebs-<br>
+spannung) das Programm ausgefuehrt</ul>
+<br>
+<h2>geschweifte Klammern:</h2><br>
+<ul>Eine oeffnende geschweifte Klammer signalisiert den<br>
+Beginn eines Blockes, eine schliessende das Ende.</ul>
+<br>
+<h2>smallio_init();</h2><br>
+<ul>"smallio_init" initialisiert die serielle Schnittstelle der MCU zur<br>
+Benutzung. Sie stellt automatisch eine Baudrate von 4800 Bd, 8 Datenbits,<br>
+1 Start und 1 Stopbit sowie keine Paritaet ein.</ul>
+<br>
+<h2>printf("Hallo Welt\n\r");</h2><br>
+<ul>sendet auf der seriellen Schnittstelle den Text<br>
+"Hallo Welt" und anschliessen ein Carriage Return <br>
+(das ist das Kommando, das den Cursor an den Anfang<br>
+einer Zeile setzt) sowie ein Line Feed (das ist das<br>
+Kommando, dass eine neue Zeile beginnt)</ul>
+<br>
+<h2>while(1)<br>
+{<br>
+}</h2><br>
+<ul>solange die Bedingung in der geschweiften Klammer<br>
+groesser als 0 ist (und sie ist hier mit konstant 1<br>
+angegeben) wird der nachfolgende Block der geschweiften<br>
+Klammern ausgefuehrt. In diesem Programm ist das also<br>
+eine sogenannte Endlosschleife und das Programm wird<br>
+ab dieser Stelle nichts mehr weiteres machen.</ul>
+<br>
+Die abschliessende schliessende Klammer zeigt das<br>
+Ende des Quellprogrammes an.<br>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<br>
+<h2><A name="130400prgaufbau">Grundsaetzlicher Programmaufbau</A></h2><br>
+<br>
+In C besteht ein Programm aus mehreren, mindestens jedoch<br>
+einer Funktion. Wie das <A name="hallowelt" href="#130300hallowelt">Hallo Welt</A> Programm<br>
+zeigt, kommt einer Funktion eine besondere Rolle zu:
+<ul><ul><ul>main</ul></ul></ul><br>
+Diese Funktion wird bei einem Programmstart automatisch<br>
+ausgefuehrt, alle anderen werden im Programmablauf<br>
+aufgerufen.<br>
+<br>
+Ein grundsaetzliches abstraktes Programmgeruest sieht<br>
+in etwa folgendermassen aus:<br>
+<ul><pre>
+- Hinzufuegende Programmfunktionen   // Bibliotheken
+- Funktionen
+- Hauptfunktion main
+</pre></ul><br>
+<h2><A name="130500klammern">Geschweifte Klammern</A></h2><br>
+<br>
+Funktional zusammengehoerende Programmteile werden in<br>
+geschweiften Klammern eingeschlossen.<br>
+<br>
+Ein Beispiel in einer Pseudoanweisung:<br>
+<pre>
+- Anweisung vor "wenn"	
+Wenn (Wasserbehaelter == leer) dann
+{
+  - Wasserbehaelter entfernen
+  - unter Wasserhahn halten
+  - Wasser aufdrehen
+<br>
+  solange
+  {
+    - Wasser laufen lassen
+  }Behaelter nicht voll
+<br>
+  - Wasser abdrehen
+  - Wasserbehaelter wieder einsetzen
+}
+<br>
+- Anweisung nach "wenn"
+</pre>
+<br>
+Das Beispiel zeigt, wie die Klammern anzuwenden sind. Ist<br>
+der Wasserbehaelter nicht leer, wird sofort mit der An-<br>
+weisung nach "wenn" fortgefahren. Die Anweisungen in den<br>
+Klammern gehoeren also nur zur "wenn" Anweisung. Innerhalb<br>
+dieser "wenn" Bedingung gibt es einen weiteren, von ge-<br>
+schweiften Klammern eingeschlossenen Bereich. Alle An-<br>
+weisungen hierin (in unserem Fall nur eine einzige) werden<br>
+ausgefuehrt, solange der Behaelter nicht voll ist.<br><br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2><A name="000999danke">Ein besonderes Dankeschoen</a></h2><br>
+
+<br>
+Die vorliegende &quot;IDE&quot; basiert in vielen Teilen auf<br>
+der Free Pascal Entwicklungsumgebung FP (besonders im Bezug<br>
+auf den Editor) und ist in FreePascal geschrieben.<br>
+<br>
+Ohne die Entwickler von Free Pascal zu kennen oder mit<br>
+ihnen in Kontakt zu stehen (leider habe ich keinerlei Kontakt<br>
+aufbauen koennen, E-Mails gingen hier leider ins Leere)<br>
+gilt ihnen mein grosser Dank. Ohne sie waere diese IDE <br>
+nicht machbar gewesen waere,<br>
+<br>
+             diese sind laut<br>
+<h1> http://freepascal.org/aboutus.var<br></h1>
+<h1>Carl Eric Codere<br>
+Daniel Mantione<br>
+Florian Klaempfl<br>
+Jonas Maebe<br>
+Michael Van Canneyt<br>
+Marco van de Voort<br>
+<br>
+und die Entwickler der IDE<br>
+Peter Vreman (auch FPC)<br>
+Pierre Muller (auch FPC)<br>
+Berczi Gabor<br></h1>
+<br>
+<h2>CIDE by Ralph Seelig 2015 - 2019</h2><br>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+
+</font></p>
+</body><br>
+</html><br>

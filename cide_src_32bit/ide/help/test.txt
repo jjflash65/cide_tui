@@ -1,0 +1,34 @@
+Bedingte Verzweigung
+
+  if ( <ausdruck> )
+     <anweisung1>
+
+       ODER
+
+  if ( <ausdruck> )
+     <anweisung1>
+  else
+     <anweisung2>
+
+Wenn der Wert von <Ausdruck> != 0 ergibt, wird
+<Befehl1> ausgefhrt; ansonsten wird dieser
+
+
+if..else: Wenn <Ausdruck> != 0 ergibt, wird
+<anweisung1> ausgefhrt und <anweisung2>
+bersprungen; wenn <Ausdruck> == 0 ergibt, wird
+<anweisung1> bersprungen und <anweisung2>
+ausgefhrt.
+
+Das else ist optional, aber zwischen einer
+if-Anweisung und einem else drfen keine
+weiteren Anweisungen stehen.
+
+ Beispiel
+ ßßßßßßßß
+  if (count < 50) count++;
+
+  if (x < y)
+     z = x;
+  else
+     z = y;

@@ -1,0 +1,47 @@
+Variable
+
+Programme muessen waehrend eines Programmlaufes verwendete Daten hauefig zwischenspeichern um
+mit ihnen spaeter weiterrechnen zu koennen. Variable (und Konstante) bieten hierfuer die
+Moeglichkeit.
+
+Eine Variable dient grundsaetzlich dazu, Informationen zu speichern. Hierfuer wird eine Stelle
+oder Speicherbereich des Computers benutzt auf dem diese Information gespeichert und wieder
+abgerufen werden kann.
+
+Grundsaetzlich ist es so, dass saemtliche Speicherstellen nummeriert sind, d.h. jede Speicherstelle
+wird durch eine Nummer identifiziert. Fuer den Programmierer waere es sehr muehselig, innerhalb
+eines Programms, mit der Nummer des Speicherorts der Information die gespeichert werden soll zu
+arbeiten.
+
+Angenommen, es wuerde an Speicherstelle 32087 (das waere die Adresse im Speicher) die Laenge eines
+Rechtecks gespeichert werden, so muesste er, um an die Information zu gelangen, innerhalb eines
+Programms sagen:
+
+"Programm, lese mir den Wert an der Speicherstelle 32087 aus damit ich die Kantenlaenge des
+Rechtecks weiss"
+
+Wuerde dieses Vorgehen mit wenigen zu speichernden Informationen noch handhabbar sein, waere es
+jedoch spaetestens bei verwendung von bspw. 20, 100 oder gar tausenden Informationen gaenzlich
+unpraktikabel.
+
+In C (und in anderen Programmiersprachen auch) werden zu diesem Zweck diesen Speicherstellen
+Namen zugewiesen. Hierbei wird dem C Compiler sogar ueberlassen, an welcher Speicherstelle er diese
+Variable ablegen wird.
+
+Damit ein Programm mit Variablen arbeiten kann, muss im Programm festgelegt werden, dass es die
+verwendete Variable gibt.
+
+Da es jedoch Daten unterschiedlichster Art gibt, muss zudem angegeben werden, um welche Art ( Datentyp )
+es sich bei der Variable handelt.
+
+Eine Variable, die die Kantenlaenge eines Rechtecks aufnehmen soll wuerde bspw. mit
+
+   int kantenlaenge;
+
+oder mit
+
+   int laenge;
+
+definiert werden. Fortan kann innerhalb des Programms dieser Variable ein Wert des Datentyp's
+Integer zugewiesen werden ( ein Integer kann ganze Zahlen, keine Kommazahlen aufnehmen).
+

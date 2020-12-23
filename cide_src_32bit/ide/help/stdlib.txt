@@ -1,0 +1,803 @@
+Funktionen der stdlib
+------------------------------------
+
+abs
+
+Das Makro abs berechnet den absoluten Betrag
+einer Integer-Zahl.
+
+  reell:    int abs(int x);
+  komplex:  double abs(complex x);
+
+Prototyp in
+ math.h
+ stdlib.h (real)
+ complex.h (complex)
+
+ #include &lt;stdio.h&gt;
+ #include &lt;math.h&gt;
+ #include &lt;stdlib.h&gt;
+ #include "../include/rs232_io.h"
+
+
+ int main(void)
+ {
+   int number = -1234;
+
+   rs232_init();
+
+   printf("number: %d  absolute value: %d\n", number, abs(number));
+   while(1);
+ }
+
+--------------------------------------------------
+
+atof
+
+Konvertiert einen String in eine Gleitkommazahl.
+
+  double atof(const char *s);
+
+Prototyp in  math.h
+             stdlib.h
+
+atof liefert das Ergebnis der Interpretation
+bzw. den Wert 0, wenn die Konvertierung nicht
+fehlerfrei ausguefuehrt werden konnte.
+
+Querverweis
+  atoi    ecvt    gcvt    strtod
+  atol    fcvt    scanf
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+ int main(void)
+ {
+    float f;
+    char *str = "12345.67";
+
+    rs232_init();
+
+    f = atof(str);
+    printf("string = %s float = %f\n", str, f);
+    while(1);
+ }
+
+
+--------------------------------------------------
+
+atoi
+
+
+Das Makro atoi konvertiert einen String in einen
+Integerwert.
+
+  int atoi(const char *s);
+
+Prototyp in  stdlib.h
+
+atoi liefert das Ergebnis der Interpretation
+bzw. den Wert 0, wenn die Konvertierung nicht
+fehlerfrei ausgefuehrt werden konnte.
+
+Querverweis
+
+  atof    ecvt    gcvt    strtod
+  atol    fcvt    scanf
+
+ #include &lt;stdio.h&gt;
+ #include &lt;stdlib.h&gt;
+ #include "../include/rs232_io.h"
+
+
+ int main(void)
+ {
+    int n;
+    char *str = "12345.67";
+
+    rs232_init();
+
+    n = atoi(str);
+    printf("string = %s integer = %d\n", str, n);
+    while(1);
+ }
+
+--------------------------------------------------
+
+atol
+
+Konvertiert den Inhalt eines Strings in einen
+long-Wert.
+
+  long atol(const char *s);
+
+Prototyp in  stdlib.h
+
+atol liefert das Ergebnis der Interpretation
+bzw. den Wert 0, wenn die Konvertierung nicht
+fehlerfrei ausgefuehrt werden konnte.
+
+Querverweis
+  atof    fcvt    strtod
+  atoi    gcvt    strtol
+  ecvt    scanf   strtoul
+
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+
+ int main(void)
+ {
+    long l;
+    char *str = "98765432";
+
+    rs232_init();
+
+    l = atol(str);
+    printf("string = %s integer = %ld\n", str, l);
+   while(1);
+ }
+
+--------------------------------------------------
+
+bsearch
+
+Binaeres Absuchen einer Liste.
+
+ void *bsearch(const void *key,
+       const void *base, size_t *nelem,
+       size_t width, int (*fcmp)(const void*,
+                     const void*));
+
+Prototyp in  stdlib.h
+
+Liefert die Adresse des ersten Elements von
+base, dessen Inhalt mit dem von key ueberein-
+stimmt. Wenn die Suche erfolglos bleibt, ist
+das Ergebnis NULL.
+
+bsearch interpretiert den Rueckgabewert der
+(benutzerdefinierten) Vergleichsfunktion
+*fcmp wie folgt:
+
+  &lt; 0 bedeutet: *elem1  &lt; *elem2
+ == 0 bedeutet: *elem1 == *elem2
+  &gt; 0 bedeutet: *elem1  &gt; *elem2
+
+Die Tabelle muss in aufsteigender Reihenfolge
+sortiert sein.
+
+Querverweis
+  lfind    lsearch    qsort
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+ #define NELEMS(arr) (sizeof(arr) / sizeof(arr[0]))
+
+ int numarray[] = {123, 145, 512, 627, 800, 933};
+
+ int numeric (const int *p1, const int *p2)
+ {
+    return(*p1 - *p2);
+ }
+
+ int lookup(int key)
+ {
+    int *itemptr;
+
+    /* The cast of (int(*)(const void *,const void*))
+       is needed to avoid a type mismatch error at
+       compile time */
+    itemptr = bsearch (&key, numarray, NELEMS(numarray),
+              sizeof(int), (int(*)(const void *,const void *))numeric);
+    return (itemptr != NULL);
+ }
+
+ int main(void)
+ {
+    rs232_init();
+
+    if (lookup(512))
+       printf("512 is in the table.\n");
+    else
+       printf("512 isn't in the table.\n");
+
+    while(1);
+ }
+
+--------------------------------------------------
+
+calloc
+
+
+Reserviert Platz im Hauptspeicher.
+
+  void *calloc(size_t nitems, size_t size);
+
+Prototyp in  stdlib.h
+             alloc.h
+
+Reserviert einen Block von nitems * size
+Bytes und initialisiert sie mit 0.
+
+Liefert einen Zeiger auf den neu belegten
+Block. Wenn nicht genug Platz vorhanden ist
+oder nitems oder size den Wert 0 hat, ist
+das Ergebnis NULL.
+
+Querverweis
+  farcalloc    free    malloc    realloc
+
+
+ #include &lt;stdio.h&gt;
+ #include &lt;string.h&gt;
+ #include &lt;stdlib.h&gt;
+ #include "../include/rs232_io.h"
+
+ int main(void)
+ {
+    char *str = NULL;
+
+    rs232_init();
+
+    /* allocate memory for string */
+    str = calloc(10, sizeof(char));
+
+    /* copy "Hello" into string */
+    strcpy(str, "Hello");
+
+    /* display string */
+    printf("String is %s\n", str);
+
+    /* free memory */
+    free(str);
+
+    while(1);
+ }
+
+
+
+--------------------------------------------------
+
+div
+
+dividiert zwei Integerwerte.
+
+  div_t  div(int numer, int denom);
+
+Prototyp in  stdlib.h
+
+div dividiert die als numer (Dividend) und
+als denom (Divisor) uebergebenen Integerwerte
+und liefert eine Struktur des Typs div_t
+zurueck. Dieser Datentyp ist in stdlib.h wie
+folgt definiert:
+
+  typedef struct {
+     int quot;  /* Quotient (Divisionsergebnis) */
+     int rem;   /* Divisionsrest */
+  } div_t;
+
+Querverweis
+  ldiv
+
+
+ /* div example */
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+ int main(void)
+ {
+
+    div_t x;
+
+    rs232_init();
+
+    x = div(10,3);
+    printf("10 div 3 = %d remainder %d\n", x.quot, x.rem);
+
+    while(1);
+ }
+
+
+--------------------------------------------------
+
+free
+
+
+gibt einen mit malloc oder calloc dynamisch
+reservierten Speicherbereich wieder frei.
+
+  void free(void *block);
+
+Prototyp in  stdlib.h
+              alloc.h
+
+Querverweis
+  calloc     malloc    strdup
+  freemem    realloc
+
+
+ #include &lt;string.h&gt;
+ #include &lt;stdio.h&gt;
+ #include &lt;stdlib.h&gt;
+ #include "../include/rs232_io.h"
+
+
+ int main(void)
+ {
+    char *str;
+
+    rs232_init();
+
+    /* allocate memory for string */
+    str = malloc(10);
+
+    /* copy "Hello" to string */
+    strcpy(str, "Hello");
+
+    /* display string */
+    printf("String is %s\n", str);
+
+    /* free memory */
+    free(str);
+
+    while(1);
+ }
+
+
+--------------------------------------------------
+
+itoa
+
+
+Konvertiert einen Integerwert in einen String.
+
+   char *itoa(int value, char *string, int radix);
+
+Prototyp in  stdlib.h
+
+Zurueckgeliefert wird ein Zeiger auf den als
+string uebergebenen String.
+
+Querverweis
+  ltoa    ultoa
+
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+
+ int main(void)
+ {
+    int number = 12345;
+    char string[25];
+
+    rs232_init();
+
+    itoa(number, string, 10);
+    printf("integer = %d string = %s\n", number, string);
+    while(1);
+ }
+
+
+--------------------------------------------------
+
+labs
+
+Liefert den absoluten Betrag eines
+long-Wertes.
+
+  long int labs(long int x);
+
+Prototyp in  math.h
+             stdlib.h
+
+Querverweis
+  abs    cabs    fabs
+
+
+ #include &lt;stdio.h&gt;
+ #include &lt;stdlib.h&gt;
+ #include &lt;math.h&gt;
+ #include "../include/rs232_io.h"
+
+ int main(void)
+ {
+    long result;
+    long x = -12345678L;
+
+    rs232_init();
+
+    result= labs(x);
+    printf("number: %ld abs value: %ld\n",
+       x, result);
+
+    while(1);
+ }
+
+
+--------------------------------------------------
+
+ldiv
+
+Dividiert zwei long-Werte und liefert sowohl den
+Quotienten als auch den Divisionsrest in einer
+Struktur zurueck.
+
+  ldiv_t ldiv(long int numer, long int denom);
+
+Prototyp in  stdlib.h
+
+ldiv dividiert die als numer und demon ueber-
+gebenen long-Werte und liefert eine Struktur des
+Typs ldiv_t zurueck. Dieser Datentyp ist in
+stdlib.h wie folgt definiert:
+
+  typedef struct {
+     long int quot;    /* quotient */
+     long int rem;     /* remainder */
+  } ldiv_t;
+
+Querverweis
+  div
+
+ /* ldiv example */
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+ int main(void)
+ {
+    ldiv_t lx;
+
+    rs232_init();
+
+    lx = ldiv(100000L, 30000L);
+    printf("100000 div 30000 = %ld remainder %ld\n", lx.quot, lx.rem);
+    while(1);
+ }
+
+--------------------------------------------------
+
+ltoa
+
+konvertiert einen long-Wert in einen String.
+
+  char *ltoa(long value, char *string,
+             int radix);
+
+Prototyp in  stdlib.h
+
+radix definiert die Basis, bezueglich der value
+konvertiert wird. radix muss groesser als 1 und
+kleiner als 37 sein.
+radix=10 erzeugt dezimale Darstellung, radix=16
+hexadezimale.
+
+Querverweis
+  itoa    ultoa
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+ int main(void)
+ {
+    char string[25];
+    long value = 123456789L;
+
+    rs232_init();
+
+    ltoa(value,string,10);
+    printf("number = %ld  string = %s\n", value, string);
+
+    while(1);
+ }
+
+--------------------------------------------------
+
+malloc
+
+
+dynamische Belegung von Speicherplatz.
+
+  void *malloc(size_t size);
+
+Prototyp in  alloc.h
+             stdlib.h
+
+size gibt die Groesse des zu reservierenden
+Speichers in Bytes an. malloc liefert einen
+Zeiger auf den neu belegten Block bzw. den Wert
+NULL, wenn nicht genuegend Platz auf dem Heap
+vorhanden ist oder size den Wert 0 hat.
+
+Querverweis
+  allocmem    coreleft    farmalloc    realloc
+  calloc      farcalloc   free
+
+
+ #include &lt;stdio.h&gt;
+ #include &lt;string.h&gt;
+ #include &lt;stdlib.&gt;
+ #include "../include/rs232_io.h"
+
+ int main(void)
+ {
+    char *str;
+
+    rs232_init();
+
+    /* allocate memory for string */
+    if ((str = malloc(10)) == NULL)
+    {
+       printf("Not enough memory to allocate buffer\n");
+       exit(1);  /* terminate program if out of memory */
+    }
+
+
+    strcpy(str, "Hello");
+
+    /* display string */
+    printf("String is %s\n",str);
+
+    /* free memory */
+    free(str);
+
+    while(1);
+ }
+
+
+--------------------------------------------------
+
+qsort
+
+ sortiert die Elemente eines Arrays mit dem
+ QuickSort-Algorithmus.
+
+   void qsort(void *base, size_t nelem,
+              size_t width, int(*fcmp)
+              (const void *, const void *));
+
+ Prototyp in  stdlib.h
+
+ nelem = Elementenzahl des Arrays base, width =
+ Groesse eines Elements. Die Routine fcmp muá ein
+ Vergleichsergebnis (&lt;0, 0, &gt;0) zurueckliefern.
+
+ Der Rueckgabewert von fcmp wird so interpretiert:
+
+   &lt; 0 bedeutet *elem1  &lt; *elem2
+   = 0 bedeutet *elem1 == *elem2
+   &gt; 0 bedeutet *elem1  &gt; *elem2
+
+ Querverweis
+   bsearch    lsearch
+
+
+  #include &lt;stdio.h&gt;
+  #include &lt;stdlib.h&gt;
+  #include &lt;string.h&gt;
+  #include "../include/rs232_io.h"
+
+  int sort_function( const void *a, const void *b)
+  {
+     return( strcmp(a,b) );
+  }
+
+  int main(void)
+  {
+
+     char list[5][8] = { "Maier", "Mueller", "Schulz ", "Schmidt", "Albers" };
+     int  x;
+
+     rs232_init();
+
+     qsort((void *)list, 5, sizeof(list[0]), sort_function);
+     for (x = 0; x &lt; 5; x++)
+        printf("%s\n\r", list[x]);
+     while(1);
+  }
+
+
+--------------------------------------------------
+
+rand
+
+liefert eine "Zufallszahl" zurueck.
+
+  int rand(void);
+
+Prototyp in  stdlib.h
+
+Das Ergebnis liegt im Bereich von 0...RAND_MAX.
+RAND_MAX ist in stdlib.h definiert als 0xffff.
+
+Querverweis
+  random    randomize    srand
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+
+ int main(void)
+ {
+    int i;
+
+    rs232_init();
+
+    printf("10 Zufallszahlen von 0 bis 99\n\n\r");
+    for(i=0; i&lt;10; i++)
+       printf("%d\n\r", rand() % 100);
+    while(1);
+ }
+
+--------------------------------------------------
+
+realloc
+
+aendert die Groesse eines dynamisch
+belegten Speicherblocks.
+
+  void *realloc(void *block, size_t size);
+
+Prototyp in  alloc.h
+             stdlib.h
+
+Liefert die neue (und evtl. veraenderte) Adresse
+des Blocks (mit size Bytes) zurueck bzw. den Wert
+NULL, wenn der Block aus irgendeinem Grund nicht
+hat).
+
+
+  calloc    farrealloc    free     malloc
+
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;string.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+
+ int main(void)
+ {
+    char *str;
+
+    rs232_init();
+
+    /* allocate memory for string */
+    str = malloc(10);
+
+    /* copy "Hello" into string */
+    strcpy(str, "Hello");
+
+    printf("String is %s\n  Address is %p\n", str, str);
+    str = realloc(str, 20);
+    printf("String is %s\n  New address is %p\n", str, str);
+
+    /* free memory */
+    free(str);
+
+    while(1);
+ }
+
+--------------------------------------------------
+
+srand
+
+setzt einen Startwert fuer die Erzeugung von
+"Zufallszahlen".
+
+  void srand(unsigned int seed);
+
+Prototyp in  stdlib.h
+
+Identische Startwerte erzeugen identische
+Zufallszahlenfolgen.
+
+Querverweis
+  rand    random    randomize
+
+
+ #include &lt;stdlib.h&gt;
+ #include &lt;stdio.h&gt;
+ #include "../include/rs232_io.h"
+
+ int main(void)
+ {
+    int i;
+    time_t t;
+
+    rs232_init();
+
+    srand(231);
+    printf("Ten random numbers from 0 to 99\n\n\r");
+    for(i=0; i&lt;10; i++)
+        printf("%d\n\r", rand() % 100);
+    while(0);
+ }
+
+--------------------------------------------------
+
+utoa
+
+ konvertiert einen vorzeichenlosen Integer Wert
+ in einen String.
+
+   char *utoa(unsigned int value,
+               char *string, int radix);
+
+ Prototyp in  stdlib.h
+
+ Liefert den als string uebergebenen Zeiger zurueck.
+ Fehlermoeglichkeiten gibt es hier keine.
+
+ Querverweis
+   itoa    ltoa
+
+
+  #include &lt;stdlib.h&gt;
+  #include &lt;stdio.h&gt;
+  #include "../include/rs232_io.h"
+
+
+  int main( void )
+  {
+     unsigned int number = 52768;
+     char string[6];
+
+     rs232_init();
+
+     utoa(number,string,10);
+     printf("string = %s  unsigned long = %u\n",string,number);
+
+     while(1);
+  }
+
+--------------------------------------------------
+
+ultoa
+
+ konvertiert einen vorzeichenlosen long-Wert
+ in einen String.
+
+   char *ultoa(unsigned long value,
+               char *string, int radix);
+
+ Prototyp in  stdlib.h
+
+ Liefert den als string uebergebenen Zeiger zurueck.
+ Fehlermoeglichkeiten gibt es hier keine.
+
+ Querverweis
+   itoa    ltoa
+
+
+  #include &lt;stdlib.h&gt;
+  #include &lt;stdio.h&gt;
+  #include "../include/rs232_io.h"
+
+  int main( void )
+  {
+     unsigned long lnumber = 3123456789UL;
+     char string[25];
+
+     rs232_init();
+
+     ultoa(lnumber,string,10);
+     printf("string = %s  unsigned long = %lu\n",string,lnumber);
+
+     while(1);
+  }

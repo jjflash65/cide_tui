@@ -1,0 +1,10 @@
+
+Funktionen
+
+Programme bestehen grundsaetzlich aus einem Hauptprogramm (main)
+und Unterprogrammen (Funktionen). Das Hauptprogramm  ist der Programmteil,
+der beim Start als erstes ausgefuehrt wird. Hieraus werden in
+aller Regel Unterprogramme aufgerufen die auch ihrerseits weitere
+Unterprogramme aufrufen koennen.
+
+Warum Unterprogramme verwenden ?

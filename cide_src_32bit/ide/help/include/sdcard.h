@@ -1,0 +1,199 @@
+/*
+ * 	Doku, siehe http://www.mikrocontroller.net/articles/AVR_FAT32
+ *      Neuste Version: http://www.mikrocontroller.net/svnbrowser/avr-fat32/
+ *	Autor: Daniel R.
+ *      Minimalmodifikationen fuer RSIDE: R. Seelig
+ *
+ *      Dieses Softwaremodul ist eine "ineinander" kopierte Datei aus den
+ *      3 Quelldateien: file.h / fat.h / mmc.h
+ */
+
+
+#ifndef _SDCARD_H
+  #define _SDCARD_H
+
+
+  // timer variable ( 10 ms intervall)
+  volatile uint8_t TimingDelay;
+
+  #define MMC_Write 		PORTB	//Port an der die MMC/SD-Karte angeschlossen ist also des SPI
+  #define MMC_Read 		PINB
+  #define MMC_Direction_REG DDRB
+
+  // da der SPI port ein master gesteuerter port ist, beziehen sich die bezeichnungen auf den master, also den controller.
+  // MISO -> Master In Slave Out, also der eingang am MC und der ausgang der karte.
+  // MOSI -> Master Out Slave In, also der ausgang am MC und der eingang der karte.
+  // der SS pin des SPI ports wird nicht benutzt! also da nich die karte anschließen, sondern an MMC_Chip_Select !
+
+  #if defined (__AVR_ATmega128__)
+    #define SPI_MISO            3  //Port Pin an dem Data Output der MMC/SD-Karte angeschlossen ist (DO)
+    #define SPI_MOSI            2  //Port Pin an dem Data Input der MMC/SD-Karte angeschlossen ist (DI)
+    #define SPI_Clock		1  //Port Pin an dem die Clock der MMC/SD-Karte angeschlossen ist (clk)
+    #define SPI_SS		0  //Port Pin an dem Chip Select der MMC/SD-Karte angeschlossen ist (CS)
+  #endif
+
+  #if defined (__AVR_ATmega32__)
+    #define SPI_MISO		6  //Port Pin an dem Data Output der MMC/SD-Karte angeschlossen ist
+    #define SPI_MOSI   		5  //Port Pin an dem Data Input der MMC/SD-Karte angeschlossen ist
+    #define SPI_Cloc		7  //Port Pin an dem die Clock der MMC/SD-Karte angeschlossen ist (clk)
+    #define SPI_SS		4  //Port Pin an dem Chip Select der MMC/SD-Karte angeschlossen ist (CS)
+  #endif
+
+  #if defined (__AVR_ATmega162__)
+    #define SPI_MISO   		6  //Port Pin an dem Data Output der MMC/SD-Karte angeschlossen ist
+    #define SPI_MOSI   		5  //Port Pin an dem Data Input der MMC/SD-Karte angeschlossen ist
+    #define SPI_Clock		7  //Port Pin an dem die Clock der MMC/SD-Karte angeschlossen ist (clk)
+    #define SPI_SS   		4  //Port Pin an dem Chip Select der MMC/SD-Karte angeschlossen ist (CS)
+  #endif
+
+  #if defined (__AVR_ATmega168__) || (__AVR_ATmega328P__) || (__AVR_ATmega8__)
+    #define SPI_MISO            4  //Port Pin an dem Data Output der MMC/SD-Karte angeschlossen ist
+    #define SPI_MOSI            3  //Port Pin an dem Data Input der MMC/SD-Karte angeschlossen ist
+    #define SPI_Clock		5  //Port Pin an dem die Clock der MMC/SD-Karte angeschlossen ist (clk)
+    #define SPI_SS		2  //Port Pin an dem Chip Select der MMC/SD-Karte angeschlossen ist (CS)
+  #endif
+
+  #if defined (__AVR_ATmega644__)
+    #define SPI_MISO 		6  //Port Pin an dem Data Output der MMC/SD-Karte angeschlossen ist
+    #define SPI_MOSI   		5  //Port Pin an dem Data Input der MMC/SD-Karte angeschlossen ist
+    #define SPI_Clock		7  //Port Pin an dem die Clock der MMC/SD-Karte angeschlossen ist (clk)
+    #define SPI_SS   		4  //Port Pin an dem Chip Select der MMC/SD-Karte angeschlossen ist (CS)
+  #endif
+
+  #if defined (__AVR_ATmega16__)
+    #define SPI_MISO   		6  //Port Pin an dem Data Output der MMC/SD-Karte angeschlossen ist
+    #define SPI_MOSI   		5  //Port Pin an dem Data Input der MMC/SD-Karte angeschlossen ist
+    #define SPI_Clock		7  //Port Pin an dem die Clock der MMC/SD-Karte angeschlossen ist (clk)
+    #define SPI_SS		4  //Port Pin an dem Chip Select der MMC/SD-Karte angeschlossen ist (CS)
+  #endif
+
+
+// timer0 einstellungen, werte mit http://www.avrcalc.com/download.html berechnet!
+// aus diesen 3 werten ergibt sich die tick zeit, hier 10ms.
+// 4 = prescaler 256, 3 = prescaler 64, 5 = prescaler 1024, 2 = prescaler 8. wenn prescaler 0 = prescaler dann stoppt der timer
+
+  #if(F_CPU == 4000000)			// error 0.16%
+    #define TOP_OCR 0x9B
+    #define START_TCNT 0x64
+    #define PRESCALER 0x04
+  #endif
+
+  #if(F_CPU == 8000000)			// error 0,16%
+    #define TOP_OCR 0x4D
+    #define START_TCNT 0xB2
+    #define PRESCALER 0x05
+  #endif
+
+  #if(F_CPU == 10000000)       		// error 0.351%
+    #define TOP_OCR 0x61
+    #define START_TCNT 0x9E
+    #define PRESCALER 0x05
+  #endif
+
+  #if(F_CPU == 12000000)		// error 0.16%
+    #define TOP_OCR 0x74
+    #define START_TCNT 0x8B
+    #define PRESCALER 0x05
+  #endif
+
+  #if(F_CPU == 16000000)		// error 0,16%
+    #define TOP_OCR 0x9B
+    #define START_TCNT 0x64
+    #define PRESCALER 0x05
+  #endif
+
+  #if(F_CPU == 20000000)		// error 0.16%
+    #define TOP_OCR 0x4D
+    #define START_TCNT 0xB2
+    #define PRESCALER 0x04
+  #endif
+
+  // prototypen
+
+  void timer0_init();
+
+  uint8_t mmc_init(void);		// initialisiert die pins und geschwindigkeit
+  uint8_t mmc_read_sector (uint32_t addr,uint8_t *Buffer);	// liest einen sektor mit adresse addr auf Buffer
+  uint8_t mmc_write_sector (uint32_t addr,uint8_t *Buffer);	// schreibt einen sektor mit der adresse addr aus dem puffer Buffer, auf die karte
+  uint8_t mmc_multi_block_stop_read (void);  			// stop kommando fuer multiblock read operation
+  uint8_t mmc_multi_block_stop_write (void); 			// stop kommando fuer multiblock write operation
+  uint8_t mmc_multi_block_start_read (uint32_t addr);            // hier wird das kommando um mehrer bloecke am stueck zu lesen gesendet. ab addr
+  void    mmc_multi_block_read_sector (uint8_t *Buffer);         // hiermit werden nacheinander die bloecke gelesen
+  uint8_t mmc_multi_block_start_write (uint32_t addr);           // hier wird das kommando um mehrere bloecke am stueck zu schreiben gesendet, ab addr
+  uint8_t mmc_multi_block_write_sector (uint8_t *Buffer);	// hiermit werden nacheinander die bloecke geschrieben
+
+  #if(MMC_STATUS_INFO==TRUE)
+    #define MMC_OK	       	0
+    #define MMC_ERROR_1		1
+    #define MMC_ERROR_2		2
+    #define MMC_NO_CARD		5
+    #define MMC_WP     		6
+
+    #define MMC_NOT_PRESENT	7
+    #define MMC_PROTECTED	8
+
+    // > defines are based on work by Roland Riegel
+    #define configure_pin_protected() 		DDRC &= ~(1 << DDC2)
+    #define configure_pin_present() 		DDRA &= ~(1 << DDA1)
+    #define get_pin_protected()			((PINC >> PC2) & 0x01)
+    #define get_pin_present()  			((PINA >> PA1) & 0x01)
+
+    #if(MMC_STATUS_INFO == TRUE)
+      uint8_t mmc_present(void);
+    #endif
+
+    #if(MMC_STATUS_INFO == TRUE && MMC_WRITE == TRUE)
+      uint8_t mmc_protected(void);
+    #endif
+  #endif
+
+  #if (MMC_LS == TRUE)
+    int8_t *ltostr(int32_t num, int8_t *string, uint16_t max_chars, uint8_t base);
+  #endif
+
+  // #######################################################################################################################
+  // "daten" ketten siehe doku...
+  // 1. fat_getFreeRowOfCluster -> fat_getFreeRowOfDir -> fat_makeRowDataEntry -> fat_makeFileEntry -> fat_writeSector  "eintrag gemacht !!"
+  // 2. fat_loadSector -> fat_loadRowOfSector -> fat_loadFileDataFromCluster -> fat_loadFileDataFromDir (-> fat_cd)   "daten chain"
+
+  // #######################################################################################################################
+
+  // funktionen
+
+  uint32_t fat_clustToSec(uint32_t);				// rechnet cluster zu 1. sektor des clusters um
+  uint32_t fat_secToClust(uint32_t sec);			// rechnet sektor zu cluster um!
+  uint32_t fat_getNextCluster(uint32_t oneCluster);// fat auf naechsten, verketteten cluster durchsuchen
+  uint64_t fat_getFreeBytes(void);						// berechnet den freien platz der karte in bytes!
+  uint8_t fat_writeSector(uint32_t sec);				// schreibt sektor auf karte
+  uint8_t fat_loadSector(uint32_t sec);				// laed Uebergebenen absoluten sektor
+  uint8_t fat_loadFileDataFromDir( uint8_t name []);	// durchsucht das aktuelle directory
+  uint8_t fat_loadFatData(void);								// laed fat daten
+  void 	fat_loadRowOfSector(uint16_t row);			// laed reihe des geladen sektors auf struct:file
+  void 	fat_setCluster( uint32_t cluster, uint32_t content); 	// setzt cluster inhalt in der fat
+  void 	fat_delClusterChain(uint32_t startCluster);			// loescht cluster-chain in der fat
+  void 	fat_makeFileEntry( uint8_t name [],uint8_t attrib); // macht einen datei/ordner eintrag
+  void 	fat_getFreeClustersInRow(uint32_t offsetCluster);		// sucht zusammenhaengende freie cluster aus der fat
+  void 	fat_getFatChainClustersInRow( uint32_t offsetCluster);	// sucht fat-chain cluster die zusammenhaengen
+  void 	fat_setClusterChain(uint32_t startCluster, uint32_t endCluster); // verkettet cluster zu einer cluster-chain
+  void	fat_makeSfnDataEntry(uint8_t name [],uint8_t attrib,uint32_t cluster,uint32_t length);
+
+
+  uint8_t  ffread(void);                   // liest byte-weise aus der datei (puffert immer 512 bytes zwischen)
+  void     ffwrite( uint8_t c);            // schreibt ein byte in die geoeffnete datei
+  void     ffwrites( uint8_t *s );         // schreibt string auf karte
+  void     ffwriten( uint8_t *s, uint16_t n );           // schreibt n bytes aus s auf die karte. maximal 2^16 stueck wegen datentyp von n !
+  uint8_t  ffopen( uint8_t name[], uint8_t rw_flag);     // kann immer nur 1 datei bearbeiten.
+  uint8_t  ffclose(void);                  // muss aufgerufen werden bevor neue datei bearbeitet wird.
+  void     ffseek(uint32_t offset);        // setzt zeiger:bytesOfSec auf position in der geoeffneten Datei.
+  uint8_t  ffcd( uint8_t name[]);          // wechselt direktory
+  void     ffls(fptr_t uputs_ptr);         // zeigt direktory inhalt an, muss zeiger auf eine ausgabe funktion uebergeben bekommen
+  uint8_t  ffcdLower(void);                // geht ein direktory zurueck, also cd.. (parent direktory)
+  uint8_t  ffrm( uint8_t name[]);	  // loescht datei aus aktuellem verzeichniss.
+  void     ffmkdir( uint8_t name[]); 	  // legt ordner in aktuellem verzeichniss an.
+  void     fflushFileData(void);           // updatet datei informationen. sichert alle noetigen informationen!
+  uint8_t  ffileExsists ( uint8_t name[]); // prueft ob es die datei im aktuellen verzeichnis gibt. ffopen wuerde die datei direkt anlegen falls es sie noch nicht gibt!
+
+  //#######################################################################################################################
+
+#endif
+

@@ -1,0 +1,149 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>GETOPT (Linux)</title>
+</head>
+<body>
+<p><font face="Arial">
+<h2>---------------------------------------------------------<br>
+getopt (Linux)<br>
+---------------------------------------------------------</h2>
+<ul><ul>
+	   Kommandozeilenargumente auswerten
+</ul></ul>
+<br>
+Getop ist eine Funktion die das Auslesen von Kommandozeilenparametern<br> 
+erleichtert. Getopt stellt somit einen Kommandozeilenparser dar.<br>
+<ul><ul>
+        #include &lt;unistd.h&gt;<br>
+        <br>
+        int getopt(int argc, char * const argv[ ], const char *optstring);
+</ul></ul>
+
+Getopt definiert globale Variable, die zur Auswertung der Kommandozeile<br>
+benoetigt werden:<br>
+<ul><ul>
+        extern char *optarg;<br>
+        extern int optind, opterr, optopt;
+</ul></ul>
+<br>
+Die Syntax eines Programmaufrufs<br>
+---------------------------------------------------------<br>
+<br>
+getopt liefert das aktuell durch argc angesprochene Optionszeichen<br> 
+zurueck. Ist das Optionszeichen "--" so liefert getopt den Wert -1<br> 
+zurueck.<br>
+<br>
+- argc -  und - argv - sind die Variable, wie sie der Hauptfunktion<br>
+- main- uebergeben worden sind ( - argc - zaehlt die Anzahl der ueber-<br>
+gebenen Parameter, - argv - nimmt die die einzelnen Argumentenstrings in<br>
+einem Array auf ).<br>
+<br>
+- optstring - ist ein String, der alle erlaubten Optionszeichen enthaelt<br>
+(case sensitive).<br>
+<br>
+Optionszeichen muessen beim Aufruf ein Minuszeichen - vorangestellt<br>
+werden. Folgt einem Optionszeichen ein Doppelpunkt, so erwartet die<br> 
+Optionsangabe ein Optionsargument.<br>
+<br>
+Beispiel "abc:d:"<br>
+<br>
+Wertet - getopt - einen Programmstart mit obigem String fuer - optstring -<br>
+aus, so koennen dem aufgerufenem Programm die Parameter a,b,c und d<br>
+mitgegeben werden, wobei fuer die Parameter c und d ein zusaetzliches<br>
+Argument verlangt wird.<br>
+<br>
+programmname -a -d test1<br>
+<br>
+Wird eine Option, die ein Optionsargument erwartet (nachgestellter Doppel-<br>
+punkt), ohne dieses Argument angegegeben, so liefert getopt ein<br>
+Fragezeichen '?' zurueck. In diesem Falle ist in optopt die Option ge-<br>
+speichert, die das Argument erwartet hat.<br>
+<br>
+Beispiel<br>
+---------------------------------------------------------<br>
+<pre>
+#include &lt;ctype.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+ 
+int main (int argc, char **argv)
+{
+  int aflag = 0;
+  int bflag = 0;
+  char *cvalue = NULL;
+  char *fvalue = NULL;
+  int index;
+  int c;
+ 
+  opterr = 0;
+ 
+  while ((c = getopt (argc, argv, ":af:bc:")) != -1)
+  {
+    switch (c)
+      {
+      case 'a':
+        aflag = 1;
+        break;
+      case 'f':
+        fvalue = optarg;
+        break;
+      case 'b':
+        bflag = 1;
+        break;
+      case 'c':
+        cvalue = optarg;
+        break;
+      case '?':
+        if ((optopt == 'c') || (optopt == 'f'))
+        {
+          printf (" Option -%c benoetigt Argument.\n", optopt);
+        }
+        else
+        {
+          printf (" Unbekannter Parameter -%c'.\n", optopt);
+        }
+        return 1;
+      default:
+        abort ();
+      }
+  }
+ 
+  printf("\n");
+ 
+  if (aflag)
+    printf("\n Option -a ausgewaehlt");
+  else
+    printf("\n Option -a nicht ausgewaehlt");
+ 
+  if (bflag)
+    printf("\n Option -b ausgewaehlt");
+  else
+    printf("\n Option -b nicht ausgewaehlt");
+ 
+  if (cvalue == NULL)
+    printf("\n Keine Angabe fuer Option -c");
+  else
+    printf("\n Optionsargument fuer Option -c: %s", cvalue);
+ 
+  if (fvalue == NULL)
+    printf("\n Keine Angabe fuer Option -f");
+  else
+    printf("\n Optionsargument fuer Option -f: %s", fvalue);
+ 
+  for (index = optind; index &lt; argc; index++)
+  {
+    printf ("Argument ohne Optionszeichen: %s\n", argv[index]);
+  }
+  printf("\n");
+  return 0;
+}
+</pre>
+<br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+</font></p>
+</body><br>
+</html><br>

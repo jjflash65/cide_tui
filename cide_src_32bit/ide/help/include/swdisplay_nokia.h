@@ -1,0 +1,269 @@
+/* -------------------- SWDISPLAY_NOKIA.H ---------------------
+   Headerdatei fuer die Anbindung eines Nokia s/w Displays
+   Verwendbare Displays:
+
+      5110
+      3310
+      3410
+
+   Microcontroller: ATmega8 / ATmegaxx8
+
+   (c) 28.01.2015 R. Seelig
+   ------------------------------------------------------------ */
+
+#ifndef in_swdisplay
+  #define in_swdisplay
+
+  // moegliche "Define - Optionen"
+
+  #define n3410                  // angeschlossenes Display ist ein N3410 ansonsten ein 3310)
+//  #define noscreen_cache         // Schattenspeicher nicht verfuegbar, Display nur im
+                                 // Directwritemodus verfuegbar
+
+
+  #include <avr/io.h>
+  #include <avr/pgmspace.h>
+  #include <util/delay.h>
+  #include <stdlib.h>
+  #include <string.h>
+  #include <stdio.h>
+
+//-------------------------------------------------------------
+// Hardwareanbindung
+//-------------------------------------------------------------
+
+// SPI Interface
+// die PIN-Definitionen des SPI duerfen nicht geaendert werden,
+// weil die besonderen Funktionen der Pin's (MOSI,SCK und SS
+// verwendet werden !
+
+
+  #define SPI_DDR                 DDRB
+  #define SPI_MOSI_PIN            3  //PB3
+  #define SPI_CLK_PIN             5  //PB5
+  #define SPI_SS_PIN              2  //PB2
+
+  // Displayports
+  #define LCD_PORT                PORTB
+  #define LCD_DDR                 DDRB
+  #define LCD_RST_PIN             0  //PB0
+  #define LCD_DC_PIN              1  //PB1
+  #define LCD_CE_PIN              2  //PB2
+
+  #ifdef n3410
+    // Nokia 3410
+    #define LCD_VISIBLE_X_RES     96
+    #define LCD_VISIBLE_Y_RES     64
+    #define LCD_REAL_X_RES        102
+    #define LCD_REAL_Y_RES        72
+    #define OK                    0
+    #define OUT_OF_BORDER         1
+  #else
+    // Nokia 5110 / 3310
+    #define LCD_VISIBLE_X_RES     84
+    #define LCD_VISIBLE_Y_RES     48
+    #define LCD_REAL_X_RES        84
+    #define LCD_REAL_Y_RES        48
+    #define OK                    0
+    #define OUT_OF_BORDER         1
+  #endif
+
+  #ifdef noscreen_cache
+    #define LCD_CACHE_SIZE        2
+    #warning LCD kann nur im Directwrite-Modus genutzt werden
+  #else
+    #define LCD_CACHE_SIZE        ((LCD_VISIBLE_X_RES*LCD_VISIBLE_Y_RES)/8)
+  #endif
+
+  #define lcd_prints(tx)     (putromstring(PSTR(tx)))      // Anzeige String aus Flashrom: prints("Text");
+  #define lcd_printa(tx)     (putramstring(tx))            // Anzeige eines Strings der in einem Array im RAM liegt
+
+
+  typedef enum {LCD_CMD=0,LCD_DATA=1} LcdCmdData;
+  typedef enum {PIXEL_OFF=0,PIXEL_ON=1,PIXEL_XOR=2} PixelMode;
+  extern unsigned char signal[LCD_VISIBLE_X_RES];
+  extern unsigned char LcdCache[LCD_CACHE_SIZE];
+
+
+  // --------------------------------------------------------------
+  // SPI Prototypen
+  // --------------------------------------------------------------
+
+  void spi_init(void);
+  unsigned char spi_out(unsigned char data);
+
+  // --------------------------------------------------------------
+  // LCD Prototypen
+  // --------------------------------------------------------------
+
+  void wrcmd(uint8_t command);                            // sende ein Kommando
+  void wrdata(uint8_t dat);                               // sende ein Datum
+  void lcd_init(void);
+  void clrscr(void);
+  void gotoxy(unsigned char x, unsigned char y);
+  void lcd_putchar (uint8_t ch);
+  void lcd_putchar_d(uint8_t ch);
+  void putramstring(unsigned char dataArray[]);
+  void putromstring(const unsigned char *dataPtr);
+  void putpixel(unsigned char x, unsigned char y, PixelMode mode );
+  void line(int x0, int y0, int x1, int y1, PixelMode mode);
+  void rectangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, PixelMode mode);
+  void ellipse(int xm, int ym, int a, int b, PixelMode mode );
+  void circle(int x, int y, int r, PixelMode mode );
+  void showimage(char ox, char oy, const unsigned char* const image, PixelMode mode);
+  void scr_update(void);
+
+  // --------------------------------------------------------------
+  //  LCD-Prototypen, die direkt in das Displayram schreiben.
+  //  Hiermit sind keine Pixel des Displays einzeln ansprechbar,
+  //  sondern immer nur 8 zusammen (1 Byte). Eignet sich für
+  //  schnelle Ausgaben. Außerdem kann hierfür dann der
+  //  Schattenspeicher ausser Betrieb genommen werden.
+  // --------------------------------------------------------------
+
+  void showimage_d(uint8_t ox, uint8_t oy, const unsigned char* const image, char mode);
+
+  void clrscr_d(void);
+  void gotoxy_d(unsigned char x, unsigned char y);
+  void yline(char x, char y1, char y2);                   // zeichnet eine Linie in Y-Achse
+                                                          // zeige Bitmap direkt an
+
+  // ----------------- fuer PrintF --------------------------------
+
+  int lcd_fileout(char ch, FILE *stream);
+  static FILE lcdout = FDEV_SETUP_STREAM(lcd_fileout,NULL,_FDEV_SETUP_WRITE);		// einen Stream zuordnen
+
+  // --------------------------------------------------------------
+
+  // LCD Variable
+
+  extern unsigned int LcdCacheIdx;
+  extern char directwrite;
+  extern char wherex;
+  extern char wherey;
+  extern char invchar;               // = 1 fuer inversive Textausgabe  (nur im Directwrite-Modus)
+
+
+  // --------------------------------------------------------------
+  // Zeichensatz
+  // --------------------------------------------------------------
+
+
+  /* Bitmaps des Ascii-Zeichensatzes
+     ein Smily wuerde so aussehen:
+        { 0x36, 0x46, 0x40, 0x46, 0x36 }  // Smiley
+
+     ein grosses A ist folgendermassen definiert:
+
+     { 0x7E, 0x11, 0x11, 0x11, 0x7E }
+
+     . x x x x x x .
+     . . . x . . . x
+     . . . x . . . x
+     . . . x . . . x
+     . x x x x x x .
+
+  */
+
+
+  #define lastascii 125                   // letztes angegebenes Asciizeichen
+
+  static const unsigned char fonttab [][5] PROGMEM={
+      { 0x00, 0x00, 0x00, 0x00, 0x00 },   // space
+      { 0x00, 0x00, 0x2f, 0x00, 0x00 },   // !
+      { 0x00, 0x07, 0x00, 0x07, 0x00 },   // "
+      { 0x14, 0x7f, 0x14, 0x7f, 0x14 },   // #
+      { 0x24, 0x2a, 0x7f, 0x2a, 0x12 },   // $
+      { 0xc4, 0xc8, 0x10, 0x26, 0x46 },   // %
+      { 0x36, 0x49, 0x55, 0x22, 0x50 },   // &
+      { 0x00, 0x05, 0x03, 0x00, 0x00 },   // '
+      { 0x00, 0x1c, 0x22, 0x41, 0x00 },   // (
+      { 0x00, 0x41, 0x22, 0x1c, 0x00 },   // )
+      { 0x14, 0x08, 0x3E, 0x08, 0x14 },   // *
+      { 0x08, 0x08, 0x3E, 0x08, 0x08 },   // +
+      { 0x00, 0x00, 0x50, 0x30, 0x00 },   // ,
+      { 0x10, 0x10, 0x10, 0x10, 0x10 },   // -
+      { 0x00, 0x60, 0x60, 0x00, 0x00 },   // .
+      { 0x20, 0x10, 0x08, 0x04, 0x02 },   // /
+      { 0x3E, 0x51, 0x49, 0x45, 0x3E },   // 0
+      { 0x00, 0x42, 0x7F, 0x40, 0x00 },   // 1
+      { 0x42, 0x61, 0x51, 0x49, 0x46 },   // 2
+      { 0x21, 0x41, 0x45, 0x4B, 0x31 },   // 3
+      { 0x18, 0x14, 0x12, 0x7F, 0x10 },   // 4
+      { 0x27, 0x45, 0x45, 0x45, 0x39 },   // 5
+      { 0x3C, 0x4A, 0x49, 0x49, 0x30 },   // 6
+      { 0x01, 0x71, 0x09, 0x05, 0x03 },   // 7
+      { 0x36, 0x49, 0x49, 0x49, 0x36 },   // 8
+      { 0x06, 0x49, 0x49, 0x29, 0x1E },   // 9
+      { 0x00, 0x36, 0x36, 0x00, 0x00 },   // :
+      { 0x00, 0x56, 0x36, 0x00, 0x00 },   // ;
+      { 0x08, 0x14, 0x22, 0x41, 0x00 },   // <
+      { 0x14, 0x14, 0x14, 0x14, 0x14 },   // =
+      { 0x00, 0x41, 0x22, 0x14, 0x08 },   // >
+      { 0x02, 0x01, 0x51, 0x09, 0x06 },   // ?
+      { 0x32, 0x49, 0x59, 0x51, 0x3E },   // @
+      { 0x7E, 0x11, 0x11, 0x11, 0x7E },   // A
+      { 0x7F, 0x49, 0x49, 0x49, 0x36 },   // B
+      { 0x3E, 0x41, 0x41, 0x41, 0x22 },   // C
+      { 0x7F, 0x41, 0x41, 0x22, 0x1C },   // D
+      { 0x7F, 0x49, 0x49, 0x49, 0x41 },   // E
+      { 0x7F, 0x09, 0x09, 0x09, 0x01 },   // F
+      { 0x3E, 0x41, 0x49, 0x49, 0x7A },   // G
+      { 0x7F, 0x08, 0x08, 0x08, 0x7F },   // H
+      { 0x00, 0x41, 0x7F, 0x41, 0x00 },   // I
+      { 0x20, 0x40, 0x41, 0x3F, 0x01 },   // J
+      { 0x7F, 0x08, 0x14, 0x22, 0x41 },   // K
+      { 0x7F, 0x40, 0x40, 0x40, 0x40 },   // L
+      { 0x7F, 0x02, 0x0C, 0x02, 0x7F },   // M
+      { 0x7F, 0x04, 0x08, 0x10, 0x7F },   // N
+      { 0x3E, 0x41, 0x41, 0x41, 0x3E },   // O
+      { 0x7F, 0x09, 0x09, 0x09, 0x06 },   // P
+      { 0x3E, 0x41, 0x51, 0x21, 0x5E },   // Q
+      { 0x7F, 0x09, 0x19, 0x29, 0x46 },   // R
+      { 0x46, 0x49, 0x49, 0x49, 0x31 },   // S
+      { 0x01, 0x01, 0x7F, 0x01, 0x01 },   // T
+      { 0x3F, 0x40, 0x40, 0x40, 0x3F },   // U
+      { 0x1F, 0x20, 0x40, 0x20, 0x1F },   // V
+      { 0x3F, 0x40, 0x38, 0x40, 0x3F },   // W
+      { 0x63, 0x14, 0x08, 0x14, 0x63 },   // X
+      { 0x07, 0x08, 0x70, 0x08, 0x07 },   // Y
+      { 0x61, 0x51, 0x49, 0x45, 0x43 },   // Z
+      { 0x00, 0x7F, 0x41, 0x41, 0x00 },   // [
+      { 0x55, 0x2A, 0x55, 0x2A, 0x55 },   // "Yen"
+      { 0x00, 0x41, 0x41, 0x7F, 0x00 },   // ]
+      { 0x04, 0x02, 0x01, 0x02, 0x04 },   // ^
+      { 0x40, 0x40, 0x40, 0x40, 0x40 },   // _
+      { 0x00, 0x01, 0x02, 0x04, 0x00 },   // '
+      { 0x20, 0x54, 0x54, 0x54, 0x78 },   // a
+      { 0x7F, 0x48, 0x44, 0x44, 0x38 },   // b
+      { 0x38, 0x44, 0x44, 0x44, 0x20 },   // c
+      { 0x38, 0x44, 0x44, 0x48, 0x7F },   // d
+      { 0x38, 0x54, 0x54, 0x54, 0x18 },   // e
+      { 0x08, 0x7E, 0x09, 0x01, 0x02 },   // f
+      { 0x0C, 0x52, 0x52, 0x52, 0x3E },   // g
+      { 0x7F, 0x08, 0x04, 0x04, 0x78 },   // h
+      { 0x00, 0x44, 0x7D, 0x40, 0x00 },   // i
+      { 0x20, 0x40, 0x44, 0x3D, 0x00 },   // j
+      { 0x7F, 0x10, 0x28, 0x44, 0x00 },   // k
+      { 0x00, 0x41, 0x7F, 0x40, 0x00 },   // l
+      { 0x7C, 0x04, 0x18, 0x04, 0x78 },   // m
+      { 0x7C, 0x08, 0x04, 0x04, 0x78 },   // n
+      { 0x38, 0x44, 0x44, 0x44, 0x38 },   // o
+      { 0x7C, 0x14, 0x14, 0x14, 0x08 },   // p
+      { 0x08, 0x14, 0x14, 0x18, 0x7C },   // q
+      { 0x7C, 0x08, 0x04, 0x04, 0x08 },   // r
+      { 0x48, 0x54, 0x54, 0x54, 0x20 },   // s
+      { 0x04, 0x3F, 0x44, 0x40, 0x20 },   // t
+      { 0x3C, 0x40, 0x40, 0x20, 0x7C },   // u
+      { 0x1C, 0x20, 0x40, 0x20, 0x1C },   // v
+      { 0x3C, 0x40, 0x30, 0x40, 0x3C },   // w
+      { 0x44, 0x28, 0x10, 0x28, 0x44 },   // x
+      { 0x0C, 0x50, 0x50, 0x50, 0x3C },   // y
+      { 0x44, 0x64, 0x54, 0x4C, 0x44 },   // z
+      // Zeichen vom Ascii-Satz abweichend
+      { 0x3E, 0x7F, 0x7F, 0x3E, 0x00 },   // Zeichen 123 : ausgefuelltes Oval
+      { 0x06, 0x09, 0x09, 0x06, 0x00 },   // Zeichen 124 : hochgestelltes kleines o (fuer Gradzeichen);
+      { 0x01, 0x01, 0x01, 0x01, 0x01 }    // Zeichen 125 : Strich in der obersten Reihe
+  };
+
+#endif

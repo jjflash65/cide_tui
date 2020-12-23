@@ -1,0 +1,421 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Zeiger (Pointer)</title>
+</head>
+<body>
+<p><font face="Arial">	
+		
+<h2>---------------------------------------------------------<br>	
+<a name="pointer">Zeiger (Pointer)</a><br>
+---------------------------------------------------------</h2><br>
+
+<ul>
+<A name= "pointer_bsp" href="#000301zeiger"></A>Beispielprogramm mit Zeigern<br>
+<A name= "pointer_callbyref" href="#000302reference">Call by reference</a><br>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+</ul><br>
+Zeiger sind Variable, die anstelle von Datentypen (Anmerkung 1) die<br>
+Adresse (reference), an der diese Daten gespeichert sind, beinhalten.<br>
+Ein Zeiger ist gewissermassen der Verweis oder der Link auf eine Variable,<br>
+an der diese im Speicher zu finden ist.<br>
+<br>
+Anmerkung 1: Datentypen koennen Standardtypen wie char, int, float aber auch<br>
+Strukturen sein.<br>
+<pre>
+  Datentyp   *variable;
+</pre>
+Das "*" Zeichen zeigt an, dass es sich bei der Variable um einen Zeiger<br>
+handelt. Zu beachten ist hierbei, dass das "*" Zeichen VOR dem Variablen-<br>
+namen steht. Ein Zeiger muss immer vom selben Datentyp sein, auf den er<br>
+zeigt.<br>
+Zeiger kommen vor allem immer dann zum Einsatz, wenn Variable die mehr als<br>
+aus einem Wert (Value) bestehen, bearbeitet werden sollen.
+<br>
+<h2>Beispiel:</h2>	
+<br>
+Ein Char-Array fuer einen Text wird definiert:<br>
+<pre>
+	char  mytext[4]= "Ich";
+</pre>
+Hier wird der Compiler fuer diesen Text insgesamt 4 Bytes des<br>
+Speichers belegen. Es wird angenommen, dass der Compiler hierfuer<br>
+die Adresse 0x0210 gewaehlt hat (Adresse wurde absolut zufaellig<br>
+bestimmt). Dann sieht dieses im Speicher folgendermassen aus:<br>
+<pre>
+    Adresse     Inhalt
+   ---------------------
+  |  0x0210  |   0x49   |    'I'
+  |----------|----------|
+  |  0x0211  |   0x63   |    'c'
+  |----------|----------|
+  |  0x0212  |   0x68   |    'h'
+  |----------|----------|
+  |  0x0213  |   0x00   |    Endekennung eines Ascii-Textes
+   ---------------------
+</pre>
+Moechte man nun auf die einzelnen Elemente des Arrays zugreifen um<br>
+diese zu bearbeiten oder auszulesen hat man nun 2 Moeglichkeiten:<br>
+<br>
+Man kann eine "Indexvariable" erstellen die dann zum einen im<br>
+Stile von<br>
+<pre>
+  char  mytext[4]= "Ich";	
+  int   strindex;
+  char  ch;
+
+  strindex= 0;
+  ch= mytext[strindex];
+
+  // ch beinhaltet nun das 'I' Zeichen
+</pre>
+auf das Array zugreift. Wird nun aber eine Funktion benoetigt, die<br>
+die Bearbeitung des Arrays vornimmt funktioniert dieses Vorgehen nur<br>
+noch bedingt.<br>
+<br>
+Hier kommen die Zeiger ins Spiel und dies ist somit die zweite<br>
+Moeglichkeit:<br>
+<pre>
+  char  mytext[4]= "Ich";		
+  char  *p;              // ein Zeiger auf Datentyp char
+  char  ch;
+
+  p= &mytext[0];
+
+  ch= *p;
+
+  // ch beinhaltet nun das 'I' Zeichen
+</pre>
+<h2>Erklaerung:</h2>
+<br>
+Das "*" Zeichen vor der Variable "p" ist ein Operator und bedeutet,<br>
+dass dies keine "normale" Variable ist, sondern dass sie als Inhalt eine<br>
+Speicheradresse aufnehmen kann, die auf eine Variable vom Typ char zeigt.<br>
+Somit ist "p" eine Zeigervariable (korrekt bezeichnet als Indirektions-<br>
+operator).
+<h2>ch = *p;</h2>
+Das Sternchen VOR dem p gibt an, dass ch der Wert uebergeben werden soll,<br>
+auf den p zeigt.<br>
+<br>
+Das "&" Zeichen in der Anweisung
+<h2>p = &mytext[0];</h2>
+gibt an, dass dem Zeiger "p" die Adresse des Arrays "mytext[0]" zugewiesen<br>
+wird. Somit hat die Zeigervariable "p" nach obigem Beispiel die Adresse 0x210<br>
+und "zeigt" somit auf den Anfang des Arrays.<br>
+Da dem Zeiger eine Adresse uebergeben wird (und kein Inhalt gemeint ist),<br>
+erhaelt die Variable p KEIN Sternchen davor.<br>
+<br>
+Mit "ch = *p" wird angewiesen, dass der Variable "ch" (vom Typ char) der<br>
+Wert zugewiesen werden soll, auf den "p" zeigt (in unserem Fall auf den<br>
+Buchstaben "I" der im Speicher abgelegt ist).<br>
+<A name="000301zeiger"><h2>Beispielprogramm mit Zeigern</h2></a>
+<br>
+Dieses Beispielprogramm zeigt, wie ein Array, dessen Inhalt einen Text ist,<br>
+auf der seriellen Schnittstelle ausgegeben werden kann.<br>
+<pre>
+ #include "smallio.h"
+  
+ int main(void)
+ {
+  
+   char   mytext[] = "Mein Name ist Hase\n\r";
+   char   *p;                   // unser Zeiger
+   char   *p2;                  // ein zweiter Zeiger
+   char   ch;
+  
+   smallio_init();              // fuer Ausgaben via printf
+  
+   p= &mytext[0];               // p beinhaltet die Adresse des Textes
+   p2= p;                       // ... und p2 auch !
+  
+   while(*p)                    // wiederhole so lange, wie das Element
+   {                            // auf das p zeigt groesser als 0,
+                                // also keine Endekennung ist.
+  
+     ch= *p;                    // ch beinhaltet das Zeichen auf
+                                // das p zeigt
+  
+     p++;                       // Zeiger auf naechstes Element
+                                // setzen
+  
+     putchar(ch);               // Zeichen ausgeben
+   }
+   p= p2;                       // da der originale Zeiger in der
+                                // While-Schleife veraendert wurde
+                                // zeigt er hiermit wieder auf den
+                                // originalen Speicherbereich
+   while (1);
+ }
+</pre>
+<br>
+<a href="#pointer">Zeiger (Pointer)</a><br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+
+<h2>---------------------------------------------------------<br>	
+<A name="000301functionsall"></A>Funktionen allgemein / Call by value<br>
+---------------------------------------------------------</h2><br>
+<br>
+Eine der wichtigsten Herangehensweise bei der Programmierung von <br>
+Computern / Mikrocontrollern ist das Aufteilen des Programms in <br>
+Haupt- und Unterprogramme.<br>
+<br>
+Unterprogramme dienen dafuer, eine  bestimmte und oefters wiederkehrende<br>
+Aufgabenstellung (und nur diese) zu bearbeiten. Unterprogramme werden <br>
+in C als function bezeichnet.<br>
+<br>
+Jedem C-Compiler liegt ein Softwarepaket bei, den sogenannten Standard-<br>
+bibliotheken, die eine Vielzahl von Funktionen zur Verfuegung stellen.<br>
+Eine gute Unterteilung eines Programms in sinnvolle Funktionen sollte in <br>
+jedem Programm stattfinden, damit dieses gut wartbar und an evtl. geaenderte<br>
+Anforderungen anpassbar ist.<br>
+<br>
+Grundsaetzlich gibt es 2 Arten von Funktionen:<br>
+<ul>
+	- ohne Rueckgabe eines Ergebniswertes<br>
+	- mit Rueckgabe eines Ergebniswertes.<br>
+</ul>
+<br>
+Bei der Deklaration einer Funktion ist IMMER der Datentyp des Rueckgabe-<br>
+wertes anzugeben. Funktionen, die keinen Wert zurueck geben haben den <br>
+Datentyp void (engl. leere, nichts).<br>
+<br>
+Funktion mit Rueckgabewert:<br>
+<br
+Beispiel:<br>
+<br>
+<pre>
+/* ----------------------------------------------------------
+     example_f01.c
+
+     Beispiel zur Verwendung von Funktionen
+   ---------------------------------------------------------- */
+#include "smallio.h"
+  
+/* ------------------------------------------
+                   tu_etwas
+               eine eigene Funktion
+   ------------------------------------------ */
+void tu_etwas(void)                    // die Funktion heisst "tu_etwas"
+{
+  printf("\n\r Ich tu ja schon was...\n\r");
+}
+  
+/* ------------------------------------------
+                      main
+     auch "main" ist eine Funktion, sie ist
+     die Hauptfunktion des Programmes
+   ------------------------------------------ */
+int main(void)
+{
+  smallio_init();
+
+  tu_etwas();                         // Aufruf der eigenen Funktion
+  while(1)
+  {
+  }
+}
+</pre>
+<br>
+Das Beispiel oben macht nicht wirklich viel, sie verdeutlich jedoch den Aufruf<br>
+einer Funktion. Hat die Funktion wie im Fall oben keinerlei weitere Funktions-<br>
+argumente, so ist der Argumentenliste das Schluesselwort void (fuer "nichts")<br>
+einzutragen.<br>
+<br>
+Funktionen koennen optional ein oder mehrere Funktionsargumente enthalten,<br>
+die innerhalb der Funktion ausgewertet werden koennen.  Fuer jedes Funktions-<br>
+argument ist der Datentyp anzugeben. Ein solches Funktionsargument ist, wenn<br>
+nicht durch const eingeschraenkt, auch als Variable innerhalb der Funktion<br>
+verwendbar.<br>
+<br>
+Hierfuer wird beim Funktionsaufruf Speicher fuer diese Variable reserviert<br>
+und in der Funktion benutzt, der nach Beendigung der Funktion wieder frei<br>
+gegeben wird. Gleiches gilt fuer Variable, die innerhalb einer Funktion<br>
+angelegt werden. Fuer diese werden ebenfalls beim Aufruf Speicher reserviert,<br>
+der bei Beendigung der Variable wieder freigegeben wird (so diese nicht durch<br>
+das Schluesselwort static gekennzeichnet ist).<br>
+<br>
+Beispiel:<br>
+<br>
+<pre>
+/* ----------------------------------------------------------
+     example_f02.c
+
+     Beispiel zur Verwendung von Funktionen
+   ---------------------------------------------------------- */
+  
+#include "smallio.h"
+  
+void print_add(uint16_t z1, uint16_t z2)
+{
+  uint16_t ergeb;
+
+  ergeb= z1 + z2;
+  printf("\n\r %d + %d = %d \n\r", z1, z2, ergeb);
+}
+  
+/* ------------------------------------------
+                    main
+   ------------------------------------------ */
+int main(void)
+{
+  uint16_t zahl;                   // Variable, nur gueltig fuer main
+  
+  smallio_init();
+  
+  zahl= 42;
+  print_add(zahl, 119);            // Aufruf der eigenen Funktion
+  while(1)
+  {
+  }
+}
+  
+</pre>
+<br>	
+Funktion mit Rueckgabewert<br>	
+<br>	
+Funktionen, die ein Ergebnis zurueck geben sollen, muss anstelle von void<br>	
+der Datentyp angegeben werden, den er zurueckliefern soll.<br>	
+<pre>
+	   int16_t addiere(int16_t zahl1, int16_t zahl2);
+</pre>
+Die Funktion addiere liefert hier einen Wert vom Datentyp uint16_t zurueck,<br>
+dessen Ergebnis bspw. einer Variablen vom selben Typ zugewiesen werden kann.<br>
+<br>
+Das Ergebnis, das eine solche Funktion zurueckliefert, wird durch eine Angabe von<br>
+<pre>
+	   return wert;
+</pre>
+erreicht. return beendet auch die Funktion (unabhaengig davon, ob im Quelltext<br>
+weitere Anweisungen folgen oder nicht).<br>
+<br>
+Beispiel:<br>
+<br>
+<pre>
+/* ----------------------------------------------------------
+     example_f03.c
+
+     Beispiel zur Verwendung von Funktionen
+   ---------------------------------------------------------- */
+  
+#include "smallio.h"
+  
+int16_t addiere(int16_t zahl1, int16_t zahl2)
+{
+  int16_t ergeb;
+
+  ergeb= zahl1 + zahl2;
+  return ergeb;
+}
+  
+/* ------------------------------------------
+                      main
+   ------------------------------------------ */
+int main(void)
+{
+  int16_t z1, z2, summe;                // Variable nur gueltig fuer main
+  
+  smallio_init();
+  
+  z1= 42;
+  z2= 121;
+  summe= addiere(z1, z2);
+  printf("\n\r %d + %d = %d \n\r", z1, z2, summe);
+  
+  summe= addiere(128, 384);
+  printf("\n\r %d + %d = %d \n\r", z1, z2, summe);
+  while(1)
+  {
+  }
+}	
+</pre>
+Erklaerungen:<br>
+<br>
+Mit addiere wird eine Funktion definiert (programmiert), die zwei Zahlen<br>
+miteinander addiert und die Summe hiervon als Rueckgabewert der Funktion<br>
+liefert.<br>
+<br>
+Im Hauptprogramm main sind Variable z1, z2 und summe definiert. z1 und z2<br>
+werden Werte zugewiesen und diese Variable der Funktion addiere uebergeben.<br>
+Das Ergebnis wird der Variable summe zugewiesen und ein anschliessendes printf<br>
+gibt das Ergebnis der Addition aus.<br>
+<br>
+Ein zweiter Aufruf von addiere erfolgt dieses mal nicht mit Variablen, sondern<br>
+mit konstanten Werten. Auch diese werden von der Funktion addiere verarbeitet<br>
+(und anschliessend ausgegeben).<br>
+<br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+
+<h2>---------------------------------------------------------<br>	
+<A name="000302reference"></A>Call by reference<br>
+---------------------------------------------------------</h2><br>
+
+Wird an eine Funktion anstelle eines Wertes (value) die Speicheradresse<br>
+(reference) einer Variable uebergeben die den Wert beinhaltet, so wird der<br>
+Aufruf einer solchigen Funktion als "call by reference" bezeichnet. Die<br>
+Uebergabe der Speicheradresse wird mittels Zeigervariablen vorgenommen.<br>
+<br>
+<h2>Beispielprogramm</h2><br>
+Folgendes Beispielprogramm beinhaltet 2 Funktionen, die zu<br>
+<pre>"call by reference"</pre>
+Funktionen gehoeren. " myprint " gibt einen Text aus, " searchreplace "<br>
+sucht nach einem Zeichen in diesem Text und ersetzt alle vorkommenden<br>
+Zeichen durch ein anderes.<br>
+<pre>
+ #include "smallio.h"
+ 	
+ void myprint(char *mytext)     // beinhaltet Adresse des Textes
+ {
+   char   ch;
+ 
+   while(*mytext)               // wiederhole solange, bis das Zeichen
+   {                            // auf das *mytext zeigt > 0 ist und
+                                // somit keine Endekennung ist.
+     ch= *mytext;
+     putchar(ch);
+     mytext++;                  // Zeiger auf naechstes Element zeigen
+                                // lassen
+   }
+ }
+ 
+ void searchreplace(char search, char replace, char *mytext)
+ {
+   while(*mytext)
+   {
+     if (*mytext == search)      // bei Uebereinstimmung des Zeichens
+     {
+       *mytext = replace;        // an dieselbe Stelle das Ersatz-
+     }                           // zeichen setzen
+     mytext++;                   // naechstes Element
+   }
+ }
+ 
+ int main(void)
+ {
+
+   char   mytext_dt[] = "Mein Name ist Hase\n\r";
+   char   meldung[]   = "\n\rErsetze Buchstaben a durch einen Punkt .\n\n\r";
+
+   smallio_init();              // fuer Ausgaben via printf
+ 
+   myprint(&mytext_dt[0]);      // Funktion wird die Adresse von
+                                // mytext_dt mit dem ersten Element ueber-
+                                // geben.
+   myprint(&meldung[0]);        // dto. mit Meldungstext
+ 
+   searchreplace('a','.', &mytext_dt[0]);
+   myprint(&mytext_dt[0]);
+ 
+   while (1);
+ }
+</pre>
+<a href="#pointer">Zeiger (Pointer)</a><br>
+<a href="sprach_elem.html">Sprachelemente</a><br>
+<a href="cidehelp.html#anfang">Inhaltsverzeichnis</a><br>
+<br>
+</font>
+</body>
+</html>

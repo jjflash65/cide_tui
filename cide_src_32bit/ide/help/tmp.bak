@@ -1,0 +1,55 @@
+Sucht das erste (oder das naechste) 'token' aus s1<br>
+heraus, d.h. eine Zeichenfolge, die kein Zeichen aus<br>
+s2 enthaelt (sucht somit einen String bis zu einem<br>
+Trennzeichen ab).<br>
+<pre>
+  char *strtok(char *s1, const char *s2);
+</pre>
+s2 definiert das Trennzeichen. strtok interpretiert<br>
+s1 als eine Reihe von 'tokens', die durch ein oder<br>
+mehrere Zeichen aus s2 voneinander getrennt sind.<br>
+<br>
+Falls kein 'token' gefunden wurde, ist das Ergebnis<br>
+NULL, ansonsten schreibt strtok an die Stelle nach<br>
+dem 'token' in s1 ein NULL-Zeichen und liefert einen<br>
+Zeiger auf den Anfang des 'tokens.<br>
+<br>
+Nachfolgende Aufrufe von strtok mit NULL als erstem<br>
+Argument bearbeiten den String s1 weiter. Es koennen<br>
+dabei auch andere Trennzeichen (in s2) verwendet<br>
+werden.<br>
+<pre>
+<pre>
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include "../include/rs232_io.h"
+<br>
+int main(void)
+{
+   char myzahlen[30] = "13.89 #14.92 #15.97";
+   char *ptr;
+<br>
+   rs232_init();
+<br>
+   printf("Extraktion einer Zahlenreihe\n\r\n\r");
+<br>
+   /* strtok platziert ein 0-Byte an der Stelle
+     an der das Token gefunden wurde. ptr ist nun ein
+     Zeiger auf einen String der an der Stelle
+     terminiert ist, an der das Token WAR                */
+<br>
+   ptr = strtok(myzahlen, "#");
+<br>
+   while (ptr)                // solange ptr nicht auf ein
+   {                          // Textende zeigt
+<br>
+     if (ptr)  printf("%s\n\r", ptr);
+<br>
+     /* Ein weiterer Aufruf von strtok mit einem NULL
+        Zeiger sucht das naechste Token ersetzt dieses,
+        uebergibt wieder den Zeiger darauf */
+     ptr = strtok(NULL, "#");
+   }
+   while(1);
+}
+</pre>

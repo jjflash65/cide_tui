@@ -1,0 +1,701 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>RSIDE - Die Hilfedatei</title>
+</head>
+<body>
+<p><font face="Arial">
+<h2><a name="anfang">Inhaltsverzeichnis</a></h2><br>
+1.0<br><br>
+<A name="Menu-Leiste" href="#000200menu">Menu-Leiste der IDE</a><ul><br>
+
+<A name="Compile" href="#000210compile">Compile & Link</a><ul>
+<A name="compilelink" href="#000211compilelink">Compile & Link (Build)</a><br>
+<A name="compileonly" href="#000212compileonly">Compile only</a><br>
+<A name="Linker" href="#000231Linker">Linker options</a><ul>
+<A name="linkerzusatz" href="#000232linkerzusatz">Hinzuzufuegende Quelldateien</A></ul><br>
+<A name="clockfreq" href="#000230clockfreq">Clock frequency</a><br>	
+<A name="target" href="#000234target">Target device</A><br>
+<A name="resetcontroller" href="#000235reset">Reset controller</A><br>
+<A name="saveoptions" href="#000221saveoption">Save options</a><br>
+<A name="loadoptions" href="#000222loadoption">Load options</a><br>
+</ul><br>
+<A name="programmersfuses" href="#000235programmers">Programmers & flashing</a><ul>
+<A name="programmerport" href="#000236programmerport">Programmerport</A><br>
+<A name="programmerbaud" href="#000236bprogrammerbaud">Programmer-Baudrate</A><br>
+<A name="programmer" href="#000237programmer">Programmer</A><br>
+<A name="Fuses" href="#000220fuses">predifined Fuses</a><br>
+<A name="setfuses" href="#000221fuses">set / read fuses</a><br>
+<A name="flashhex" href="#000221bflashhex">Write / Read Hexfiles</a><br>
+</ul><br>
+<A name="rs232-monitor" href="#000240monitor">RS232-Monitor</a><br>
+<br>
+<A name="windows" href="#000250windows">Windows</a></ul>
+<br>1.1<br>
+<ul><A name="Editor" href="#000100editor">Editor</a></ul><br>
+<h2>---------------------------------------------------------</h2>
+<br>2.0<br><br>
+<A name="einfuehrungc" href="#100100einfuehrung">C , eine Einfuehrung</a><br>
+<br>2.1
+<ul><A name="dercompiler" href="#130000dercompiler">Der Compiler</a><br>
+<A name="kommentar" href="#130100kommentare">Kommentare</a><br>
+<A name="bspanmerk" href="#130200bspanmerk">Anmerkungen zu Beispielen</A><br>
+<A name="hallowelt" href="#130300hallowelt">Hallo Welt</A><br>
+<A name="prgaufbau" href="#130400prgaufbau">Grundsaetzlicher Programmaufbau</A><br>
+<A name="klammern" href="#130500klammern">Geschweifte Klammern</A><br></ul>
+<br>2.2
+<ul><A href="sprach_elem.html">Sprachelemente</a><br>
+<ul>
+      - <A href="sprach_elem.html#000401datatypes">Datentypen</a><br>	
+<br>      
+      - <A href="sprach_elem.html#000401avariable1">Variable</a><ul>
+        -- <A href="sprach_elem.html#000401bgloballocal">Global / Local</a><br>
+        -- <A href="sprach_elem.html#000401cstaticvar">static</a><br>	
+        -- <A href="sprach_elem.html#000401dvolatile">volatile</a><br>	
+        -- <A href="zeiger.html#pointer">Zeiger (Pointer)</A>
+</ul><br>
+      - <A href="sprach_elem.html#000402kontrollstrucs">Kontrollstrukturen</a><ul>
+           -- <A href="sprach_elem.html#000403aif">if - else</a><br>	
+           -- <A href="sprach_elem.html#000403whileloop">while</a><br>	
+           -- <A href="sprach_elem.html#000403bdowhileloop">do - while</a><br>	
+           -- <A href="sprach_elem.html#000405forloop">for</a><br>	
+           -- <A href="sprach_elem.html#000404switch">switch - case</a><br></ul>
+<br>
+      - <A href="sprach_elem.html#000406functionsall">Funktionen</a><ul>
+           -- Call by value<br>
+           -- <A href="zeiger.html#000302reference">Call by reference</A>
+</ul><br>		  
+</ul>
+</ul><br>
+<h2>---------------------------------------------------------</h2>
+3.0<br>
+<br><h2>Liste der <A name="incdateien">Include-Dateien</A><br></h2>
+Die Vollstaendigkeit der Beschreibungen zu AVR-GCC gehoerenden <br>
+Include Dateien ist nicht gegeben. Hier werden lediglich haeufig<br>
+benutzte Funktionen und Makros aufgefuehrt. Eine komplette<br>
+Dokumentation der AVR-GCC Libraries ist (in Englisch) zu finden <br>
+unter:<br>
+<pre>http://www.nongnu.org/avr-libc/user-manual/modules.html</pre>
+<ul>
+<A href="stringh.html">string.h</a><br>
+<A href="stdlib.html">stdlib.h</a><br>
+</ul>
+<h2>---------------------------------------------------------</h2>
+<A name="Danksagung" href="#000999danke">Danksagung</a><br>
+<h2>---------------------------------------------------------</h2>
+<br>
+<h2>---------------------------------------------------------</h2>
+<h2><A name="000100editor">Editor</A><br>
+---------------------------------------------------------</h2><br>
+Tastenfunktionen:<ul><br>
+  suchen ......................... :  Strg-Q F<br>
+  naechstes suchen ............... :  Strg-L<br>
+  suchen/ersetzen ................ :  Strg-Q A<br>
+  naechstes ersetzen ............. :  Strg-L<br>
+  Block bilden ................... :  Shift Cursortasten<br>
+  Block kopieren ................. :  Strg-C<br>
+  Block ausschneiden ............. :  Strg-X<br>
+  Block einfuegen ................ :  Strg-V<br>
+  Block loeschen ................. :  Strg-Entf<br>
+  Block aufheben ................. :  Strg-K H<br>
+  Blockanfang markieren .......... :  Ctrl-K B<br>
+  Blockende markieren ............ :  Ctrl-K K<br>
+  Block verschieben .............. :  Ctrl-K V<br>
+  Block von Disk lesen ........... :  Ctrl-K R<br>
+  Block auf Disk schreiben ....... :  Ctrl-K W<br>
+  Blockanzeige an/aus ............ :  Ctrl-K H<br>
+  Block ein Zeichen links ruecken. :  Ctrl-K I<br>
+  Block ein Zeichen rechts ruecken :  Ctrl-K U<br>
+  Wort markieren ................. :  Ctrl-K T<br>
+  Zeile markieren ................ :  Ctrl-K L</ul><h2>
+---------------------------------------------------------</h2><br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<h2><a name="000200menu">Menu-Leiste</a><br><br>
+<a name="000210compile">Compile & Link</a>:</h2><br>
+<br>
+  Der Menupunkt Compile stellt mehrere Optionen<br>
+  zur Auswahl.<br>
+<A name="000211compilelink"></a><ul>	
+  Compile & link (Build) F9:<ul><br>
+    erstellt aus der aktuellen Quelldatei entsprechend<br>
+    den gewaehlten Optionen von 'Target device' und<br>
+    Linker Optionen entweder eine Intel-Hexdatei die<br>
+    in einen AVR-Microcontroller uebertragen werden kann<br>
+    oder ein in einem Linux System lauffaehiges<br>
+    Programm </ul><br>
+<A name="000212compileonly">Compile only</a>:<ul><br>
+    uebersetzt (compiliert) die aktuelle Quelldatei, linkt<br>
+    das Programm jedoch nicht, es entsteht somit nur eine<br>
+    Object Datei, jedoch kein lauffaehiges Programm.</ul><br>
+  Flash / Run F8:<ul><br>
+    In Abhaengigkeit vom gewaehlten Zielsystem (PC oder<br>
+    Atmel AVR) wird bei angeschlossenem Programmer eine<br>
+    erstellte Hexdatei in den AVR-Mikrocontroller ueber-<br>
+    tragen oder ein erstelltes PC - Programm wird<br>
+    gestartet.</ul><br>
+<A name="000231Linker">Linker options</a>:<ul><br>
+    Hier koennen 2 unterschiedliche Dialogboxen auftreten,<br>
+    je nachdem, ob ein Programm fuer einen Microcontroller<br>
+    oder ein PC-Programm erstellt werden soll !<br><br>
+    Microcontroller Dialogbox:<br><br>
+      - nothing:<br><br>
+           es werden keine weiteren Funktionalitaeten<br>
+           hinzugefuegt.<br><br>
+      - minimalistic:<br><br>
+           es wird zum Programm Unterstuetzung fuer<br>
+           Gleitkommazahlen hinzugefuegt (MATH.H)<br><br>
+      - printf & floating point:<br><br>
+           es wird zusaetzlich die Ausgabemoeglichkeit<br>
+           fuer Gleitkommazahlen mittels "printf" hin-<br>
+           zugefuegt.<br>
+           ==> printf und Gleitkommazahlen benoetigen<br>
+           relativ viel Speicherplatz<br><br>
+<A name="000232linkerzusatz">Hinzuzufuegende Quelldateien</A><br>
+<br>       Wurde ein Programm so gestaltet, dass es zu-<br>
+           saetzliche Quelldateien einbindet, so kann hier<br>
+           angegeben werden, welche Bibliotheken<br>
+           (keine Standardbibliotheken) dem Hauptprogramm<br>
+           hinzugefuegt werden sollen. Hierfuer wird die<br>
+           Auswahl:<br>
+<br>
+           "additional source file to link"<br>
+<br>
+           aktiviert. Ein Anwaehlen von "Add file" oeffnet<br>
+           ein Verzeichnisfenster und die hinzuzulinkende<br>
+           Datei kann ausgewaehlt werden. Wird hier eine<br>
+           *.c Datei ausgewaehlt, so wird diese bei einem<br>
+           "Compile & Link" automatisch mituebersetzt<br>
+           werden, wird eine *.o Datei gewaehlt, so wird<br>
+           diese einfach nur hinzugelinkt.<br>
+<br>    
+           Ein Anwaehlen von "Clear list" loescht die Liste<br>
+           der hinzuzulinkenden Dateien.<br><br>
+           
+     PC-Programm Dialogbox:<br><br>
+      - Link default with NCurses:<br>
+           es wird standardmaessig die NCurses sowie die<br>
+           MATH.H mit eingebunden<br><br>
+      - Link with list below:<br><br>
+           hier kann angegeben werden, welche Bibliotheken<br>
+           hinzugelinkt werden sollen. Eine Angabe von<br>
+           -lSDL -SDL_image<br>
+           bindet SDL Bibliotheksfunktionen ein.<br><br>
+      - Command line arguments:<br><br>
+           kann einen String aufnehmen, der einem Programm<br>
+           beim Start als Programmparameter mit uebergeben wird.<br></ul>
+<br><a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>           
+<br>           
+<A name="000230clockfreq">Clock frequency</A><ul><br>	   
+    Hier wird angegeben, mit welchem Systemtakt der<br>
+    Microcontroller betrieben wird. Dieser Wert wird in<br>
+    Hertz angegeben.<br></ul><br><br>
+<A name="000234target">Target device</A><ul><br>
+    Hier wird das Zielsystem angegeben fuer das ein<br>
+    Programm erstellt wird. Zur Auswahl stehen als Ziel<br>
+    PC und AVR. Wird PC gewaehlt, wird die IDE ein Linux-<br>
+    PC-Programm erstellen, wird AVR gewaehlt, so kann in der<br>
+    direkt darunter stehenden Liste die Ziel MCU ausgewaehlt<br>
+    werden.</ul><br>
+<A name="000235reset">Reset controller</A><ul><br>
+    Der Programmer liest die ID des angeschlossenen Ziel-<br>
+    controllers aus und verursacht so einen Reset des<br>
+    Zielsystems<br></ul><br>
+<A name="000221saveoption">Save options</a><br><ul><br>
+    Saemtliche Einstellungen fuer Linker, Compiler, Ziel-<br>
+    system und des Programmers koennen auf Datentraeger<br>
+    gespeichert werden.<br>    
+    Dieses empfiehlt sich immer dann, wenn ein groesseres<br>
+    "Projekt" bearbeitet wird. Hinzuzulinkende Dateien<br>
+    muessen so nicht staendig zusammengefasst werden. Wird<br>
+    bspw. ein Programm "meinprogramm.c" bearbeitet, so emp-<br>
+    fiehlt es sich sehr, hier die Optionen als<br>
+    "meinprogramm.opt" abzulegen. Gespeicherte Optionen<br>
+    haben immer die Dateiendung .opt .<br></ul><br>
+<A name="000222loadoption">Load options</a><br><ul><br>
+    Saemtliche Einstellungen fuer Linker, Compiler und des<br>
+    Programmers koennen vom Datentraeger geladen werden.<br></ul><br>
+  Messages (Taste F12):<ul><br>
+    zeigt die Ausgabemeldungen bspw. des Compilers oder<br>
+    des Uploadprogramms (AVRDUDE) an.</ul></ul> 
+<br>    
+<a href="#anfang">Inhaltsverzeichnis</a><br>    
+<br>    
+<h2><A name="000235programmers">Programmers & flashing</a></h2><br>
+<br>
+<A name="000236programmerport">Programmerport</A><br><ul><br>
+    Auswahl des Anschlusses, an den der ISP-Programmers<br>
+    angeschlossen ist.<br>
+<br>
+    Hinweis:<br><ul><br>
+    Der Programmer DIAMEX-AVR meldet sich am System<br>
+    unter /dev/ttyACMx an. Fuer diesen Programmer ist ent-<br>
+    sprechend der Port ' COM1 | ttyS0 | ttyACM0 ' zu<br>
+    waehlen (so dieser sich als ttyACM0 anmeldet).<br>
+<br>
+    Sollten sie sich nicht sicher sein, auf welchem<br>
+    Port der Programmer ansprechbar ist, entfernen sie alle<br>
+    USB Geraete, schliessen dann den DIAMEX Programmer an<br>
+    und geben auf der Kommandokonsole folgenden Befehl<br>
+    ein: ' ls /dev/ttyACM* '<br>
+    Das angezeigte Ergebnis ist der Port, auf dem der<br>
+    Programmer kommuniziert.<br>
+    <br></ul>
+    </ul><br>
+<A name="000236bprogrammerbaud">Programmer-Baudrate</A><br><ul><br>
+    Hier wird die Datenuebertragungsgeschwindigkeit fuer<br>
+    die seriellen Programmer  ( Bootloader / AVRISP / STK500v2)<br>
+    eingestellt. Die Baudrateneinstellung fuer den Diamex-AVR<br>
+    Programmer kann nicht eingestellt werden, sie wird immer<br>
+    mit 115200 gesetzt.<br>
+<br>
+    Fuer den seriellen Programmer ' PonySer ' gibt es keine<br>
+    Baudrateneinstellung, da dieser die Datenuebertragung durch<br>
+    direktes setzen von 1 und 0 auf der Schnittstelle (Bit-<br>
+    banging) vornimmt und somit der Kontrolle von AVRDUDE<br>
+    unterliegt.<br>
+    <br></ul><br>    
+<A name="000237programmer">Programmer</A>:<br><ul><br>
+    Auswahl des angeschlossenen Programmers.<br>
+    Verfuegbar sind:<ul>
+    - USBtiny<br>
+    - USBasp<br>
+    - Diamex - ISP<br>
+    - PonySer<br>
+    - Bootloader<br><ul>
+        Anmerkung: es funktionieren die Bootloader des<br>
+	    Programmpaketes von (c) Arduino. Somit kann<br>
+	    bspw. ein Arduino Uno mittels RSIDE programmiert<br>
+	    werden (hier ist Baudrate 115200 zu waehlen).<br>
+     </ul><br>
+     - AVRISP<br>
+     - STK500v2
+    <br></ul></ul><br>
+<A name="000220fuses">predifined Fuses</a>:<br><ul><br>
+	Hier kann fuer die MCU's ATtiny2313, ATmega8, ATmega168<br>
+	und ATmega328 die Taktfrequenz ueber die Fuses eingestellt<br>
+	werden, mit denen der gewaehlte MCU's betrieben werden<br>
+	soll. Es koennen der interne Taktgenerator ( 1 MHz<br>
+	oder 8 MHz) oder ein extern angeschlossener Quarz ge-<br>
+	waehlt werden.<br>
+<h2>###################################################<br>
+W A R N U N G<br>
+###################################################</h2><br>
+    Wird ein externer Quarz gewaehlt und es kein<br>
+    solchiger angeschlossen, dann ist der Microcontroller<br>
+    anschliessend ueber den Programmer nicht mehr an-<br>
+    sprechbar !</ul><br>
+<h2>---------------------------------------------------------</h2><br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<A name="000221fuses">set / read fuses</a>:<br><ul><br>
+	Hier koennen die Bytes der Fusebits fuer eine zu<br>
+	waehlende MCU geflasht werden !	Waehlbar ist der<br>
+	zu 'flashende' Microcontroller sowie der verwendete<br>
+    Programmer.<br>
+<br>    
+	Ein Klick auf 'Read fuses' liest den angeschlossenen<br>
+	Microcontroller aus und zeigt die Fusebytes an.<br>
+	Die Checkfelder links der Fuses - Bytewerte geben an,<br>
+	welche Fusebytes im Falle von 'Flash fuses' in den<br>
+	Microcontroller geschrieben werden<br><br>
+<h2>###################################################<br>
+W A R N U N G<br>
+###################################################</h2><br>
+    Sie sollten sehr sicher sein, was Sie hier machen !!!<br>
+    Falsch gesetzte Fusebytes koennen dazu fuehren, dass<br>
+    der angeschlossene MCU nicht mehr mittels ISP<br>
+    Programmierung ansprechbar ist. Dieses ist immer dann<br>
+    der Fall, wenn ein Fusebit fuer die ISP-Programmierung<br>
+    oder die Funktion des Reset-Pins deaktiviert wird. Ein<br>
+    Zurucksetzen des MCU's waere in einem solchen Falle nur<br>
+    noch mit einem sogenannten HV-Parallelprogrammer (wie<br>
+    bspw. einem originalen STK500 der Fa. Atmel) moeglich.</ul><br>	
+</ul><br>
+<h2>---------------------------------------------------------</h2><br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<A name="000221bflashhex">Write / Read Hexfiles</a>:<br><ul><br>
+   Hier kann ein fertig kompiliertes Programm im Hex-Format in<br>
+   den Microcontroller uebertragen werden (write) oder ein<br>
+   Microcontroller ausgelesen (read) und dessen Inhalt als<br>
+   Hex-Datei auf einen Datentraeger gespeichert werden.<br>
+<br>
+   In der Eingabezeile wird die Zieldatei angegeben, in die<br>
+   geschrieben wird.<br>
+<br>
+   VORSICHT: Existiert die angegebene Datei bereits, so wird<br>
+   diese ueberschrieben.<br>
+<br>
+   Soll eine auf Datentraeger vorliegende Datei in den Controller<br>
+   uebertragen werden, so kann entweder die Dateiangabe manuell<br>
+   in der Eingabezeile erfolgen, oder es kann mittels eines<br>
+   Anwaehlen von 'Select Hex' eine Datei aus einer Dateiauswahl-<br>
+   box gewaehlt werden. Der ausgewaehlte Name wird (inklusive<br>
+   des Speicherpfades) in die Eingabezeile uebertragen.<br>
+<br>
+   Ein Anwaehlen von 'Flash Hex' bzw. 'Read Hex' beschreibt oder<br>
+   liest den Controller mit der in der Eingabezeile angegebenen <br>
+   Datei
+</ul><br>
+<h2>---------------------------------------------------------</h2><br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+<h2><A name="000240monitor">RS232-Monitor</a>:</h2>
+<br>
+  Der Menupunkt RS232-Monitor stellt ein Monitor fuer<br>
+  die serielle Schnittstelle und deren Einstellungen<br>
+  zur Verfuegung.<ul><br>
+  Open Monitor:<ul>
+    oeffnet das Schnittstellenfenster mit den in<br>
+    Settings gemachten Einstellungen.</ul><br>
+  Close Monitor:<ul>
+    schliesst das Schnittstellenfenster</ul><br>
+  Clear Monitor-Window:<ul>
+    loescht den Inhalt des Schnittstellenfensters</ul><br>
+  Settings:<ul>
+    stellt die Parameter der seriellen Schnittstelle ein</ul></ul><br>
+<br>
+<h2>---------------------------------------------------------</h2><br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<h2><A name="000250windows">Windows</a>:</h2><br>
+  Der Menupunkt bietet Moeglichkeiten zum Zeigen oder<br>
+  Veraendern der geoeffneten Quellcodefenster sowie<br>
+  der Compiler-, Schnttstellen- und der Utilityfenster<br>
+  an.<br><ul>
+  Tile:<ul><br>
+    ordnet die Quellcodefenster uebereinander an</ul><br>
+  Cascade:<ul><br>
+    ordnet die Quellcodefenster "kaskadiert" an. Dies<br>
+    ist eine gute Moeglichkeit um mit einer Mouse<br>
+    verschiedene Fenster durch anklicken zu fokusieren.</ul><br>
+  Close All:<ul><br>
+    schliesst alle Quellcodefenster</ul><br>
+  Size/Move (Tasten Strg-F5):<ul><br>
+    waehlt ein Fenster an, damit  mit der Tastatur<br>
+    dessen Position oder dessen Groesse veraendert<br>
+    werden kann.<br>
+    Nach der Anwahl kann mit den Cursortasten die<br>
+    Position veraendert werden. Wird gleichzeitig die<br>
+    Shifttaste mit den Cursortasten verwendet, kann<br>
+    hiermit die Groesse des Fensters eingestellt werden.</ul><br>
+  Zoom (Taste F5):<ul><br>
+    vergroessert/verkleinert das aktuelle Fenster</ul><br>
+  Next (Taste F6):<ul><br>
+    bringt das naechste Fenster in den Fokus</ul><br>
+  Hide (Tasten Strg-F6):<ul><br>
+    "versteckt" das Fenster und ist auf dem Desktop<br>
+    nicht mehr sichtbar. Im Menupunkt <List> kann ein<br>
+    verstecktes Fenster wieder sichtbar gemacht werden.</ul><br>
+  Close (Tasten Alt-F3):<ul><br>
+    schliesst ein Fenster.</ul><br>
+  List:<ul><br>
+    listet alle fuer den Desktop verfuegbaren Fenster<br>
+    auf.</ul><br>
+  Refresh Display:<ul><br>
+    bei einem Fehler (sollte nicht vorkommen) wird das<br>
+    Fenster neu aufgebaut !</ul></ul><br>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br><br>
+<h2><A name="000999danke">Danksagung</a><br>
+---------------------------------------------------------</h2><br>
+<h1>Generelles</h1><h2><br>
+---------------------------------------------------------</h2><br>
+<br>
+Die vorliegende AVR Entwicklungsumgebung basiert in<br>
+vielen Teilen auf der Free Pascal Entwicklungsumgebung<br>
+FP (besonders im Bezug auf den Editor) und ist in Free<br>
+Pascal geschrieben.<br>
+<br>
+Ohne die Entwickler von Free Pascal zu kennen oder mit<br>
+ihnen in Kontakt zu stehen gilt ihnen mein grosser<br>
+Dank, da diese IDE ohne sie nicht machbar gewesen waere,<br>
+<br>
+             diese sind laut<br>
+<h1> http://freepascal.org/aboutus.var<br></h1>
+<h1>Carl Eric Codere<br>
+Daniel Mantione<br>
+Florian Klaempfl<br>
+Jonas Maebe<br>
+Michael Van Canneyt<br>
+Marco van de Voort<br>
+<br>
+und die Entwickler der IDE<br>
+Peter Vreman (auch FPC)<br>
+Pierre Muller (auch FPC)<br>
+Berczi Gabor<br></h1>
+<br>
+<h2>RSIDE by Ralph Seelig im Januar 2015</h2><br>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<h2>---------------------------------------------------------</h2><br>
+<h2><A name="100100einfuehrung">C , eine Einfuehrung</a></h2><br>
+<br>
+
+<br>
+<h2></he><A name="130000dercompiler">Der Compiler</a></h2>
+<br>
+Bevor ein Programm ausgefuehrt werden kann, muss es von<br>
+einem Programm - dem Compiler - in Maschinensprache ueber-<br>
+setzt werden. Dieser Vorgang wird als Kompilieren, oder<br>
+schlicht als uebersetzen, bezeichnet. Die Maschinensprache<br>
+besteht aus Befehlen (Folge von Binaerzahlen), die vom<br>
+Prozessor direkt verarbeitet werden koennen. Ein C-Programm<br>
+wird hierbei als Quelltext bezeichnet, aus dem eben ein<br>
+prozessorausfuehrbares Programm entstehen soll.<br>
+<br>
+Neben dem Compiler werden fuer das uebersetzen des Quell-<br>
+textes die folgenden Programme benoetigt:<br>
+<br><ul>
+Praeprozessor<br>
+Linker<br></ul>
+<br>
+Umgangssprachlich wird oft nicht nur der Compiler selbst<br>
+als Compiler bezeichnet, sondern die Gesamtheit dieser<br>
+Programme. Oft uebernimmt tatsaechlich nur ein Programm<br>
+diese Aufgaben oder delegiert sie an die entsprechenden<br>
+Spezialprogramme weiter.<br>
+<br>
+Vor der eigentlichen Uebersetzung des Quelltextes wird<br>
+dieser von dem sogenannten Praeprozessor verarbeitet,<br>
+dessen Resultat anschliessend dem Compiler uebergeben<br>
+wird. Der Praeprozessor ist im wesentlichen ein einfacher<br>
+Textersetzer welcher Makroanweisungen auswertet und <br>
+ersetzt (diese beginnen mit #). Weiterhin kann der<br>
+Praeprozssor durch sogenannte defines bestimmen, welche<br>
+Teile des Quelltextes uebersetzt werden sollen.<br>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br><br>
+
+<h2><A name="130100kommentare">Kommentare</a></h2>
+<br>
+Bei Programmen empfiehlt es sich, vor allem wenn sie eine<br>
+gewisse Groesse erreichen, diese zu kommentieren. Selbst<br>
+wenn Sie das Programm uebersichtlich gliedern, wird es<br>
+fuer eine zweite Person schwierig werden, zu verstehen,<br>
+welche Logik hinter Ihrem Programm steckt. Vor dem<br>
+gleichen Problem stehen Sie aber auch, wenn Sie sich nach<br>
+ein paar Wochen oder gar Monaten in Ihr eigenes Programm<br>
+wieder einarbeiten muessen.<br>
+<br>
+Fast alle Programmiersprachen besitzen deshalb eine<br>
+Moeglichkeit, Kommentare in den Programmtext einzufuegen.<br>
+Diese Kommentare bleiben vom Compiler unberuecksichtigt.<br>
+In C werden Kommentare in /* und */ eingeschlossen.<br>
+Ein Kommentar darf sich ueber mehrere Zeilen erstrecken.<br>
+<br>
+Mit AVR-GCC ist es auch moeglich, einzeilige Kommentare,<br>
+beginnend mit // zugelassen. Er wird mit dem Ende der<br>
+Zeile abgeschlossen.<br>
+<br>
+Ein Beispiel fuer Kommentare:<br>
+<br><pre>
+/* Dieser Kommentar
+   erstreckt sich
+   ueber mehrere
+   Zeilen */
+<br>
+#include &lt;stdio.h&gt;  // Dieser Kommentar endet am Zeilenende
+<br>
+int main()
+{
+  printf("Beispiel fuer Kommentare\n");
+  //printf("Diese Zeile wird niemals ausgegeben\n");
+  return 0;
+}
+</pre>
+<a href="#anfang">Inhaltsverzeichnis</a><br><br>
+<br>
+
+<h2><A name="130200bspanmerk">Anmerkungen zu Beispielen</A></h2>
+<br>In dieser Hilfedatei werden zum Verdeutlichen von<br>
+Funktionalitaet kurze Programme oder Programmausschnitte<br>
+gezeigt. Entgegen der gelaeufigen Methode, bei der mittels<br>
+"printf" und "scanf" Funktionalitaet gezeigt wird, wird in<br>
+dieser Hilfesdatei so weit es geht darauf verzichtet.<br>
+Natuerlich kann auch mit Microcontrollern mit "printf" und<br>
+"scanf" gearbeitet werden (der Author selbst macht dies<br>
+auch gerne), es ist aber zu beachten, dass "printf" grund-<br>
+saetzlich im knappen Speicher eines Controllers viel<br>
+Speicherplatz benoetigt (in einen ATtiny2313 bspw. reicht<br>
+der dort verfuegbare Speicherplatz ueberhaupt nicht aus).<br>
+<br>
+Was "printf" ist, wird in einem gesonderten Abschnitt er-<br>
+klaert werden. Damit die Beispiele jedoch nachvollzogen<br>
+werden koennen ist im Verzeichnis "../include" die Datei<br>
+"rs232_io.h" verfuegbar. Zusaetzlich muss im Menupunkt:<br>
+<br>
+"Compile & Link" / "Linker options"<br>
+<br>
+die Auswahl "additional sourcefiles to link" aktiviert<br>
+werden und mit "Add file" im Verzeichnis "../include" die<br>
+Datei "rs232_io.c" ausgewaehlt werden (mit diesem Vorgang<br>
+wird dem Controller die Funktionalitaet einer seriellen<br>
+Schnittstelle hinzugefuegt).<br>
+<br>
+In "rs232_io.h" ist das Macro "prints" und die Funktion<br>
+"getintread" enthalten (welche beide jedoch weit weniger<br>
+als printf und scanf koennen).<br>
+<br>
+Mit Hilfe dieser Funktionen werden innerhalb dieser <br>
+Hilfedatei Funktionsweisen verdeutlich. Um diese Funk-<br>
+tionen in Verbindung mit Mikrocontroller verwenden zu<br>
+koennen, muss an diesen ein Schnittstellenwandler an-<br>
+geschlossen sein.<br>
+<br>
+Wie dieses zu bewerkstelligen ist, kann dem Schaltplan<br>
+zum Beipspiel "example000.c" entnommen werden.<br>
+<br>
+Alle Beispiele sollten, wenn nicht anderst angegeben, mit<br>
+allen von RSIDE unterstuetzten Controllern funktionieren.<br>
+<br><h2><A name="130300hallowelt"></A></h2>
+Das "beruehmte"<br>
+<h2>Hallo-Welt-Programm</h2><br>
+benutzt in diesem Beispiel die serielle Schnittstelle RS-232:<br>
+<br>
+<pre>/* ----------------- 000example.c ----------------
+<br>
+                     Hallo Welt
+<br>
+            Beispiel fuer die Hilfedatei
+<br>
+                     08.01.2015
+   ----------------------------------------------- */
+
+<br>
+#include &lt;avr/io.h&gt;               // grundsaetzlich
+<br>
+#include "../include/rs232_io.h"
+<br>
+int main(void)
+{
+<br>
+  rs232_init();                   // damit I/O Anweis-
+                                  // ungen funktioneren
+<br>
+  prints("Hallo Welt\n\r");
+  while (1)
+  {
+  }
+}</pre>
+<h2>Besprechung:</h2><br>
+Die ersten Zeilen sind Kommentar, grundsaetzlich sollte<br>
+am Anfang eines Programmes ein Kommentar stehen damit<br>
+leicht erkennbar ist, fuer WAS dieses Programm gut ist.<br>
+<br>
+<h2>#include &lt;avr/io.h&gt;</h2><br>
+<ul>bindet zusaetzliche Funktionalitaet in das Programm<br>
+ein. IO.H ist in jedem Programm notwendig, damit dem <br>
+Compiler gesagt werden kann, um welche MCU es sich<br>
+handelt. </ul>
+<br>
+<h2>#include ..include/rs232_io.h</h2><br>
+<ul>bindet zusaetzlich die Funktionalitaet einer seriellen<br>
+Schnittstelle ein. Hier ist unter anderem die Initialisierung <br>
+und u.a. auch das Makro "prints" fuer die Ausgabe auf der<br>
+seriellen Schnittstelle vorhanden. rs232_io.h ist die<br>
+Headerdatei fuer rs232_io.c die die Funktionen der seriellen<br>
+Schnittstelle implementiert. Wie diese Funktion einem<br>
+Programm hinzuzufuegen ist, siehe unter<br><br>
+<A name="bspanmerk" href="#130200bspanmerk">Anmerkungen zu Beispielen</A><br>
+<br></ul>
+<h2>int main(void)</h2><br>
+<ul>Bezeichnet das "Hauptprogramm" des Programms. Jedes<br>
+Programm muss eine solche Zeile besitzen, ab hier wird<br>
+beim Start (bei einer MCU nach anlegen der Betriebs-<br>
+spannung) das Programm ausgefuehrt</ul>
+<br>
+<h2>geschweifte Klammern:</h2><br>
+<ul>Eine oeffnende geschweifte Klammer signalisiert den<br>
+Beginn eines Blockes, eine schliessende das Ende.</ul>
+<br>
+<h2>rs232_init();</h2><br>
+<ul>"rs232_init" ist in rs232_io.c implementiert und<br>
+initialisiert die serielle Schnittstelle der MCU zur<br>
+Benutzung. Sie stellt automatisch eine Baudrate von<br>
+19200 Bd, 8 Datenbits, 1 Start und 1 Stopbit sowie<br>
+keine Paritaet ein.</ul>
+<br>
+<h2>prints("Hallo Welt\n\r");</h2><br>
+<ul>sendet auf der seriellen Schnittstelle den Text<br>
+"Hallo Welt" und anschliessen ein Carriage Return <br>
+(das ist das Kommando, das den Cursor an den Anfang<br>
+einer Zeile setzt) sowie ein Line Feed (das ist das<br>
+Kommando, dass eine neue Zeile beginnt)</ul>
+<br>
+<h2>while(1)<br>
+{<br>
+}</h2><br>
+<ul>solange die Bedingung in der geschweiften Klammer<br>
+groesser als 0 ist (und sie ist hier mit konstant 1<br>
+angegeben) wird der nachfolgende Block der geschweiften<br>
+Klammern ausgefuehrt. In diesem Programm ist das also<br>
+eine sogenannte Endlosschleife und das Programm wird<br>
+ab dieser Stelle nichts mehr weiteres machen.</ul>
+<br>
+Die abschliessende schliessende Klammer zeigt das<br>
+Ende des Quellprogrammes an.<br>
+<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>
+<br>
+<h2><A name="130400prgaufbau">Grundsaetzlicher Programmaufbau</A></h2><br>
+<br>
+In C besteht ein Programm aus mehreren, mindestens jedoch<br>
+einer Funktion. Wie das <A name="hallowelt" href="#130300hallowelt">Hallo Welt</A> Programm<br>
+zeigt kommt einer Funktion eine besondere Rolle zu:
+<ul><ul><ul>main</ul></ul></ul><br>
+Diese Funktion wird bei einem Programmstart automatisch<br>
+ausgefuehrt, alle anderen werden im Programmablauf<br>
+aufgerufen.<br>
+<br>
+Ein grundsaetzliches abstraktes Programmgeruest sieht<br>
+in etwa folgendermassen aus:<br>
+<ul><pre>
+- Hinzufuegende Programmfunktionen   // Bibliotheken
+- Funktionen
+- Hauptfunktion main
+</pre></ul><br>
+<h2><A name="130500klammern">Geschweifte Klammern</A></h2><br>
+<br>
+Funktional zusammengehoerende Programmteile werden in<br>
+geschweiften Klammern eingeschlossen.<br>
+<br>
+Ein Beispiel in einer Pseudoanweisung:<br>
+<pre>
+- Anweisung vor "wenn"	
+Wenn (Wasserbehaelter == leer) dann
+{
+  - Wasserbehaelter entfernen
+  - unter Wasserhahn halten
+  - Wasser aufdrehen
+<br>
+  solange
+  {
+    - Wasser laufen lassen
+  }Behaelter nicht voll
+<br>  
+  - Wasser abdrehen
+  - Wasserbehaelter wieder einsetzen
+}
+<br>
+- Anweisung nach "wenn"
+</pre>
+<br>
+Das Beispiel zeigt, wie die Klammern anzuwenden sind. Ist<br>
+der Wasserbehaelter nicht leer, wird sofort mit der An-<br>
+weisung nach "wenn" fortgefahren. Die Anweisungen in den<br>
+Klammern gehoeren also nur zur "wenn" Anweisung. Innerhalb<br>
+dieser "wenn" Bedingung gibt es einen weiteren, von ge-<br>
+schweiften Klammern eingeschlossenen Bereich. Alle An-<br>
+weisungen hierin (in unserem Fall nur eine einzige) werden<br>
+ausgefuehrt, solange der Behaelter nicht voll ist.<br>
+<a href="#anfang">Inhaltsverzeichnis</a><br>
+<br>
+
+</font></p>
+</body><br>
+</html><br>

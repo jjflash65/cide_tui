@@ -1,0 +1,9 @@
+      int h = monat, k = jahr ;
+
+      if (monat < 3)
+      {
+         h = monat + 12 ;
+         k = jahr-1 ;
+      }
+
+      w_tag = (tag+2*h + (3*h+3)/5 + k + k/4 - k/100 + k/400 + 1)%7 ;

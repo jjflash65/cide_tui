@@ -1,0 +1,19 @@
+stdxxx (#defines)
+
+ Vordefinierte Streams, die beim Start eines
+ Programms noch kein Geraet haben, auf das sie
+ geleitet werden
+
+ Konstanten
+ ออออออออออ
+
+   stdin    Standardeingabe (Tastatur)
+   stdout   Standardausgabe (Bildschirm)
+   stderr   Standardausgabe fr Fehlermeldungen
+
+Fuer eine Umleitung eines Streams auf ein Aus- oder Eingabe-
+geraet siehe
+
+FDEV_SETUP_STREAM
+
+
